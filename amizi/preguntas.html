@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Amizi · Preguntas Frecuentes</title>
+    <!-- Font Awesome para iconos más lindos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <script src="modulos/boots.js"></script>
+    
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f2f2f7;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* CONTENEDOR PRINCIPAL */
+        .app-container {
+            max-width: 900px;
+            width: 100%;
+            background-color: #f8f9ff;
+            border-radius: 60px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            padding: 32px 36px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        /* HEADER CON DEGRADADO AZUL */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            padding: 15px 25px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            flex-wrap: wrap;
+            gap: 10px;
+            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.3);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .star-icon {
+            color: #ffd700;
+            font-size: 28px;
+            filter: drop-shadow(0 2px 5px rgba(255, 215, 0, 0.5));
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -1px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .carisma-badge {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(5px);
+            border-radius: 60px;
+            padding: 8px 18px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .carisma-num {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            padding: 4px 14px;
+            font-size: 16px;
+            color: white;
+            font-weight: 700;
+        }
+
+        .boost-btn {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 60px;
+            padding: 8px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #4a90e2;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .boost-btn:hover {
+            transform: scale(1.05);
+            background: white;
+        }
+
+        .boost-btn i {
+            color: #ff6b6b;
+        }
+
+        /* POPULAR ROW */
+        .popular-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 12px 25px;
+            border-radius: 60px;
+            border: 1px solid #eeeff5;
+        }
+
+        .popular-tag {
+            font-size: 20px;
+            color: #2d3a4a;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .popular-tag i {
+            color: #ff6b6b;
+            font-size: 22px;
+        }
+
+        .popular-tag span {
+            font-weight: 700;
+            color: #1e2b3a;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            color: #8a9bb0;
+            cursor: pointer;
+        }
+
+        /* TARJETA DE FAQ */
+        .faq-card {
+            background: white;
+            border-radius: 70px;
+            padding: 40px 40px 30px 40px;
+            border: 1px solid #f0f0f8;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+            margin: 20px 0 30px 0;
+            width: 100%;
+        }
+
+        /* TÍTULO DE FAQ */
+        .faq-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .faq-title i {
+            font-size: 40px;
+            color: #6c5ce7;
+            background: #f0f3fa;
+            padding: 15px;
+            border-radius: 50%;
+        }
+
+        .faq-title h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e2b3a;
+        }
+
+        .faq-title h2 span {
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 40px;
+            font-size: 18px;
+            margin-left: 10px;
+        }
+
+        /* CONTENEDOR DE PREGUNTAS DINÁMICAS */
+        .faq-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .faq-item {
+            border: 2px solid #e4e4f0;
+            border-radius: 40px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .faq-item:hover {
+            border-color: #6c5ce7;
+        }
+
+        .faq-question {
+            background: #f8f9ff;
+            padding: 20px 25px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .faq-question:hover {
+            background: #f0f3fa;
+        }
+
+        .question-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .question-left i {
+            font-size: 24px;
+            color: #4a90e2;
+            transition: transform 0.3s ease;
+        }
+
+        .question-left span {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3a4a;
+        }
+
+        .faq-question .arrow {
+            font-size: 20px;
+            color: #6c5ce7;
+            transition: transform 0.3s ease;
+        }
+
+        .faq-question.open .arrow {
+            transform: rotate(180deg);
+        }
+
+        .faq-answer {
+            max-height: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            background: white;
+            padding: 0 25px;
+        }
+
+        .faq-answer.open {
+            max-height: 200px;
+            opacity: 1;
+            visibility: visible;
+            padding: 20px 25px;
+            border-top: 2px solid #f0f3fa;
+        }
+
+        .answer-content {
+            display: flex;
+            align-items: flex-start;
+            gap: 15px;
+        }
+
+        .answer-content i {
+            font-size: 20px;
+            color: #2ecc71;
+            margin-top: 3px;
+        }
+
+        .answer-content p {
+            font-size: 16px;
+            color: #5a6b7c;
+            line-height: 1.6;
+        }
+
+        .answer-content strong {
+            color: #4a90e2;
+            font-weight: 700;
+        }
+
+        /* BOTÓN DE ACCIÓN */
+        .action-buttons {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0 10px;
+        }
+
+        .action-btn {
+            padding: 16px 40px;
+            border-radius: 60px;
+            font-size: 20px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            min-width: 200px;
+            position: relative;
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            color: white;
+            box-shadow: 0 15px 30px rgba(74, 144, 226, 0.3);
+        }
+
+        .action-btn::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3a4a;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            margin-top: 10px;
+            pointer-events: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            z-index: 10;
+        }
+
+        .action-btn:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 20px 40px rgba(74, 144, 226, 0.4);
+        }
+
+        .action-btn i {
+            font-size: 22px;
+        }
+
+        /* FOOTER - 4 BOTONES EN UNA SOLA FILA HORIZONTAL */
+        .footer-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 60px;
+            border: 1px solid #eeeff5;
+            margin-top: 20px;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .footer-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .footer-item::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3a4a;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            pointer-events: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-item:hover::after {
+            opacity: 1;
+            visibility: visible;
+            top: -45px;
+        }
+
+        .footer-item i {
+            font-size: 24px;
+        }
+
+        .footer-item span {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .footer-item.inicio {
+            background: #f0f3fa;
+            color: #6c5ce7;
+        }
+
+        .footer-item.mensaje {
+            background: linear-gradient(145deg, #6c5ce7, #8e6ce7);
+            color: white;
+        }
+
+        .footer-item.likes {
+            background: #ff4757;
+            color: white;
+        }
+
+        .footer-item.cuenta {
+            background: #2d3a4a;
+            color: white;
+        }
+
+        .footer-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* NOTIFICACIONES ELEGANTES ARRIBA */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            pointer-events: none;
+            width: auto;
+            max-width: 90%;
+        }
+
+        .notification {
+            background: white;
+            color: #1e2b3a;
+            padding: 16px 32px;
+            border-radius: 60px;
+            font-size: 18px;
+            font-weight: 500;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.3s ease;
+            pointer-events: none;
+        }
+
+        .notification i {
+            font-size: 24px;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .app-container {
+                padding: 20px;
+            }
+
+            .faq-card {
+                padding: 25px;
+            }
+
+            .faq-title {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .faq-title h2 {
+                font-size: 28px;
+            }
+
+            .question-left span {
+                font-size: 16px;
+            }
+
+            .answer-content p {
+                font-size: 14px;
+            }
+
+            .footer-nav {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .footer-item {
+                flex: 1 1 calc(50% - 8px);
+                min-width: 120px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .faq-title h2 {
+                font-size: 24px;
+            }
+
+            .question-left {
+                gap: 10px;
+            }
+
+            .question-left i {
+                font-size: 20px;
+            }
+
+            .question-left span {
+                font-size: 14px;
+            }
+
+            .faq-question {
+                padding: 15px 20px;
+            }
+
+            .faq-answer.open {
+                padding: 15px 20px;
+            }
+
+            .answer-content {
+                gap: 10px;
+            }
+
+            .footer-item {
+                padding: 10px 12px;
+            }
+            
+            .footer-item i {
+                font-size: 20px;
+            }
+            
+            .footer-item span {
+                font-size: 14px;
+            }
+        }
+
+        /* Asegurar que Nivel y Boost siempre estén horizontales */
+        @media (max-width: 400px) {
+            .header-right {
+                flex-direction: row;
+                width: auto;
+            }
+            
+            .carisma-badge, .boost-btn {
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- CONTENEDOR DE NOTIFICACIONES ELEGANTES -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <div class="app-container">
+        <!-- HEADER CON DEGRADADO AZUL -->
+        <div class="header">
+            <div class="logo-container">
+                <i class="fas fa-star star-icon"></i>
+                <div class="logo">Amizi</div>
+            </div>
+            
+            <div class="header-right">
+                <div class="carisma-badge">
+                    <i class="fas fa-bolt"></i>
+                    Nivel <span class="carisma-num">72</span>
+                </div>
+                
+                <button class="boost-btn" id="btnBoost">
+                    <i class="fas fa-rocket"></i>
+                    Boost
+                </button>
+            </div>
+        </div>
+
+        <!-- POPULAR ROW -->
+        <div class="popular-row">
+            <div class="popular-tag">
+                <i class="fas fa-fire"></i>
+                <span>Preguntas Frecuentes</span>
+            </div>
+            <div class="menu-icon">
+                <i class="fas fa-ellipsis-h"></i>
+            </div>
+        </div>
+
+        <!-- TARJETA DE FAQ -->
+        <div class="faq-card">
+            <!-- TÍTULO -->
+            <div class="faq-title">
+                <i class="fas fa-question-circle"></i>
+                <h2>Preguntas Frecuentes <span>Amizi</span></h2>
+            </div>
+
+            <!-- CONTENEDOR DE PREGUNTAS DINÁMICAS -->
+            <div class="faq-container">
+                <!-- Pregunta 1 - Misión -->
+                <div class="faq-item">
+                    <div class="faq-question" data-index="0">
+                        <div class="question-left">
+                            <i class="fas fa-bullseye" style="color: #4a90e2;"></i>
+                            <span>¿Cuál es la misión de Amizi?</span>
+                        </div>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="answer-content">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Conectar personas con intereses similares para crear <strong>amistades genuinas</strong> y duraderas, facilitando encuentros significativos en un entorno seguro y divertido, tal como lo harías con Tinder o Kimi, pero enfocado en la <strong>verdadera amistad</strong>.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 2 - Visión -->
+                <div class="faq-item">
+                    <div class="faq-question" data-index="1">
+                        <div class="question-left">
+                            <i class="fas fa-eye" style="color: #ffd700;"></i>
+                            <span>¿Cuál es la visión de Amizi?</span>
+                        </div>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="answer-content">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Ser la <strong>plataforma líder</strong> en Latinoamérica para conocer amigos, donde cada persona pueda expandir su círculo social y encontrar a quienes comparten sus mismos gustos, pasiones y forma de ver la vida.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 3 -->
+                <div class="faq-item">
+                    <div class="faq-question" data-index="2">
+                        <div class="question-left">
+                            <i class="fas fa-user-friends"></i>
+                            <span>¿Cómo se consigue amigos?</span>
+                        </div>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="answer-content">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Consigues amigos cuando dos personas coinciden con los corazones sea aceptado o que tú envíes primero. El sistema de <strong>match</strong> funciona cuando ambos se dan like mutuamente, igual que en Tinder o Kimi.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 4 -->
+                <div class="faq-item">
+                    <div class="faq-question" data-index="3">
+                        <div class="question-left">
+                            <i class="fas fa-gift"></i>
+                            <span>¿Para qué son los regalos?</span>
+                        </div>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="answer-content">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Los regalos son para darte más <strong>carisma</strong> que reflejan el amor de tus amigos. Cada regalo recibido aumenta tu nivel de carisma y popularidad en la aplicación.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 5 -->
+                <div class="faq-item">
+                    <div class="faq-question" data-index="4">
+                        <div class="question-left">
+                            <i class="fas fa-times-circle"></i>
+                            <span>¿Qué pasa cuando oprimes descartar a una persona?</span>
+                        </div>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="answer-content">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Significa que no te interesó su perfil, por lo tanto <strong>no se te mostrará nuevamente</strong>. Es una forma de filtrar las personas con las que realmente quieres conectar.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 6 -->
+                <div class="faq-item">
+                    <div class="faq-question" data-index="5">
+                        <div class="question-left">
+                            <i class="fas fa-rocket"></i>
+                            <span>¿Qué es el boost?</span>
+                        </div>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="answer-content">
+                            <i class="fas fa-check-circle"></i>
+                            <p>El <strong>boost</strong> es el encargado de darte visibilidad a tu perfil a otras personas por un tiempo determinado, con el fin de que consigas más amigos y aumentes tu popularidad rápidamente.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 7 -->
+                <div class="faq-item">
+                    <div class="faq-question" data-index="6">
+                        <div class="question-left">
+                            <i class="fas fa-star"></i>
+                            <span>¿Qué hace el super like?</span>
+                        </div>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="answer-content">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Este es el encargado de darte <strong>mayor probabilidad</strong> de mostrar el interés por una persona, y priorizará que seas amigo de la manera más rápida. ¡Es la forma más efectiva de conectar!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 8 -->
+                <div class="faq-item">
+                    <div class="faq-question" data-index="7">
+                        <div class="question-left">
+                            <i class="fas fa-comment-dots"></i>
+                            <span>¿Qué hace el mensaje?</span>
+                        </div>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="answer-content">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Es el encargado de <strong>escribirle antes de ser amigos</strong> y poderte comunicar con previa autorización. Ideal para romper el hielo antes de hacer match.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 9 -->
+                <div class="faq-item">
+                    <div class="faq-question" data-index="8">
+                        <div class="question-left">
+                            <i class="fas fa-shield-alt"></i>
+                            <span>¿Amizi es seguro?</span>
+                        </div>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="answer-content">
+                            <i class="fas fa-check-circle"></i>
+                            <p>¡Totalmente! Contamos con <strong>sistemas de verificación</strong> y moderación constante. Puedes bloquear y reportar cualquier perfil que consideres inapropiado. Tu seguridad es nuestra prioridad.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 10 -->
+                <div class="faq-item">
+                    <div class="faq-question" data-index="9">
+                        <div class="question-left">
+                            <i class="fas fa-coins"></i>
+                            <span>¿Cómo funciona el carisma?</span>
+                        </div>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="answer-content">
+                            <i class="fas fa-check-circle"></i>
+                            <p>El <strong>carisma</strong> es tu puntuación social en Amizi. Sube cuando recibes likes, regalos y mensajes. ¡Mientras más carisma tengas, más visible serás para otros usuarios!</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Pregunta 11 -->
+                <div class="faq-item">
+                    <div class="faq-question" data-index="10">
+                        <div class="question-left">
+                            <i class="fas fa-ban"></i>
+                            <span>¿Puedo deshacer un descarte?</span>
+                        </div>
+                        <i class="fas fa-chevron-down arrow"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <div class="answer-content">
+                            <i class="fas fa-check-circle"></i>
+                            <p>Actualmente no se puede deshacer un descarte, pero estamos trabajando en una <strong>función premium</strong> que te permitirá revivir perfiles que hayas descartado accidentalmente.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- BOTÓN DE ACCIÓN -->
+            <div class="action-buttons">
+                <button class="action-btn" id="btnEntendido" data-tooltip="Volver al perfil">
+                    <i class="fas fa-check-circle"></i>
+                    ¡Entendido!
+                </button>
+            </div>
+        </div>
+
+        <!-- FOOTER CON 4 BOTONES EN UNA SOLA FILA HORIZONTAL Y TOOLTIPS -->
+        <div class="footer-nav">
+            <div class="footer-item inicio" id="btnInicio" data-tooltip="Ir al inicio">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </div>
+            
+            <div class="footer-item mensaje" id="btnMessage" data-tooltip="Ver mensajes">
+                <i class="fas fa-comment-dots"></i>
+                <span>Mensaje</span>
+            </div>
+            
+            <div class="footer-item likes" id="btnLikesFooter" data-tooltip="Mis likes">
+                <i class="fas fa-heart"></i>
+                <span id="footerLikesCount">156</span>
+            </div>
+            
+            <div class="footer-item cuenta" id="btnCuenta" data-tooltip="Mi perfil">
+                <i class="fas fa-user"></i>
+                <span>Cuenta</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos de botones
+            const btnBoost = document.getElementById('btnBoost');
+            const btnInicio = document.getElementById('btnInicio');
+            const btnMessage = document.getElementById('btnMessage');
+            const btnLikesFooter = document.getElementById('btnLikesFooter');
+            const btnCuenta = document.getElementById('btnCuenta');
+            const btnEntendido = document.getElementById('btnEntendido');
+            
+            // Elementos de preguntas frecuentes
+            const faqItems = document.querySelectorAll('.faq-item');
+
+            // Función para mostrar notificaciones elegantes arriba
+            function showNotification(icon, text, bgColor = '#ffffff', iconColor = '#6c5ce7') {
+                const container = document.getElementById('notificationContainer');
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.innerHTML = `<i class="${icon}" style="color: ${iconColor}"></i> ${text}`;
+                notification.style.background = bgColor;
+                
+                container.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.animation = 'fadeOut 0.3s ease';
+                    setTimeout(() => {
+                        container.removeChild(notification);
+                    }, 300);
+                }, 2500);
+            }
+
+            // Función para toggle de preguntas
+            faqItems.forEach((item) => {
+                const question = item.querySelector('.faq-question');
+                const answer = item.querySelector('.faq-answer');
+                
+                question.addEventListener('click', function() {
+                    // Cerrar todas las demás preguntas
+                    faqItems.forEach((otherItem) => {
+                        if (otherItem !== item) {
+                            const otherQuestion = otherItem.querySelector('.faq-question');
+                            const otherAnswer = otherItem.querySelector('.faq-answer');
+                            otherQuestion.classList.remove('open');
+                            otherAnswer.classList.remove('open');
+                        }
+                    });
+                    
+                    // Abrir/cerrar la pregunta actual
+                    question.classList.toggle('open');
+                    answer.classList.toggle('open');
+                });
+            });
+
+            // Botón Boost
+            btnBoost.addEventListener('click', function() {
+                btnBoost.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    btnBoost.style.transform = 'scale(1)';
+                }, 200);
+                showNotification('fas fa-rocket', '🚀 Boost activado! +50 visibilidad', '#6c5ce7', 'white');
+            });
+
+            // Botón Inicio
+            btnInicio.addEventListener('click', function() {
+                window.location.href = 'principal.html';
+            });
+
+            // Botón Mensaje
+            btnMessage.addEventListener('click', function() {
+                showNotification('fas fa-comment-dots', '📬 Buzón de mensajes', '#6c5ce7', 'white');
+            });
+
+            // Botón Likes en footer
+            btnLikesFooter.addEventListener('click', function() {
+                btnLikesFooter.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    btnLikesFooter.style.transform = 'scale(1)';
+                }, 200);
+                showNotification('fas fa-heart', '❤️ Tus likes', '#ff4757', 'white');
+            });
+
+            // Botón Cuenta
+            btnCuenta.addEventListener('click', function() {
+                window.location.href = 'cuenta.html';
+            });
+
+            // Botón Entendido
+            btnEntendido.addEventListener('click', function() {
+                
+                    window.location.href = 'cuenta.html';
+               
+            });
+
+            // Abrir primera pregunta por defecto
+            setTimeout(() => {
+                const firstQuestion = document.querySelector('.faq-question');
+                const firstAnswer = document.querySelector('.faq-answer');
+                if (firstQuestion && firstAnswer) {
+                    firstQuestion.classList.add('open');
+                    firstAnswer.classList.add('open');
+                }
+            }, 500);
+        });
+
+           // ============================================
+// ACTIVAR BOTÓN BOOST
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    const btnBoost = document.getElementById('btnBoost');
+    
+    if (btnBoost) {
+        btnBoost.addEventListener('click', function() {
+            // Animación del botón
+            this.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+            
+            // Verificar si el modal de Boost está disponible
+            if (typeof mostrarModalBoost === 'function') {
+                mostrarModalBoost();
+            } else {
+                console.warn('Modal de Boost no disponible');
+                // Fallback: mostrar notificación si existe
+                if (typeof showNotification === 'function') {
+                    showNotification('fas fa-rocket', '🚀 Función de Boost próximamente', '#ff6b6b', 'white');
+                }
+            }
+        });
+    }
+});
+    </script>
+</body>
+</html>
