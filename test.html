@@ -1,0 +1,1371 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Amizi · Test de Personalidad</title>
+    <!-- Font Awesome para iconos más lindos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <script src="modulos/boots.js"></script><style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f2f2f7;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* CONTENEDOR PRINCIPAL */
+        .app-container {
+            max-width: 900px;
+            width: 100%;
+            background-color: #f8f9ff;
+            border-radius: 60px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            padding: 32px 36px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        /* HEADER CON DEGRADADO AZUL */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            padding: 15px 25px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            flex-wrap: wrap;
+            gap: 10px;
+            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.3);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .star-icon {
+            color: #ffd700;
+            font-size: 28px;
+            filter: drop-shadow(0 2px 5px rgba(255, 215, 0, 0.5));
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -1px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .carisma-badge {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(5px);
+            border-radius: 60px;
+            padding: 8px 18px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .carisma-num {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            padding: 4px 14px;
+            font-size: 16px;
+            color: white;
+            font-weight: 700;
+        }
+
+        .boost-btn {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 60px;
+            padding: 8px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #4a90e2;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .boost-btn:hover {
+            transform: scale(1.05);
+            background: white;
+        }
+
+        .boost-btn i {
+            color: #ff6b6b;
+        }
+
+        /* POPULAR ROW */
+        .popular-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 12px 25px;
+            border-radius: 60px;
+            border: 1px solid #eeeff5;
+        }
+
+        .popular-tag {
+            font-size: 20px;
+            color: #2d3a4a;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .popular-tag i {
+            color: #ff6b6b;
+            font-size: 22px;
+        }
+
+        .popular-tag span {
+            font-weight: 700;
+            color: #1e2b3a;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            color: #8a9bb0;
+            cursor: pointer;
+        }
+
+        /* TARJETA DE TEST */
+        .test-card {
+            background: white;
+            border-radius: 70px;
+            padding: 40px 40px 30px 40px;
+            border: 1px solid #f0f0f8;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+            margin: 20px 0 30px 0;
+            width: 100%;
+        }
+
+        /* TÍTULO DE TEST */
+        .test-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .test-title i {
+            font-size: 40px;
+            color: #2ecc71;
+            background: #f0f3fa;
+            padding: 15px;
+            border-radius: 50%;
+        }
+
+        .test-title h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e2b3a;
+        }
+
+        .test-title h2 span {
+            background: linear-gradient(145deg, #2ecc71, #27ae60);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 40px;
+            font-size: 18px;
+            margin-left: 10px;
+        }
+
+        /* SALUDO INICIAL */
+        .test-greeting {
+            background: linear-gradient(145deg, #f0f3fa, #ffffff);
+            border-radius: 40px;
+            padding: 25px;
+            margin-bottom: 30px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            border: 2px solid #e4e4f0;
+        }
+
+        .greeting-icon {
+            font-size: 50px;
+            color: #ffd700;
+            animation: wave 2s infinite;
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(10deg); }
+            75% { transform: rotate(-10deg); }
+        }
+
+        .greeting-text h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e2b3a;
+            margin-bottom: 8px;
+        }
+
+        .greeting-text p {
+            font-size: 16px;
+            color: #5a6b7c;
+            line-height: 1.5;
+        }
+
+        /* PROGRESO DEL TEST */
+        .test-progress {
+            margin-bottom: 30px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .progress-info span {
+            font-size: 14px;
+            font-weight: 600;
+            color: #5a6b7c;
+        }
+
+        .progress-info .current {
+            color: #4a90e2;
+            font-size: 18px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 10px;
+            background: #f0f3fa;
+            border-radius: 20px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, #4a90e2, #6c5ce7);
+            border-radius: 20px;
+            transition: width 0.3s ease;
+        }
+
+        /* PREGUNTAS DEL TEST */
+        .question-container {
+            margin-bottom: 30px;
+        }
+
+        .question-number {
+            font-size: 16px;
+            color: #8a9bb0;
+            margin-bottom: 10px;
+        }
+
+        .question-text {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e2b3a;
+            margin-bottom: 25px;
+            line-height: 1.4;
+        }
+
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .option-item {
+            background: #f8f9ff;
+            border: 2px solid #e4e4f0;
+            border-radius: 30px;
+            padding: 20px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .option-item:hover {
+            border-color: #4a90e2;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .option-item.selected {
+            border-color: #2ecc71;
+            background: #f0fff4;
+        }
+
+        .option-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .option-icon.blue { color: #4a90e2; }
+        .option-icon.green { color: #2ecc71; }
+        .option-icon.orange { color: #f39c12; }
+        .option-icon.purple { color: #6c5ce7; }
+        .option-icon.red { color: #ff6b6b; }
+        .option-icon.yellow { color: #ffd700; }
+
+        .option-text {
+            flex: 1;
+            font-size: 16px;
+            font-weight: 500;
+            color: #2d3a4a;
+        }
+
+        /* BOTONES DE NAVEGACIÓN */
+        .navigation-buttons {
+            display: flex;
+            justify-content: space-between;
+            gap: 15px;
+            margin: 30px 0;
+        }
+
+        .nav-btn {
+            padding: 15px 30px;
+            border-radius: 60px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            min-width: 120px;
+            justify-content: center;
+        }
+
+        .nav-btn.prev {
+            background: #f0f3fa;
+            color: #2d3a4a;
+        }
+
+        .nav-btn.next {
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            color: white;
+            flex: 2;
+        }
+
+        .nav-btn.finish {
+            background: linear-gradient(145deg, #2ecc71, #27ae60);
+            color: white;
+            flex: 2;
+        }
+
+        .nav-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .nav-btn.prev:hover {
+            background: #e4e9f5;
+        }
+
+        .nav-btn.next:hover {
+            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.3);
+        }
+
+        .nav-btn.finish:hover {
+            box-shadow: 0 10px 25px rgba(46, 204, 113, 0.3);
+        }
+
+        /* RESULTADOS DEL TEST */
+        .result-container {
+            text-align: center;
+            padding: 20px 0;
+        }
+
+        .result-icon {
+            font-size: 80px;
+            margin-bottom: 20px;
+            animation: starPulse 1s ease;
+        }
+
+        @keyframes starPulse {
+            0% { transform: scale(0); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+
+        .result-title {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e2b3a;
+            margin-bottom: 15px;
+        }
+
+        .result-subtitle {
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 25px;
+            padding: 10px 20px;
+            border-radius: 60px;
+            display: inline-block;
+        }
+
+        .result-subtitle.inteligente {
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            color: white;
+        }
+
+        .result-subtitle.social {
+            background: linear-gradient(145deg, #ffd700, #f39c12);
+            color: white;
+        }
+
+        .result-subtitle.aventurero {
+            background: linear-gradient(145deg, #2ecc71, #27ae60);
+            color: white;
+        }
+
+        .result-subtitle.leal {
+            background: linear-gradient(145deg, #6c5ce7, #a363d9);
+            color: white;
+        }
+
+        .result-subtitle.equilibrado {
+            background: linear-gradient(145deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+
+        .result-description {
+            background: #f0f3fa;
+            border-radius: 40px;
+            padding: 25px;
+            margin-bottom: 25px;
+            text-align: left;
+        }
+
+        .result-description p {
+            font-size: 16px;
+            color: #5a6b7c;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+
+        .result-description strong {
+            color: #4a90e2;
+        }
+
+        .result-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            justify-content: center;
+            margin-bottom: 25px;
+        }
+
+        .result-tag {
+            background: white;
+            border: 2px solid;
+            border-radius: 40px;
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        .result-tag:hover {
+            transform: scale(1.05);
+        }
+
+        .result-tag.blue {
+            border-color: #4a90e2;
+            color: #4a90e2;
+        }
+        .result-tag.blue:hover {
+            background: #4a90e2;
+            color: white;
+        }
+
+        .result-tag.green {
+            border-color: #2ecc71;
+            color: #2ecc71;
+        }
+        .result-tag.green:hover {
+            background: #2ecc71;
+            color: white;
+        }
+
+        .result-tag.orange {
+            border-color: #f39c12;
+            color: #f39c12;
+        }
+        .result-tag.orange:hover {
+            background: #f39c12;
+            color: white;
+        }
+
+        .result-tag.purple {
+            border-color: #6c5ce7;
+            color: #6c5ce7;
+        }
+        .result-tag.purple:hover {
+            background: #6c5ce7;
+            color: white;
+        }
+
+        .result-tag.red {
+            border-color: #ff6b6b;
+            color: #ff6b6b;
+        }
+        .result-tag.red:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .result-tag.yellow {
+            border-color: #ffd700;
+            color: #ffd700;
+        }
+        .result-tag.yellow:hover {
+            background: #ffd700;
+            color: white;
+        }
+
+        .result-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .result-btn {
+            padding: 15px 30px;
+            border-radius: 60px;
+            font-size: 18px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .result-btn.share {
+            background: #f0f3fa;
+            color: #2d3a4a;
+        }
+
+        .result-btn.again {
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            color: white;
+        }
+
+        .result-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .result-btn.share:hover {
+            background: #e4e9f5;
+        }
+
+        .result-btn.again:hover {
+            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.3);
+        }
+
+        /* DESPEDIDA */
+        .farewell {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            border-top: 2px solid #f0f3fa;
+        }
+
+        .farewell p {
+            font-size: 16px;
+            color: #8a9bb0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .farewell i {
+            color: #ff6b6b;
+            animation: heartBeat 1.5s infinite;
+        }
+
+        @keyframes heartBeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        /* FOOTER - 4 BOTONES EN UNA SOLA FILA HORIZONTAL */
+        .footer-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 60px;
+            border: 1px solid #eeeff5;
+            margin-top: 20px;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .footer-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .footer-item::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3a4a;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            pointer-events: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-item:hover::after {
+            opacity: 1;
+            visibility: visible;
+            top: -45px;
+        }
+
+        .footer-item i {
+            font-size: 24px;
+        }
+
+        .footer-item span {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .footer-item.inicio {
+            background: #f0f3fa;
+            color: #6c5ce7;
+        }
+
+        .footer-item.mensaje {
+            background: linear-gradient(145deg, #6c5ce7, #8e6ce7);
+            color: white;
+        }
+
+        .footer-item.likes {
+            background: #ff4757;
+            color: white;
+        }
+
+        .footer-item.cuenta {
+            background: #2d3a4a;
+            color: white;
+        }
+
+        .footer-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* NOTIFICACIONES ELEGANTES ARRIBA */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            pointer-events: none;
+            width: auto;
+            max-width: 90%;
+        }
+
+        .notification {
+            background: white;
+            color: #1e2b3a;
+            padding: 16px 32px;
+            border-radius: 60px;
+            font-size: 18px;
+            font-weight: 500;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.3s ease;
+            pointer-events: none;
+        }
+
+        .notification i {
+            font-size: 24px;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .app-container {
+                padding: 20px;
+            }
+
+            .test-card {
+                padding: 25px;
+            }
+
+            .test-title {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .test-greeting {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .navigation-buttons {
+                flex-direction: column;
+            }
+
+            .nav-btn {
+                width: 100%;
+            }
+
+            .result-actions {
+                flex-direction: column;
+            }
+
+            .result-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .footer-nav {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .footer-item {
+                flex: 1 1 calc(50% - 8px);
+                min-width: 120px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .test-title h2 {
+                font-size: 24px;
+            }
+
+            .greeting-text h3 {
+                font-size: 20px;
+            }
+
+            .question-text {
+                font-size: 18px;
+            }
+
+            .option-item {
+                padding: 15px;
+            }
+
+            .result-title {
+                font-size: 28px;
+            }
+
+            .result-subtitle {
+                font-size: 20px;
+            }
+
+            .footer-item {
+                padding: 10px 12px;
+            }
+            
+            .footer-item i {
+                font-size: 20px;
+            }
+            
+            .footer-item span {
+                font-size: 14px;
+            }
+        }
+
+        /* Asegurar que Nivel y Boost siempre estén horizontales */
+        @media (max-width: 400px) {
+            .header-right {
+                flex-direction: row;
+                width: auto;
+            }
+            
+            .carisma-badge, .boost-btn {
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- CONTENEDOR DE NOTIFICACIONES ELEGANTES -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <div class="app-container">
+        <!-- HEADER CON DEGRADADO AZUL -->
+        <div class="header">
+            <div class="logo-container">
+                <i class="fas fa-star star-icon"></i>
+                <div class="logo">Amizi</div>
+            </div>
+            
+            <div class="header-right">
+                <div class="carisma-badge">
+                    <i class="fas fa-bolt"></i>
+                    Nivel <span class="carisma-num">72</span>
+                </div>
+                
+                <button class="boost-btn" id="btnBoost">
+                    <i class="fas fa-rocket"></i>
+                    Boost
+                </button>
+            </div>
+        </div>
+
+        <!-- POPULAR ROW -->
+        <div class="popular-row">
+            <div class="popular-tag">
+                <i class="fas fa-fire"></i>
+                <span>Test de Personalidad</span> · Conócete mejor
+            </div>
+            <div class="menu-icon">
+                <i class="fas fa-ellipsis-h"></i>
+            </div>
+        </div>
+
+        <!-- TARJETA DE TEST -->
+        <div class="test-card" id="testCard">
+            <!-- TÍTULO -->
+            <div class="test-title">
+                <i class="fas fa-vial"></i>
+                <h2>Test de Personalidad <span>Amizi</span></h2>
+            </div>
+
+            <!-- CONTENEDOR DINÁMICO -->
+            <div id="testContent"></div>
+        </div>
+
+        <!-- FOOTER CON 4 BOTONES EN UNA SOLA FILA HORIZONTAL Y TOOLTIPS -->
+        <div class="footer-nav">
+            <div class="footer-item inicio" id="btnInicio" data-tooltip="Ir al inicio">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </div>
+            
+            <div class="footer-item mensaje" id="btnMessage" data-tooltip="Ver mensajes">
+                <i class="fas fa-comment-dots"></i>
+                <span>Mensaje</span>
+            </div>
+            
+            <div class="footer-item likes" id="btnLikesFooter" data-tooltip="Mis likes">
+                <i class="fas fa-heart"></i>
+                <span id="footerLikesCount">156</span>
+            </div>
+            
+            <div class="footer-item cuenta" id="btnCuenta" data-tooltip="Mi perfil">
+                <i class="fas fa-user"></i>
+                <span>Cuenta</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos de botones
+            const btnBoost = document.getElementById('btnBoost');
+            const btnInicio = document.getElementById('btnInicio');
+            const btnMessage = document.getElementById('btnMessage');
+            const btnLikesFooter = document.getElementById('btnLikesFooter');
+            const btnCuenta = document.getElementById('btnCuenta');
+            
+            // Contenedor del test
+            const testContent = document.getElementById('testContent');
+            
+            // Estado del test
+            let currentStep = 'greeting';
+            let currentQuestion = 0;
+            let answers = [];
+            
+            // Preguntas del test
+            const questions = [
+                {
+                    text: "¿Cómo prefieres pasar tu tiempo libre?",
+                    options: [
+                        { text: "Con amigos, en actividades grupales", icon: "fa-users", color: "blue", value: "social" },
+                        { text: "Leyendo o viendo series solo", icon: "fa-book", color: "green", value: "inteligente" },
+                        { text: "Haciendo deporte o actividades al aire libre", icon: "fa-futbol", color: "orange", value: "aventurero" },
+                        { text: "Aprendiendo cosas nuevas o jugando videojuegos", icon: "fa-gamepad", color: "purple", value: "inteligente" }
+                    ]
+                },
+                {
+                    text: "¿Cómo te describirían tus amigos?",
+                    options: [
+                        { text: "Extrovertido, siempre animando el grupo", icon: "fa-star", color: "yellow", value: "social" },
+                        { text: "Leal, en quien pueden confiar", icon: "fa-shield-alt", color: "blue", value: "leal" },
+                        { text: "Divertido, con buen sentido del humor", icon: "fa-smile", color: "orange", value: "social" },
+                        { text: "Inteligente, con quien se puede hablar de todo", icon: "fa-brain", color: "purple", value: "inteligente" }
+                    ]
+                },
+                {
+                    text: "¿Qué es lo más importante en una amistad?",
+                    options: [
+                        { text: "Confianza y lealtad", icon: "fa-handshake", color: "green", value: "leal" },
+                        { text: "Diversión y buenos momentos", icon: "fa-party-horn", color: "orange", value: "social" },
+                        { text: "Apoyo en momentos difíciles", icon: "fa-heart", color: "red", value: "leal" },
+                        { text: "Intereses y hobbies en común", icon: "fa-heart", color: "purple", value: "equilibrado" }
+                    ]
+                },
+                {
+                    text: "¿Cómo reaccionas ante un conflicto con un amigo?",
+                    options: [
+                        { text: "Busco hablarlo de inmediato para resolverlo", icon: "fa-comments", color: "blue", value: "equilibrado" },
+                        { text: "Necesito tiempo para pensar antes de hablar", icon: "fa-clock", color: "green", value: "inteligente" },
+                        { text: "Pido ayuda a otros amigos para mediar", icon: "fa-users", color: "orange", value: "social" },
+                        { text: "Espero que el tiempo lo solucione", icon: "fa-hourglass", color: "purple", value: "leal" }
+                    ]
+                },
+                {
+                    text: "¿Qué tipo de planes prefieres?",
+                    options: [
+                        { text: "Fiestas y reuniones con mucha gente", icon: "fa-music", color: "yellow", value: "social" },
+                        { text: "Planes tranquilos con pocos amigos", icon: "fa-coffee", color: "green", value: "equilibrado" },
+                        { text: "Aventuras y actividades nuevas", icon: "fa-hiking", color: "orange", value: "aventurero" },
+                        { text: "Noches de películas o videojuegos", icon: "fa-tv", color: "purple", value: "inteligente" }
+                    ]
+                }
+            ];
+
+            // Resultados según puntuación
+            const resultados = {
+                inteligente: {
+                    titulo: "🧠 El Intelectual",
+                    subtitulo: "Mente brillante",
+                    icono: "fa-brain",
+                    color: "inteligente",
+                    descripcion: [
+                        "Tu mente es tu superpoder. Disfrutas aprendiendo, analizando situaciones y buscando conocimiento constantemente.",
+                        "En la amistad, valoras las conversaciones profundas y las personas que estimulan tu intelecto. No te conformas con lo superficial.",
+                        "Tienes una capacidad única para ver soluciones donde otros solo ven problemas. ¡Eres un genio en potencia!"
+                    ],
+                    tags: ["#Inteligente", "#Curioso", "#Analítico", "#Profundo", "#Sabio"]
+                },
+                social: {
+                    titulo: "🎉 El Alma de la Fiesta",
+                    subtitulo: "Carismático y divertido",
+                    icono: "fa-star",
+                    color: "social",
+                    descripcion: [
+                        "Eres el centro de atención dondequiera que vayas. Tu energía y carisma contagian a todos a tu alrededor.",
+                        "Haces amigos con facilidad porque sabes cómo hacer sentir bien a los demás. Tu sentido del humor es tu mejor arma.",
+                        "La gente busca tu compañía porque saben que contigo nunca hay un momento aburrido. ¡Ese es tu superpoder!"
+                    ],
+                    tags: ["#Social", "#Carismático", "#Divertido", "#Energía", "#Amigable"]
+                },
+                aventurero: {
+                    titulo: "🏃 El Aventurero",
+                    subtitulo: "Espíritu libre",
+                    icono: "fa-hiking",
+                    color: "aventurero",
+                    descripcion: [
+                        "La rutina no es lo tuyo. Siempre estás buscando nuevas experiencias y emociones fuertes.",
+                        "En la amistad, buscas compañeros de aventuras que se atrevan a salir de su zona de confort contigo.",
+                        "Tu espontaneidad y valentía inspiran a otros a vivir la vida al máximo. ¡Nunca dices que no a una aventura!"
+                    ],
+                    tags: ["#Aventurero", "#Espontáneo", "#Valiente", "#Energético", "#ViveLaVida"]
+                },
+                leal: {
+                    titulo: "🤝 El Leal",
+                    subtitulo: "Amigo incondicional",
+                    icono: "fa-handshake",
+                    color: "leal",
+                    descripcion: [
+                        "Eres el amigo que todos quieren tener. Cuando estableces un vínculo, es para siempre.",
+                        "Valoras la confianza por encima de todo y das todo por las personas que quieres. Tu lealtad no tiene límites.",
+                        "En los momentos difíciles, eres el primero en aparecer. Tu círculo cercano sabe que puede contar contigo pase lo que pase."
+                    ],
+                    tags: ["#Leal", "#Confiable", "#Incondicional", "#Protector", "#CorazónGrande"]
+                },
+                equilibrado: {
+                    titulo: "⚖️ El Equilibrado",
+                    subtitulo: "Maestro del balance",
+                    icono: "fa-balance-scale",
+                    color: "equilibrado",
+                    descripcion: [
+                        "Tienes la capacidad única de adaptarte a cualquier situación. Sabes cuándo ser serio y cuándo relajarte.",
+                        "En la amistad, eres ese amigo que da los mejores consejos porque ves todas las perspectivas.",
+                        "Tu equilibrio emocional te permite conectar con todo tipo de personas. Eres el pegamento que mantiene unidos a los grupos."
+                    ],
+                    tags: ["#Equilibrado", "#Sabio", "#Diplomático", "#Paciente", "#Comprensivo"]
+                }
+            };
+
+            // Función para mostrar notificaciones
+            function showNotification(icon, text, bgColor = '#ffffff', iconColor = '#6c5ce7') {
+                const container = document.getElementById('notificationContainer');
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.innerHTML = `<i class="${icon}" style="color: ${iconColor}"></i> ${text}`;
+                notification.style.background = bgColor;
+                
+                container.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.animation = 'fadeOut 0.3s ease';
+                    setTimeout(() => {
+                        container.removeChild(notification);
+                    }, 300);
+                }, 2500);
+            }
+
+            // Función para calcular resultado
+            function calcularResultado() {
+                const conteo = {
+                    inteligente: 0,
+                    social: 0,
+                    aventurero: 0,
+                    leal: 0,
+                    equilibrado: 0
+                };
+
+                answers.forEach(answerIndex => {
+                    const value = questions[answers.indexOf(answerIndex)].options[answerIndex].value;
+                    conteo[value]++;
+                });
+
+                // Encontrar el tipo con mayor puntuación
+                let maxTipo = 'equilibrado';
+                let maxValor = 0;
+
+                for (const [tipo, valor] of Object.entries(conteo)) {
+                    if (valor > maxValor) {
+                        maxValor = valor;
+                        maxTipo = tipo;
+                    }
+                }
+
+                return resultados[maxTipo];
+            }
+
+            // Renderizar saludo
+            function renderGreeting() {
+                testContent.innerHTML = `
+                    <div class="test-greeting">
+                        <div class="greeting-icon">
+                            <i class="fas fa-hand-wave"></i>
+                        </div>
+                        <div class="greeting-text">
+                            <h3>¡Hola! 👋</h3>
+                            <p>Vamos a conocerte un poco mejor. Este test de personalidad nos ayudará a encontrar amigos compatibles contigo. Son solo 5 preguntas rápidas.</p>
+                        </div>
+                    </div>
+                    <div class="navigation-buttons">
+                        <button class="nav-btn next" id="startTest">
+                            <i class="fas fa-play"></i>
+                            Comenzar Test
+                        </button>
+                    </div>
+                `;
+
+                document.getElementById('startTest').addEventListener('click', () => {
+                    currentStep = 'questions';
+                    currentQuestion = 0;
+                    answers = [];
+                    renderQuestion();
+                });
+            }
+
+            // Renderizar pregunta
+            function renderQuestion() {
+                const question = questions[currentQuestion];
+                const progress = ((currentQuestion + 1) / questions.length) * 100;
+                
+                let optionsHtml = '';
+                question.options.forEach((option, index) => {
+                    const isSelected = answers[currentQuestion] === index;
+                    optionsHtml += `
+                        <div class="option-item ${isSelected ? 'selected' : ''}" data-option="${index}">
+                            <div class="option-icon ${option.color}">
+                                <i class="fas ${option.icon}"></i>
+                            </div>
+                            <div class="option-text">${option.text}</div>
+                        </div>
+                    `;
+                });
+
+                testContent.innerHTML = `
+                    <div class="test-progress">
+                        <div class="progress-info">
+                            <span class="current">Pregunta ${currentQuestion + 1} de ${questions.length}</span>
+                            <span>${Math.round(progress)}% completado</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${progress}%"></div>
+                        </div>
+                    </div>
+                    <div class="question-container">
+                        <div class="question-number">Pregunta ${currentQuestion + 1}</div>
+                        <div class="question-text">${question.text}</div>
+                        <div class="options-grid" id="optionsGrid">
+                            ${optionsHtml}
+                        </div>
+                    </div>
+                    <div class="navigation-buttons">
+                        ${currentQuestion > 0 ? '<button class="nav-btn prev" id="prevQuestion"><i class="fas fa-arrow-left"></i> Anterior</button>' : ''}
+                        <button class="nav-btn ${currentQuestion === questions.length - 1 ? 'finish' : 'next'}" id="nextQuestion">
+                            ${currentQuestion === questions.length - 1 ? '<i class="fas fa-check-circle"></i> Finalizar' : '<i class="fas fa-arrow-right"></i> Siguiente'}
+                        </button>
+                    </div>
+                `;
+
+                // Agregar eventos a las opciones
+                document.querySelectorAll('.option-item').forEach(option => {
+                    option.addEventListener('click', function() {
+                        const optionIndex = parseInt(this.dataset.option);
+                        answers[currentQuestion] = optionIndex;
+                        
+                        document.querySelectorAll('.option-item').forEach(opt => {
+                            opt.classList.remove('selected');
+                        });
+                        
+                        this.classList.add('selected');
+                    });
+                });
+
+                if (currentQuestion > 0) {
+                    document.getElementById('prevQuestion').addEventListener('click', () => {
+                        currentQuestion--;
+                        renderQuestion();
+                    });
+                }
+
+                document.getElementById('nextQuestion').addEventListener('click', () => {
+                    if (answers[currentQuestion] === undefined) {
+                        showNotification('fas fa-exclamation-circle', '❓ Por favor selecciona una opción', '#ff6b6b', 'white');
+                        return;
+                    }
+
+                    if (currentQuestion < questions.length - 1) {
+                        currentQuestion++;
+                        renderQuestion();
+                    } else {
+                        renderResult();
+                    }
+                });
+            }
+
+            // Renderizar resultado
+            function renderResult() {
+                const resultado = calcularResultado();
+                
+                let tagsHtml = '';
+                resultado.tags.forEach(tag => {
+                    const color = tag.includes('Inteligente') ? 'blue' :
+                                 tag.includes('Social') || tag.includes('Carismático') ? 'yellow' :
+                                 tag.includes('Aventurero') ? 'green' :
+                                 tag.includes('Leal') ? 'purple' : 'red';
+                    tagsHtml += `<span class="result-tag ${color}">${tag}</span>`;
+                });
+
+                let descripcionHtml = '';
+                resultado.descripcion.forEach(parrafo => {
+                    descripcionHtml += `<p>${parrafo}</p>`;
+                });
+
+                testContent.innerHTML = `
+                    <div class="result-container">
+                        <div class="result-icon">
+                            <i class="fas ${resultado.icono}" style="color: ${resultado.color === 'inteligente' ? '#4a90e2' : resultado.color === 'social' ? '#ffd700' : resultado.color === 'aventurero' ? '#2ecc71' : resultado.color === 'leal' ? '#6c5ce7' : '#ff6b6b'}"></i>
+                        </div>
+                        <h3 class="result-title">${resultado.titulo}</h3>
+                        <div class="result-subtitle ${resultado.color}">${resultado.subtitulo}</div>
+                        
+                        <div class="result-description">
+                            ${descripcionHtml}
+                        </div>
+
+                        <div class="result-tags">
+                            ${tagsHtml}
+                        </div>
+
+                        <div class="result-actions">
+                            <button class="result-btn share" id="shareResult">
+                                <i class="fas fa-share-alt"></i>
+                                Compartir
+                            </button>
+                            <button class="result-btn again" id="doAgain">
+                                <i class="fas fa-redo-alt"></i>
+                                Hacer de nuevo
+                            </button>
+                        </div>
+                    </div>
+                    <div class="farewell">
+                        <p><i class="fas fa-heart"></i> Gracias por conocerte mejor con Amizi <i class="fas fa-heart"></i></p>
+                    </div>
+                `;
+
+                document.getElementById('shareResult').addEventListener('click', () => {
+                    showNotification('fas fa-share-alt', '📤 Resultado compartido', '#4a90e2', 'white');
+                });
+
+                document.getElementById('doAgain').addEventListener('click', () => {
+                    currentStep = 'greeting';
+                    renderGreeting();
+                });
+            }
+
+            // Renderizar saludo inicial
+            renderGreeting();
+
+            // Botón Boost
+            btnBoost.addEventListener('click', function() {
+                btnBoost.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    btnBoost.style.transform = 'scale(1)';
+                }, 200);
+                showNotification('fas fa-rocket', '🚀 Boost activado! +50 visibilidad', '#6c5ce7', 'white');
+            });
+
+            // Botón Inicio
+            btnInicio.addEventListener('click', function() {
+                window.location.href = 'principal.html';
+            });
+
+            // Botón Mensaje
+            btnMessage.addEventListener('click', function() {
+                showNotification('fas fa-comment-dots', '📬 Buzón de mensajes', '#6c5ce7', 'white');
+            });
+
+            // Botón Likes en footer
+            btnLikesFooter.addEventListener('click', function() {
+                btnLikesFooter.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    btnLikesFooter.style.transform = 'scale(1)';
+                }, 200);
+                showNotification('fas fa-heart', '❤️ Tus likes', '#ff4757', 'white');
+            });
+
+            // Botón Cuenta
+            btnCuenta.addEventListener('click', function() {
+                window.location.href = 'cuenta.html';
+            });
+        });
+
+           // ============================================
+// ACTIVAR BOTÓN BOOST
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    const btnBoost = document.getElementById('btnBoost');
+    
+    if (btnBoost) {
+        btnBoost.addEventListener('click', function() {
+            // Animación del botón
+            this.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+            
+            // Verificar si el modal de Boost está disponible
+            if (typeof mostrarModalBoost === 'function') {
+                mostrarModalBoost();
+            } else {
+                console.warn('Modal de Boost no disponible');
+                // Fallback: mostrar notificación si existe
+                if (typeof showNotification === 'function') {
+                    showNotification('fas fa-rocket', '🚀 Función de Boost próximamente', '#ff6b6b', 'white');
+                }
+            }
+        });
+    }
+});
+    </script>
+</body>
+</html>

@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Amizi · Registrarse</title>
+    <!-- Font Awesome para iconos más lindos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #f0f3fa 0%, #f8f9ff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Fondo con elementos decorativos */
+        .bg-decoration {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(145deg, rgba(108, 92, 231, 0.1), rgba(163, 99, 217, 0.1));
+            filter: blur(60px);
+        }
+
+        .circle1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            left: -100px;
+        }
+
+        .circle2 {
+            width: 400px;
+            height: 400px;
+            bottom: -150px;
+            right: -150px;
+            background: linear-gradient(145deg, rgba(74, 144, 226, 0.1), rgba(108, 92, 231, 0.1));
+        }
+
+        /* CONTENEDOR PRINCIPAL */
+        .register-container {
+            max-width: 1100px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 70px;
+            box-shadow: 0 40px 100px rgba(74, 144, 226, 0.2);
+            overflow: hidden;
+            padding: 40px 50px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ESTRELLA ANIMADA */
+        .star-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .animated-star {
+            position: relative;
+            width: 80px;
+            height: 80px;
+            animation: starPulse 2s ease-in-out;
+        }
+
+        @keyframes starPulse {
+            0% {
+                transform: scale(0.5);
+                opacity: 0.3;
+                filter: drop-shadow(0 0 0 rgba(255, 215, 0, 0));
+            }
+            30% {
+                transform: scale(1.3);
+                opacity: 1;
+                filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8));
+            }
+            60% {
+                transform: scale(1);
+                opacity: 1;
+                filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+                filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+            }
+        }
+
+        .animated-star i {
+            font-size: 60px;
+            color: #ffd700;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+            animation: starGlow 3s infinite;
+        }
+
+        @keyframes starGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8));
+            }
+        }
+
+        /* TÍTULO PRINCIPAL */
+        .title-section {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .main-title {
+            font-size: 60px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7, #a363d9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
+            text-shadow: 0 5px 20px rgba(108, 92, 231, 0.3);
+        }
+
+        .subtitle {
+            font-size: 18px;
+            color: #5a6b7c;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 6px 20px;
+            border-radius: 60px;
+            display: inline-block;
+            backdrop-filter: blur(5px);
+        }
+
+        /* TÍTULO DE REGISTRO */
+        .register-title {
+            text-align: center;
+            margin: 15px 0 25px;
+            font-size: 30px;
+            font-weight: 700;
+            color: #1e2b3a;
+        }
+
+        .register-title i {
+            color: #ffd700;
+            margin-right: 10px;
+        }
+
+        .register-title span {
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            color: white;
+            padding: 5px 18px;
+            border-radius: 60px;
+            margin-left: 10px;
+            font-size: 22px;
+        }
+
+        /* FORMULARIO DE REGISTRO */
+        .register-form {
+            max-width: 900px;
+            margin: 0 auto 30px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .input-group {
+            margin-bottom: 5px;
+        }
+
+        .input-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3a4a;
+        }
+
+        .input-label i {
+            color: #4a90e2;
+            font-size: 18px;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 14px 20px;
+            border-radius: 50px;
+            border: 2px solid #e4e4f0;
+            background: white;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .input-field:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+        }
+
+        .input-field::placeholder {
+            color: #8a9bb0;
+            font-size: 14px;
+        }
+
+        select.input-field {
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238a9bb0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 20px center;
+            background-size: 16px;
+        }
+
+        textarea.input-field {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .password-wrapper {
+            position: relative;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: #8a9bb0;
+            cursor: pointer;
+            font-size: 18px;
+            transition: color 0.2s;
+        }
+
+        .toggle-password:hover {
+            color: #4a90e2;
+        }
+
+        /* BOTONES DE ACCIÓN */
+        .register-actions {
+            display: flex;
+            gap: 20px;
+            margin: 30px 0 20px;
+            justify-content: center;
+        }
+
+        .btn-primary {
+            flex: 1;
+            max-width: 250px;
+            padding: 16px 30px;
+            border-radius: 60px;
+            font-size: 20px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            border: none;
+            position: relative;
+        }
+
+        .btn-primary.registrarse {
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            color: white;
+            box-shadow: 0 15px 30px rgba(74, 144, 226, 0.3);
+        }
+
+        .btn-primary.cancelar {
+            background: #f0f3fa;
+            color: #2d3a4a;
+            border: 2px solid #e4e4f0;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+        }
+
+        .btn-primary.registrarse:hover {
+            box-shadow: 0 20px 40px rgba(74, 144, 226, 0.4);
+        }
+
+        .btn-primary.cancelar:hover {
+            background: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b;
+        }
+
+        .btn-primary i {
+            font-size: 20px;
+        }
+
+        /* TOOLTIPS */
+        .btn-primary::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3a4a;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            margin-top: 8px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .btn-primary:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* FOOTER */
+        .landing-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 2px solid rgba(108, 92, 231, 0.1);
+            color: #5a6b7c;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            flex-wrap: wrap;
+        }
+
+        .support-badge {
+            background: #f0f3fa;
+            border-radius: 60px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #e4e4f0;
+            position: relative;
+        }
+
+        .support-badge::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3a4a;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 30px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            margin-top: 6px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .support-badge:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .support-badge:hover {
+            background: linear-gradient(145deg, #ff6b6b, #ff8e8e);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .support-badge:hover i,
+        .support-badge:hover span {
+            color: white;
+        }
+
+        .support-badge i {
+            color: #ff6b6b;
+            font-size: 16px;
+            transition: color 0.2s;
+        }
+
+        .support-badge span {
+            color: #2d3a4a;
+            font-weight: 600;
+            font-size: 14px;
+            transition: color 0.2s;
+        }
+
+        .support-badge .email {
+            color: #4a90e2;
+            font-weight: 700;
+            margin-left: 3px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links span {
+            cursor: pointer;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .footer-links span::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3a4a;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 30px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            margin-top: 6px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .footer-links span:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .footer-links span:hover {
+            color: #6c5ce7;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 12px;
+        }
+
+        .social-icons i {
+            font-size: 20px;
+            color: #8a9bb0;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        .social-icons i::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3a4a;
+            color: white;
+            padding: 5px 10px;
+            border-radius: 30px;
+            font-size: 11px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            margin-top: 6px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .social-icons i:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .social-icons i:hover {
+            color: #6c5ce7;
+            transform: translateY(-2px);
+        }
+
+        /* MODAL DE SOPORTE */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-correo {
+            background: white;
+            border-radius: 60px;
+            padding: 35px;
+            max-width: 400px;
+            width: 90%;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-correo {
+            transform: scale(1);
+        }
+
+        .modal-correo i {
+            font-size: 50px;
+            color: #ff6b6b;
+            margin-bottom: 15px;
+        }
+
+        .modal-correo h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e2b3a;
+            margin-bottom: 12px;
+        }
+
+        .modal-correo p {
+            font-size: 16px;
+            color: #5a6b7c;
+            margin-bottom: 20px;
+            line-height: 1.4;
+        }
+
+        .modal-correo .email-highlight {
+            background: #f0f3fa;
+            padding: 12px;
+            border-radius: 40px;
+            font-size: 18px;
+            font-weight: 700;
+            color: #4a90e2;
+            margin-bottom: 20px;
+            border: 1px solid #e4e4f0;
+        }
+
+        .modal-correo .btn-cerrar {
+            background: linear-gradient(145deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-correo .btn-cerrar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .register-container {
+                padding: 30px 30px;
+            }
+
+            .main-title {
+                font-size: 50px;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+                gap: 15px;
+            }
+
+            .register-actions {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .btn-primary {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .landing-footer {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-left {
+                justify-content: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .register-container {
+                padding: 20px 20px;
+            }
+
+            .main-title {
+                font-size: 40px;
+            }
+
+            .register-title {
+                font-size: 24px;
+            }
+
+            .register-title span {
+                font-size: 18px;
+            }
+
+            .animated-star i {
+                font-size: 50px;
+            }
+
+            .input-field {
+                padding: 12px 16px;
+                font-size: 14px;
+            }
+
+            .btn-primary {
+                padding: 14px 25px;
+                font-size: 18px;
+            }
+
+            .footer-left {
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .support-badge {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Efecto de partículas */
+        .particle {
+            position: absolute;
+            width: 5px;
+            height: 5px;
+            background: #ffd700;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 3s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-15px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fondo decorativo -->
+    <div class="bg-decoration">
+        <div class="bg-circle circle1"></div>
+        <div class="bg-circle circle2"></div>
+    </div>
+
+    <!-- Partículas (estrellas pequeñas) -->
+    <div class="particle" style="top: 15%; left: 8%;"></div>
+    <div class="particle" style="top: 75%; right: 12%; width: 7px; height: 7px; animation-delay: 0.5s;"></div>
+    <div class="particle" style="top: 45%; right: 18%; width: 4px; height: 4px; animation-delay: 1s;"></div>
+    <div class="particle" style="bottom: 25%; left: 15%; width: 8px; height: 8px; animation-delay: 1.5s;"></div>
+
+    <!-- MODAL DE SOPORTE -->
+    <div class="modal-overlay" id="modalSoporte">
+        <div class="modal-correo">
+            <i class="fas fa-headset"></i>
+            <h3>Soporte Amizi</h3>
+            <p>¿Necesitas ayuda? Escríbenos y te responderemos a la brevedad</p>
+            <div class="email-highlight">
+                <i class="fas fa-envelope" style="margin-right: 8px;"></i> amizi@gmail.com
+            </div>
+            <button class="btn-cerrar" id="btnCerrarSoporte">Entendido</button>
+        </div>
+    </div>
+
+    <div class="register-container">
+        <!-- ESTRELLA ANIMADA -->
+        <div class="star-container">
+            <div class="animated-star">
+                <i class="fas fa-star"></i>
+            </div>
+        </div>
+
+        <!-- TÍTULO PRINCIPAL -->
+        <div class="title-section">
+            <h1 class="main-title">Amizi</h1>
+            <div class="subtitle">
+                <i class="fas fa-heart" style="color: #ff4757; margin-right: 8px;"></i>
+                Conoce amigos, comparte momentos
+            </div>
+        </div>
+
+        <!-- TÍTULO DE REGISTRO -->
+        <div class="register-title">
+            <i class="fas fa-user-plus"></i>
+            Crear Cuenta <span>Amizi</span>
+        </div>
+
+        <!-- FORMULARIO DE REGISTRO -->
+        <div class="register-form">
+            <div class="form-row">
+                <div class="input-group">
+                    <div class="input-label">
+                        <i class="fas fa-user"></i>
+                        <span>Nombre</span>
+                    </div>
+                    <input type="text" class="input-field" placeholder="Ej: Laura">
+                </div>
+                <div class="input-group">
+                    <div class="input-label">
+                        <i class="fas fa-user-friends"></i>
+                        <span>Apellidos</span>
+                    </div>
+                    <input type="text" class="input-field" placeholder="Ej: González Pérez">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="input-group">
+                    <div class="input-label">
+                        <i class="fas fa-calendar-alt"></i>
+                        <span>Edad</span>
+                    </div>
+                    <input type="number" class="input-field" placeholder="Ej: 25" min="18" max="99">
+                </div>
+                <div class="input-group">
+                    <div class="input-label">
+                        <i class="fas fa-venus-mars"></i>
+                        <span>Género</span>
+                    </div>
+                    <select class="input-field">
+                        <option value="" disabled selected>Selecciona una opción</option>
+                        <option value="femenino">Femenino</option>
+                        <option value="masculino">Masculino</option>
+                        <option value="otro">Otro</option>
+                        <option value="prefiero-no">Prefiero no decirlo</option>
+                    </select>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="input-group">
+                    <div class="input-label">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <span>Ciudad de residencia</span>
+                    </div>
+                    <input type="text" class="input-field" placeholder="Ej: Bogotá, Medellín, Cali...">
+                </div>
+                <div class="input-group">
+                    <div class="input-label">
+                        <i class="fas fa-briefcase"></i>
+                        <span>Trabajo / Estudio</span>
+                    </div>
+                    <input type="text" class="input-field" placeholder="Ej: Estudiante, Ingeniero, Doctor...">
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="input-group" style="grid-column: 1 / -1;">
+                    <div class="input-label">
+                        <i class="fas fa-align-left"></i>
+                        <span>Descripción personal</span>
+                    </div>
+                    <textarea class="input-field" placeholder="Cuéntanos sobre ti, tus hobbies, intereses..."></textarea>
+                </div>
+            </div>
+
+            <div class="form-row">
+                <div class="input-group">
+                    <div class="input-label">
+                        <i class="fas fa-lock"></i>
+                        <span>Contraseña</span>
+                    </div>
+                    <div class="password-wrapper">
+                        <input type="password" class="input-field" id="passwordField" placeholder="Mínimo 8 caracteres">
+                        <button class="toggle-password" id="togglePassword">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="input-group">
+                    <div class="input-label">
+                        <i class="fas fa-check-circle"></i>
+                        <span>Confirmar contraseña</span>
+                    </div>
+                    <div class="password-wrapper">
+                        <input type="password" class="input-field" id="confirmPasswordField" placeholder="Repite tu contraseña">
+                        <button class="toggle-password" id="toggleConfirmPassword">
+                            <i class="far fa-eye"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="register-actions">
+                <button class="btn-primary registrarse" id="btnRegistrarse" data-tooltip="Crear tu cuenta en Amizi">
+                    <i class="fas fa-user-plus"></i>
+                    Registrarse
+                </button>
+                <button class="btn-primary cancelar" id="btnCancelar" data-tooltip="Volver al inicio">
+                    <i class="fas fa-times"></i>
+                    Cancelar
+                </button>
+            </div>
+        </div>
+
+        <!-- FOOTER CON SOPORTE -->
+        <div class="landing-footer">
+            <div class="footer-left">
+                <!-- Soporte con tooltip -->
+                <div class="support-badge" id="btnAbrirSoporte" data-tooltip="Contactar al soporte">
+                    <i class="fas fa-headset"></i>
+                    <span>Soporte <span class="email">amizi@gmail.com</span></span>
+                </div>
+            </div>
+
+            <div class="footer-links">
+                <span data-tooltip="Preguntas frecuentes"><i class="fas fa-question-circle"></i> FAQ</span>
+                <span data-tooltip="Políticas de privacidad"><i class="fas fa-shield-alt"></i> Privacidad</span>
+                <span data-tooltip="Términos y condiciones"><i class="fas fa-file-alt"></i> Términos</span>
+            </div>
+
+            <div class="social-icons">
+                <i class="fab fa-instagram" data-tooltip="Instagram"></i>
+                <i class="fab fa-twitter" data-tooltip="Twitter"></i>
+                <i class="fab fa-tiktok" data-tooltip="TikTok"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos del formulario
+            const btnRegistrarse = document.getElementById('btnRegistrarse');
+            const btnCancelar = document.getElementById('btnCancelar');
+            
+            // Toggle contraseñas
+            const togglePassword = document.getElementById('togglePassword');
+            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
+            const passwordField = document.getElementById('passwordField');
+            const confirmPasswordField = document.getElementById('confirmPasswordField');
+            
+            // Modal de soporte
+            const modalSoporte = document.getElementById('modalSoporte');
+            const btnAbrirSoporte = document.getElementById('btnAbrirSoporte');
+            const btnCerrarSoporte = document.getElementById('btnCerrarSoporte');
+
+            // Función para mostrar notificaciones elegantes
+            function showNotification(text, color) {
+                const notification = document.createElement('div');
+                notification.textContent = text;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: ${color};
+                    color: white;
+                    padding: 14px 28px;
+                    border-radius: 60px;
+                    font-size: 16px;
+                    z-index: 9999;
+                    animation: slideDown 0.3s ease;
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+                    border: 1px solid rgba(255,255,255,0.2);
+                    font-weight: 500;
+                    text-align: center;
+                    max-width: 90%;
+                    white-space: nowrap;
+                `;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.animation = 'fadeOut 0.3s ease';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 2500);
+            }
+
+            // Añadir estilos de animación
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideDown {
+                    from {
+                        opacity: 0;
+                        transform: translate(-50%, -30px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translate(-50%, 0);
+                    }
+                }
+                
+                @keyframes fadeOut {
+                    from {
+                        opacity: 1;
+                        transform: translate(-50%, 0);
+                    }
+                    to {
+                        opacity: 0;
+                        transform: translate(-50%, -30px);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+
+            // Event listener para registrarse
+            btnRegistrarse.addEventListener('click', function() {
+                // Validación básica
+                if (passwordField.value !== confirmPasswordField.value) {
+                    showNotification('❌ Las contraseñas no coinciden', '#ff6b6b');
+                    return;
+                }
+                
+                if (passwordField.value.length < 8 && passwordField.value.length > 0) {
+                    showNotification('⚠️ La contraseña debe tener al menos 8 caracteres', '#ff6b6b');
+                    return;
+                }
+
+                showNotification('✨ Creando tu cuenta en Amizi...', '#4a90e2');
+                // Aquí iría la lógica de registro
+                setTimeout(() => {
+                    window.location.href = 'index.html'; // Redirige al index después del registro simulado
+                }, 1500);
+            });
+
+            // Event listener para cancelar
+            btnCancelar.addEventListener('click', function() {
+                showNotification('👋 Registro cancelado', '#2d3a4a');
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 1000);
+            });
+
+            // Toggle mostrar/ocultar contraseña
+            togglePassword.addEventListener('click', function() {
+                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordField.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="far fa-eye"></i>' : '<i class="far fa-eye-slash"></i>';
+            });
+
+            toggleConfirmPassword.addEventListener('click', function() {
+                const type = confirmPasswordField.getAttribute('type') === 'password' ? 'text' : 'password';
+                confirmPasswordField.setAttribute('type', type);
+                this.innerHTML = type === 'password' ? '<i class="far fa-eye"></i>' : '<i class="far fa-eye-slash"></i>';
+            });
+
+            // Abrir modal de soporte
+            btnAbrirSoporte.addEventListener('click', function() {
+                modalSoporte.classList.add('active');
+            });
+
+            // Cerrar modal de soporte
+            btnCerrarSoporte.addEventListener('click', function() {
+                modalSoporte.classList.remove('active');
+            });
+
+            // Cerrar modal al hacer clic fuera
+            modalSoporte.addEventListener('click', function(e) {
+                if (e.target === modalSoporte) {
+                    modalSoporte.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>

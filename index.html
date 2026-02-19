@@ -1,0 +1,827 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Amizi · Conoce amigos</title>
+    <!-- Font Awesome para iconos más lindos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            min-height: 100vh;
+            background: linear-gradient(145deg, #f0f3fa 0%, #f8f9ff 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+        }
+
+        /* Fondo con elementos decorativos */
+        .bg-decoration {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            z-index: 0;
+        }
+
+        .bg-circle {
+            position: absolute;
+            border-radius: 50%;
+            background: linear-gradient(145deg, rgba(108, 92, 231, 0.1), rgba(163, 99, 217, 0.1));
+            filter: blur(60px);
+        }
+
+        .circle1 {
+            width: 300px;
+            height: 300px;
+            top: -100px;
+            left: -100px;
+        }
+
+        .circle2 {
+            width: 400px;
+            height: 400px;
+            bottom: -150px;
+            right: -150px;
+            background: linear-gradient(145deg, rgba(74, 144, 226, 0.1), rgba(108, 92, 231, 0.1));
+        }
+
+        /* CONTENEDOR PRINCIPAL */
+        .landing-container {
+            max-width: 1000px;
+            width: 100%;
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(10px);
+            border-radius: 70px;
+            box-shadow: 0 40px 100px rgba(74, 144, 226, 0.2);
+            overflow: hidden;
+            padding: 50px 60px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            position: relative;
+            z-index: 1;
+            animation: fadeIn 0.8s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        /* ESTRELLA ANIMADA */
+        .star-container {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 15px;
+        }
+
+        .animated-star {
+            position: relative;
+            width: 90px;
+            height: 90px;
+            animation: starPulse 2s ease-in-out;
+        }
+
+        @keyframes starPulse {
+            0% {
+                transform: scale(0.5);
+                opacity: 0.3;
+                filter: drop-shadow(0 0 0 rgba(255, 215, 0, 0));
+            }
+            30% {
+                transform: scale(1.3);
+                opacity: 1;
+                filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8));
+            }
+            60% {
+                transform: scale(1);
+                opacity: 1;
+                filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+            }
+            100% {
+                transform: scale(1);
+                opacity: 1;
+                filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
+            }
+        }
+
+        .animated-star i {
+            font-size: 70px;
+            color: #ffd700;
+            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+            animation: starGlow 3s infinite;
+        }
+
+        @keyframes starGlow {
+            0%, 100% {
+                filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
+            }
+            50% {
+                filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8));
+            }
+        }
+
+        /* TÍTULO PRINCIPAL */
+        .title-section {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .main-title {
+            font-size: 70px;
+            font-weight: 800;
+            margin-bottom: 5px;
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7, #a363d9);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -2px;
+            text-shadow: 0 5px 20px rgba(108, 92, 231, 0.3);
+        }
+
+        .subtitle {
+            font-size: 20px;
+            color: #5a6b7c;
+            font-weight: 500;
+            background: rgba(255, 255, 255, 0.5);
+            padding: 8px 25px;
+            border-radius: 60px;
+            display: inline-block;
+            backdrop-filter: blur(5px);
+        }
+
+        /* SALUDO */
+        .greeting {
+            text-align: center;
+            margin: 20px 0 30px;
+            font-size: 24px;
+            color: #4a5b6e;
+            background: rgba(255, 255, 255, 0.6);
+            padding: 15px;
+            border-radius: 60px;
+            border: 1px solid rgba(108, 92, 231, 0.2);
+        }
+
+        .greeting i {
+            color: #ffd700;
+            margin: 0 10px;
+        }
+
+        .greeting span {
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 40px;
+            margin-left: 10px;
+            font-weight: 600;
+        }
+
+        /* BOTONES PRINCIPALES */
+        .bottom-buttons {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin: 30px 0 40px;
+            flex-wrap: wrap;
+        }
+
+        .bottom-btn {
+            padding: 20px 50px;
+            border-radius: 60px;
+            font-size: 22px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.08);
+            min-width: 240px;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* TOOLTIPS - para botones principales */
+        .bottom-btn::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3a4a;
+            color: white;
+            padding: 8px 15px;
+            border-radius: 40px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            margin-bottom: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .bottom-btn:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .bottom-btn.iniciar-sesion {
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            color: white;
+        }
+
+        .bottom-btn.registrarse {
+            background: white;
+            color: #4a90e2;
+            border: 2px solid #4a90e2;
+        }
+
+        .bottom-btn.cambiar-pass {
+            background: #f0f3fa;
+            color: #2d3a4a;
+        }
+
+        .bottom-btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(74, 144, 226, 0.25);
+        }
+
+        .bottom-btn i {
+            font-size: 24px;
+        }
+
+        /* FOOTER */
+        .landing-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 25px;
+            border-top: 2px solid rgba(108, 92, 231, 0.1);
+            color: #5a6b7c;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .footer-left {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            flex-wrap: wrap;
+        }
+
+        .support-badge {
+            background: #f0f3fa;
+            border-radius: 60px;
+            padding: 10px 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid #e4e4f0;
+            position: relative;
+        }
+
+        /* TOOLTIP para soporte */
+        .support-badge::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3a4a;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            margin-top: 8px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .support-badge:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .support-badge:hover {
+            background: linear-gradient(145deg, #ff6b6b, #ff8e8e);
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        .support-badge:hover i,
+        .support-badge:hover span {
+            color: white;
+        }
+
+        .support-badge i {
+            color: #ff6b6b;
+            font-size: 18px;
+            transition: color 0.2s;
+        }
+
+        .support-badge span {
+            color: #2d3a4a;
+            font-weight: 600;
+            font-size: 15px;
+            transition: color 0.2s;
+        }
+
+        .support-badge .email {
+            color: #4a90e2;
+            font-weight: 700;
+            margin-left: 5px;
+        }
+
+        .footer-links {
+            display: flex;
+            gap: 25px;
+            flex-wrap: wrap;
+        }
+
+        .footer-links span {
+            cursor: pointer;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 15px;
+            position: relative;
+        }
+
+        /* TOOLTIPS para footer links */
+        .footer-links span::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3a4a;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            margin-top: 8px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .footer-links span:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .footer-links span:hover {
+            color: #6c5ce7;
+        }
+
+        .social-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .social-icons i {
+            font-size: 22px;
+            color: #8a9bb0;
+            cursor: pointer;
+            transition: all 0.2s;
+            position: relative;
+        }
+
+        /* TOOLTIPS para redes sociales */
+        .social-icons i::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3a4a;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s;
+            margin-top: 8px;
+            z-index: 100;
+            pointer-events: none;
+        }
+
+        .social-icons i:hover::after {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .social-icons i:hover {
+            color: #6c5ce7;
+            transform: translateY(-2px);
+        }
+
+        /* MODAL DE SOPORTE */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-correo {
+            background: white;
+            border-radius: 60px;
+            padding: 40px;
+            max-width: 450px;
+            width: 90%;
+            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.8);
+            text-align: center;
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.active .modal-correo {
+            transform: scale(1);
+        }
+
+        .modal-correo i {
+            font-size: 60px;
+            color: #ff6b6b;
+            margin-bottom: 20px;
+        }
+
+        .modal-correo h3 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e2b3a;
+            margin-bottom: 15px;
+        }
+
+        .modal-correo p {
+            font-size: 18px;
+            color: #5a6b7c;
+            margin-bottom: 25px;
+            line-height: 1.5;
+        }
+
+        .modal-correo .email-highlight {
+            background: #f0f3fa;
+            padding: 15px;
+            border-radius: 40px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #4a90e2;
+            margin-bottom: 25px;
+            border: 1px solid #e4e4f0;
+        }
+
+        .modal-correo .btn-cerrar {
+            background: linear-gradient(145deg, #ff6b6b, #ff8e8e);
+            color: white;
+            border: none;
+            border-radius: 60px;
+            padding: 15px 40px;
+            font-size: 18px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-correo .btn-cerrar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        /* RESPONSIVE ORIGINAL */
+        @media (max-width: 900px) {
+            .landing-container {
+                padding: 30px 30px;
+            }
+
+            .main-title {
+                font-size: 50px;
+            }
+
+            .bottom-buttons {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .bottom-btn {
+                width: 100%;
+                max-width: 350px;
+            }
+
+            .landing-footer {
+                flex-direction: column;
+                align-items: center;
+                text-align: center;
+            }
+
+            .footer-left {
+                justify-content: center;
+            }
+
+            .footer-links {
+                justify-content: center;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .landing-container {
+                padding: 25px 20px;
+            }
+
+            .main-title {
+                font-size: 40px;
+            }
+
+            .greeting {
+                font-size: 18px;
+            }
+
+            .subtitle {
+                font-size: 16px;
+            }
+
+            .animated-star i {
+                font-size: 60px;
+            }
+
+            .bottom-btn {
+                padding: 15px 30px;
+                font-size: 18px;
+                min-width: auto;
+            }
+
+            .footer-left {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .support-badge {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+
+        /* Efecto de partículas */
+        .particle {
+            position: absolute;
+            width: 6px;
+            height: 6px;
+            background: #ffd700;
+            border-radius: 50%;
+            opacity: 0.3;
+            animation: float 3s infinite;
+        }
+
+        @keyframes float {
+            0%, 100% {
+                transform: translateY(0);
+            }
+            50% {
+                transform: translateY(-20px);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Fondo decorativo -->
+    <div class="bg-decoration">
+        <div class="bg-circle circle1"></div>
+        <div class="bg-circle circle2"></div>
+    </div>
+
+    <!-- Partículas (estrellas pequeñas) -->
+    <div class="particle" style="top: 20%; left: 10%;"></div>
+    <div class="particle" style="top: 80%; right: 15%; width: 8px; height: 8px; animation-delay: 0.5s;"></div>
+    <div class="particle" style="top: 40%; right: 20%; width: 4px; height: 4px; animation-delay: 1s;"></div>
+    <div class="particle" style="bottom: 30%; left: 20%; width: 10px; height: 10px; animation-delay: 1.5s;"></div>
+
+    <!-- MODAL DE SOPORTE -->
+    <div class="modal-overlay" id="modalSoporte">
+        <div class="modal-correo">
+            <i class="fas fa-headset"></i>
+            <h3>Soporte Amizi</h3>
+            <p>¿Necesitas ayuda? Escríbenos y te responderemos a la brevedad</p>
+            <div class="email-highlight">
+                <i class="fas fa-envelope" style="margin-right: 10px;"></i> amizi@gmail.com
+            </div>
+            <button class="btn-cerrar" id="btnCerrarSoporte">Entendido</button>
+        </div>
+    </div>
+
+    <div class="landing-container">
+        <!-- ESTRELLA ANIMADA -->
+        <div class="star-container">
+            <div class="animated-star">
+                <i class="fas fa-star"></i>
+            </div>
+        </div>
+
+        <!-- TÍTULO PRINCIPAL -->
+        <div class="title-section">
+            <h1 class="main-title">Amizi</h1>
+            <div class="subtitle">
+                <i class="fas fa-heart" style="color: #ff4757; margin-right: 10px;"></i>
+                Conoce amigos, comparte momentos
+            </div>
+        </div>
+
+        <!-- SALUDO -->
+        <div class="greeting">
+            <i class="fas fa-hand-wave"></i>
+            ¡Hola! ¿Qué deseas hacer hoy?
+            <span>Amizi</span>
+        </div>
+
+        <!-- BOTONES PRINCIPALES CON TOOLTIPS -->
+        <div class="bottom-buttons">
+            <button class="bottom-btn iniciar-sesion" data-tooltip="Accede a tu cuenta existente" id="btnIniciarSesion">
+                <i class="fas fa-sign-in-alt"></i>
+                Iniciar Sesión
+            </button>
+            <button class="bottom-btn registrarse" data-tooltip="Crea una cuenta nueva gratis" id="btnRegistrarse">
+                <i class="fas fa-user-plus"></i>
+                Registrarse
+            </button>
+            <button class="bottom-btn cambiar-pass" data-tooltip="Recupera o cambia tu contraseña" id="btnCambiarPass">
+                <i class="fas fa-key"></i>
+                Cambiar Contraseña
+            </button>
+        </div>
+
+        <!-- FOOTER CON TOOLTIPS -->
+        <div class="landing-footer">
+            <div class="footer-left">
+                <!-- Soporte con tooltip -->
+                <div class="support-badge" id="btnAbrirSoporte" data-tooltip="Contactar al soporte">
+                    <i class="fas fa-headset"></i>
+                    <span>Soporte <span class="email">amizi@gmail.com</span></span>
+                </div>
+            </div>
+
+            <div class="footer-links">
+                <span data-tooltip="Preguntas frecuentes"><i class="fas fa-question-circle"></i> FAQ</span>
+                <span data-tooltip="Políticas de privacidad"><i class="fas fa-shield-alt"></i> Privacidad</span>
+                <span data-tooltip="Términos y condiciones"><i class="fas fa-file-alt"></i> Términos</span>
+            </div>
+
+            <div class="social-icons">
+                <i class="fab fa-instagram" data-tooltip="Instagram"></i>
+                <i class="fab fa-twitter" data-tooltip="Twitter"></i>
+                <i class="fab fa-tiktok" data-tooltip="TikTok"></i>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos de botones principales
+            const btnIniciarSesion = document.getElementById('btnIniciarSesion');
+            const btnRegistrarse = document.getElementById('btnRegistrarse');
+            const btnCambiarPass = document.getElementById('btnCambiarPass');
+            
+            // Modal de soporte
+            const modalSoporte = document.getElementById('modalSoporte');
+            const btnAbrirSoporte = document.getElementById('btnAbrirSoporte');
+            const btnCerrarSoporte = document.getElementById('btnCerrarSoporte');
+
+            // Función para mostrar notificaciones elegantes
+            function showNotification(text, color) {
+                const notification = document.createElement('div');
+                notification.textContent = text;
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    left: 50%;
+                    transform: translateX(-50%);
+                    background: ${color};
+                    color: white;
+                    padding: 16px 32px;
+                    border-radius: 60px;
+                    font-size: 18px;
+                    z-index: 9999;
+                    animation: slideDown 0.3s ease;
+                    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+                    border: 1px solid rgba(255,255,255,0.2);
+                    font-weight: 500;
+                    text-align: center;
+                    max-width: 90%;
+                    white-space: nowrap;
+                `;
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.animation = 'fadeOut 0.3s ease';
+                    setTimeout(() => {
+                        document.body.removeChild(notification);
+                    }, 300);
+                }, 2500);
+            }
+
+            // Añadir estilos de animación
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideDown {
+                    from {
+                        opacity: 0;
+                        transform: translate(-50%, -30px);
+                    }
+                    to {
+                        opacity: 1;
+                        transform: translate(-50%, 0);
+                    }
+                }
+                
+                @keyframes fadeOut {
+                    from {
+                        opacity: 1;
+                        transform: translate(-50%, 0);
+                    }
+                    to {
+                        opacity: 0;
+                        transform: translate(-50%, -30px);
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+
+                        // Event listener para botones principales
+            btnIniciarSesion.addEventListener('click', function() {
+                window.location.href = 'login.html';
+            });
+
+
+            btnRegistrarse.addEventListener('click', function() {
+                window.location.href = 'registrarce.html';
+            });
+
+            btnCambiarPass.addEventListener('click', function() {
+                showNotification('🔑 Recuperación de contraseña', '#2ecc71');
+            });
+
+            // Abrir modal de soporte
+            btnAbrirSoporte.addEventListener('click', function() {
+                modalSoporte.classList.add('active');
+            });
+
+            // Cerrar modal de soporte
+            btnCerrarSoporte.addEventListener('click', function() {
+                modalSoporte.classList.remove('active');
+            });
+
+            // Cerrar modal al hacer clic fuera
+            modalSoporte.addEventListener('click', function(e) {
+                if (e.target === modalSoporte) {
+                    modalSoporte.classList.remove('active');
+                }
+            });
+        });
+    </script>
+</body>
+</html>
