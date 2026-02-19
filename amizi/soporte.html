@@ -1,0 +1,1154 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Amizi · Soporte</title>
+    <!-- Font Awesome para iconos más lindos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="modulos/correo.js" ></script>
+    <script src="modulos/boots.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f2f2f7;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* CONTENEDOR PRINCIPAL */
+        .app-container {
+            max-width: 900px;
+            width: 100%;
+            background-color: #f8f9ff;
+            border-radius: 60px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            padding: 32px 36px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        /* HEADER CON DEGRADADO AZUL */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            padding: 15px 25px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            flex-wrap: wrap;
+            gap: 10px;
+            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.3);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .star-icon {
+            color: #ffd700;
+            font-size: 28px;
+            filter: drop-shadow(0 2px 5px rgba(255, 215, 0, 0.5));
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -1px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .carisma-badge {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(5px);
+            border-radius: 60px;
+            padding: 8px 18px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .carisma-num {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            padding: 4px 14px;
+            font-size: 16px;
+            color: white;
+            font-weight: 700;
+        }
+
+        .boost-btn {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 60px;
+            padding: 8px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #4a90e2;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .boost-btn:hover {
+            transform: scale(1.05);
+            background: white;
+        }
+
+        .boost-btn i {
+            color: #ff6b6b;
+        }
+
+        /* POPULAR ROW */
+        .popular-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 12px 25px;
+            border-radius: 60px;
+            border: 1px solid #eeeff5;
+        }
+
+        .popular-tag {
+            font-size: 20px;
+            color: #2d3a4a;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .popular-tag i {
+            color: #ff6b6b;
+            font-size: 22px;
+        }
+
+        .popular-tag span {
+            font-weight: 700;
+            color: #1e2b3a;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            color: #8a9bb0;
+            cursor: pointer;
+        }
+
+        /* TARJETA DE SOPORTE */
+        .support-card {
+            background: white;
+            border-radius: 70px;
+            padding: 40px 40px 30px 40px;
+            border: 1px solid #f0f0f8;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+            margin: 20px 0 30px 0;
+            width: 100%;
+        }
+
+        /* TÍTULO DE SOPORTE */
+        .support-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .support-title i {
+            font-size: 40px;
+            color: #ff6b6b;
+            background: #f0f3fa;
+            padding: 15px;
+            border-radius: 50%;
+        }
+
+        .support-title h2 {
+            font-size: 32px;
+            font-weight: 700;
+            color: #1e2b3a;
+        }
+
+        .support-title h2 span {
+            background: linear-gradient(145deg, #ff6b6b, #ff8e8e);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 40px;
+            font-size: 18px;
+            margin-left: 10px;
+        }
+
+        /* MENSAJE DE BIENVENIDA */
+        .welcome-message {
+            background: linear-gradient(145deg, #f0f3fa, #ffffff);
+            border-radius: 40px;
+            padding: 25px;
+            margin-bottom: 30px;
+            text-align: center;
+            border: 2px solid #e4e4f0;
+        }
+
+        .welcome-message i {
+            font-size: 40px;
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+
+        .welcome-message h3 {
+            font-size: 24px;
+            font-weight: 700;
+            color: #1e2b3a;
+            margin-bottom: 10px;
+        }
+
+        .welcome-message p {
+            font-size: 16px;
+            color: #5a6b7c;
+            line-height: 1.6;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        /* SECCIÓN DE CONTACTO */
+        .contact-section {
+            margin-bottom: 30px;
+        }
+
+        .section-subtitle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 22px;
+            font-weight: 700;
+            color: #1e2b3a;
+            margin-bottom: 20px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #f0f3fa;
+        }
+
+        .section-subtitle i {
+            color: #ff6b6b;
+            font-size: 24px;
+        }
+
+        .contact-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .contact-item {
+            background: #f8f9ff;
+            border: 2px solid #e4e4f0;
+            border-radius: 40px;
+            padding: 25px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .contact-item:hover {
+            transform: translateY(-5px);
+            border-color: #ff6b6b;
+            box-shadow: 0 15px 30px rgba(255, 107, 107, 0.15);
+        }
+
+        .contact-item i {
+            font-size: 48px;
+            margin-bottom: 15px;
+        }
+
+        .contact-item .gmail { color: #ea4335; }
+        .contact-item .whatsapp { color: #25d366; }
+        .contact-item .app { color: #6c5ce7; }
+
+        .contact-item h4 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e2b3a;
+            margin-bottom: 8px;
+        }
+
+        .contact-item p {
+            font-size: 14px;
+            color: #5a6b7c;
+            line-height: 1.5;
+        }
+
+        .contact-item .badge {
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            background: #ff6b6b;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+
+        /* FORMULARIO DE SUGERENCIAS */
+        .suggestion-form {
+            background: #f8f9ff;
+            border-radius: 40px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid #e4e4f0;
+        }
+
+        .form-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e2b3a;
+            margin-bottom: 20px;
+        }
+
+        .form-title i {
+            color: #ffd700;
+            font-size: 24px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d3a4a;
+            margin-bottom: 8px;
+        }
+
+        .form-label i {
+            color: #ff6b6b;
+            font-size: 18px;
+        }
+
+        .form-input,
+        .form-textarea {
+            width: 100%;
+            padding: 15px 20px;
+            border-radius: 30px;
+            border: 2px solid #e4e4f0;
+            background: white;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .form-input:focus,
+        .form-textarea:focus {
+            border-color: #ff6b6b;
+            box-shadow: 0 0 0 4px rgba(255, 107, 107, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 120px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+        }
+
+        .form-actions {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .form-btn {
+            padding: 12px 30px;
+            border-radius: 60px;
+            font-size: 16px;
+            font-weight: 600;
+            border: none;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .form-btn.send {
+            background: linear-gradient(145deg, #ff6b6b, #ff8e8e);
+            color: white;
+        }
+
+        .form-btn.cancel {
+            background: #f0f3fa;
+            color: #2d3a4a;
+        }
+
+        .form-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .form-btn.send:hover {
+            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
+        }
+
+        .form-btn.cancel:hover {
+            background: #e4e9f5;
+        }
+
+        /* SECCIÓN DE PREGUNTAS FRECUENTES RÁPIDAS */
+        .quick-faq {
+            margin-bottom: 30px;
+        }
+
+        .faq-mini-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+
+        .faq-mini-item {
+            background: #f8f9ff;
+            border: 2px solid #e4e4f0;
+            border-radius: 30px;
+            padding: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .faq-mini-item:hover {
+            border-color: #ff6b6b;
+            transform: translateY(-2px);
+        }
+
+        .faq-mini-item h5 {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e2b3a;
+            margin-bottom: 5px;
+        }
+
+        .faq-mini-item h5 i {
+            color: #ff6b6b;
+            font-size: 16px;
+        }
+
+        .faq-mini-item p {
+            font-size: 14px;
+            color: #5a6b7c;
+            padding-left: 24px;
+        }
+
+        /* ESTADÍSTICAS DE SOPORTE */
+        .support-stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .stat-item {
+            background: #f0f3fa;
+            border-radius: 30px;
+            padding: 15px;
+        }
+
+        .stat-number {
+            font-size: 24px;
+            font-weight: 700;
+            color: #ff6b6b;
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            font-size: 14px;
+            color: #5a6b7c;
+        }
+
+        /* FOOTER - 4 BOTONES EN UNA SOLA FILA HORIZONTAL */
+        .footer-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 60px;
+            border: 1px solid #eeeff5;
+            margin-top: 20px;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .footer-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .footer-item::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3a4a;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 500;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            pointer-events: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-item:hover::after {
+            opacity: 1;
+            visibility: visible;
+            top: -45px;
+        }
+
+        .footer-item i {
+            font-size: 24px;
+        }
+
+        .footer-item span {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .footer-item.inicio {
+            background: #f0f3fa;
+            color: #6c5ce7;
+        }
+
+        .footer-item.mensaje {
+            background: linear-gradient(145deg, #6c5ce7, #8e6ce7);
+            color: white;
+        }
+
+        .footer-item.likes {
+            background: #ff4757;
+            color: white;
+        }
+
+        .footer-item.cuenta {
+            background: #2d3a4a;
+            color: white;
+        }
+
+        .footer-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* NOTIFICACIONES ELEGANTES ARRIBA */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            pointer-events: none;
+            width: auto;
+            max-width: 90%;
+        }
+
+        .notification {
+            background: white;
+            color: #1e2b3a;
+            padding: 16px 32px;
+            border-radius: 60px;
+            font-size: 18px;
+            font-weight: 500;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.3s ease;
+            pointer-events: none;
+        }
+
+        .notification i {
+            font-size: 24px;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .app-container {
+                padding: 20px;
+            }
+
+            .support-card {
+                padding: 25px;
+            }
+
+            .support-title {
+                flex-direction: column;
+                text-align: center;
+            }
+
+            .contact-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .faq-mini-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .support-stats {
+                grid-template-columns: 1fr;
+            }
+
+            .form-actions {
+                flex-direction: column;
+            }
+
+            .form-btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .footer-nav {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .footer-item {
+                flex: 1 1 calc(50% - 8px);
+                min-width: 120px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .support-title h2 {
+                font-size: 24px;
+            }
+
+            .welcome-message h3 {
+                font-size: 20px;
+            }
+
+            .contact-item {
+                padding: 20px;
+            }
+
+            .contact-item i {
+                font-size: 40px;
+            }
+
+            .contact-item h4 {
+                font-size: 18px;
+            }
+
+            .footer-item {
+                padding: 10px 12px;
+            }
+            
+            .footer-item i {
+                font-size: 20px;
+            }
+            
+            .footer-item span {
+                font-size: 14px;
+            }
+        }
+
+        /* Asegurar que Nivel y Boost siempre estén horizontales */
+        @media (max-width: 400px) {
+            .header-right {
+                flex-direction: row;
+                width: auto;
+            }
+            
+            .carisma-badge, .boost-btn {
+                white-space: nowrap;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- CONTENEDOR DE NOTIFICACIONES ELEGANTES -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <div class="app-container">
+        <!-- HEADER CON DEGRADADO AZUL -->
+        <div class="header">
+            <div class="logo-container">
+                <i class="fas fa-star star-icon"></i>
+                <div class="logo">Amizi</div>
+            </div>
+            
+            <div class="header-right">
+                <div class="carisma-badge">
+                    <i class="fas fa-bolt"></i>
+                    Nivel <span class="carisma-num">72</span>
+                </div>
+                
+                <button class="boost-btn" id="btnBoost">
+                    <i class="fas fa-rocket"></i>
+                    Boost
+                </button>
+            </div>
+        </div>
+
+        <!-- POPULAR ROW -->
+        <div class="popular-row">
+            <div class="popular-tag">
+                <i class="fas fa-fire"></i>
+                <span>Centro de Soporte</span> · Ayuda
+            </div>
+            <div class="menu-icon">
+                <i class="fas fa-ellipsis-h"></i>
+            </div>
+        </div>
+
+        <!-- TARJETA DE SOPORTE -->
+        <div class="support-card">
+            <!-- TÍTULO -->
+            <div class="support-title">
+                <i class="fas fa-headset"></i>
+                <h2>Soporte Amizi <span>Ayuda 24/7</span></h2>
+            </div>
+
+            <!-- MENSAJE DE BIENVENIDA -->
+            <div class="welcome-message">
+                <i class="fas fa-hand-sparkles"></i>
+                <h3>¿En qué podemos ayudarte?</h3>
+                <p>Estamos aquí para escucharte. Ya sea que tengas dudas, sugerencias o quieras reportar un problema, nuestro equipo de soporte está listo para asistirte.</p>
+            </div>
+
+            <!-- ESTADÍSTICAS DE SOPORTE -->
+            <div class="support-stats">
+                <div class="stat-item">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Soporte activo</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">&lt; 2h</div>
+                    <div class="stat-label">Tiempo respuesta</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">+50k</div>
+                    <div class="stat-label">Usuarios ayudados</div>
+                </div>
+            </div>
+
+            <!-- SECCIÓN DE CONTACTO -->
+            <div class="contact-section">
+                <div class="section-subtitle">
+                    <i class="fas fa-comment"></i>
+                    <span>Contáctanos</span>
+                </div>
+                
+                <div class="contact-grid">
+                    <!-- Gmail -->
+                    <div class="contact-item" id="contactGmail">
+                        <div class="badge">Rápido</div>
+                        <i class="fab fa-google gmail"></i>
+                        <h4>Gmail</h4>
+                        <p>Envíanos un correo y te responderemos en menos de 2 horas</p>
+                        <small style="color: #ea4335; font-weight: 600;">soporte.amizi@gmail.com</small>
+                    </div>
+
+                    <!-- WhatsApp -->
+                    <div class="contact-item" id="contactWhatsapp">
+                        <div class="badge">Inmediato</div>
+                        <i class="fab fa-whatsapp whatsapp"></i>
+                        <h4>WhatsApp</h4>
+                        <p>Chatea con nosotros en tiempo real de lunes a viernes</p>
+                        <small style="color: #25d366; font-weight: 600;">+57 300 123 4567</small>
+                    </div>
+
+                    <!-- Desde la App -->
+                    <div class="contact-item" id="contactApp">
+                        <div class="badge">Directo</div>
+                        <i class="fas fa-mobile-alt app"></i>
+                        <h4>App</h4>
+                        <p>Escíbenos directamente desde la aplicación sin salir</p>
+                        <small style="color: #6c5ce7; font-weight: 600;">Chat interno 24/7</small>
+                    </div>
+                </div>
+            </div>
+
+            <!-- FORMULARIO DE SUGERENCIAS -->
+            <div class="suggestion-form">
+                <div class="form-title">
+                    <i class="fas fa-lightbulb"></i>
+                    <span>¿Tienes una sugerencia o recomendación?</span>
+                </div>
+                <div class="form-title" style="font-size: 16px; color: #5a6b7c; margin-top: -10px;">
+                    <i class="fas fa-star" style="color: #ffd700;"></i>
+                    <span>Ayúdanos a mejorar para futuras actualizaciones</span>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">
+                        <i class="fas fa-user"></i>
+                        <span>Nombre (opcional)</span>
+                    </div>
+                    <input type="text" class="form-input" placeholder="Cómo quieres que te llamemos" id="suggestionName">
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <div class="form-label">
+                            <i class="fas fa-envelope"></i>
+                            <span>Email</span>
+                        </div>
+                        <input type="email" class="form-input" placeholder="tucorreo@ejemplo.com" id="suggestionEmail">
+                    </div>
+                    <div class="form-group">
+                        <div class="form-label">
+                            <i class="fas fa-tag"></i>
+                            <span>Tipo</span>
+                        </div>
+                        <select class="form-input" id="suggestionType">
+                            <option value="sugerencia">💡 Sugerencia</option>
+                            <option value="problema">⚠️ Reportar problema</option>
+                            <option value="funcion">✨ Nueva función</option>
+                            <option value="mejora">📈 Mejora</option>
+                            <option value="otro">🔄 Otro</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">
+                        <i class="fas fa-comment"></i>
+                        <span>Tu mensaje</span>
+                    </div>
+                    <textarea class="form-textarea" placeholder="Cuéntanos tu idea, sugerencia o problema..." id="suggestionMessage"></textarea>
+                </div>
+
+                <div class="form-actions">
+                    <button class="form-btn cancel" id="cancelSuggestion">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
+                    <button class="form-btn send" id="sendSuggestion">
+                        <i class="fas fa-paper-plane"></i>
+                        Enviar sugerencia
+                    </button>
+                </div>
+            </div>
+
+            <!-- PREGUNTAS FRECUENTES RÁPIDAS -->
+            <div class="quick-faq">
+                <div class="section-subtitle">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Respuestas rápidas</span>
+                </div>
+
+                <div class="faq-mini-grid">
+                    <div class="faq-mini-item" id="faq1">
+                        <h5><i class="fas fa-user-friends"></i> ¿Cómo reportar a alguien?</h5>
+                        <p>Ve a su perfil, toca los tres puntos y selecciona "Reportar".</p>
+                    </div>
+                    <div class="faq-mini-item" id="faq2">
+                        <h5><i class="fas fa-lock"></i> Mi cuenta está bloqueada</h5>
+                        <p>Escíbenos por Gmail o WhatsApp y lo solucionamos en minutos.</p>
+                    </div>
+                    <div class="faq-mini-item" id="faq3">
+                        <h5><i class="fas fa-gift"></i> ¿Cómo funcionan los regalos?</h5>
+                        <p>Los regalos aumentan tu carisma y popularidad en la app.</p>
+                    </div>
+                    <div class="faq-mini-item" id="faq4">
+                        <h5><i class="fas fa-crown"></i> ¿Cómo ser verificado?</h5>
+                        <p>La verificación se obtiene con buen comportamiento y carisma alto.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MENSAJE DE DESPEDIDA -->
+            <div style="text-align: center; margin-top: 20px; padding: 15px; background: #f0f3fa; border-radius: 40px;">
+                <p style="display: flex; align-items: center; justify-content: center; gap: 10px; color: #5a6b7c;">
+                    <i class="fas fa-heart" style="color: #ff6b6b;"></i>
+                    Tu opinión hace de Amizi un lugar mejor
+                    <i class="fas fa-heart" style="color: #ff6b6b;"></i>
+                </p>
+            </div>
+        </div>
+
+        <!-- FOOTER CON 4 BOTONES EN UNA SOLA FILA HORIZONTAL Y TOOLTIPS -->
+        <div class="footer-nav">
+            <div class="footer-item inicio" id="btnInicio" data-tooltip="Ir al inicio">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </div>
+            
+            <div class="footer-item mensaje" id="btnMessage" data-tooltip="Ver mensajes">
+                <i class="fas fa-comment-dots"></i>
+                <span>Mensaje</span>
+            </div>
+            
+            <div class="footer-item likes" id="btnLikesFooter" data-tooltip="Mis likes">
+                <i class="fas fa-heart"></i>
+                <span id="footerLikesCount">156</span>
+            </div>
+            
+            <div class="footer-item cuenta" id="btnCuenta" data-tooltip="Mi perfil">
+                <i class="fas fa-user"></i>
+                <span>Cuenta</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Elementos de botones
+            const btnBoost = document.getElementById('btnBoost');
+            const btnInicio = document.getElementById('btnInicio');
+            const btnMessage = document.getElementById('btnMessage');
+            const btnLikesFooter = document.getElementById('btnLikesFooter');
+            const btnCuenta = document.getElementById('btnCuenta');
+            
+            // Elementos de contacto
+            const contactGmail = document.getElementById('contactGmail');
+            const contactWhatsapp = document.getElementById('contactWhatsapp');
+            const contactApp = document.getElementById('contactApp');
+            
+            // Elementos del formulario
+            const sendSuggestion = document.getElementById('sendSuggestion');
+            const cancelSuggestion = document.getElementById('cancelSuggestion');
+            const suggestionName = document.getElementById('suggestionName');
+            const suggestionEmail = document.getElementById('suggestionEmail');
+            const suggestionMessage = document.getElementById('suggestionMessage');
+            
+            // FAQs
+            const faq1 = document.getElementById('faq1');
+            const faq2 = document.getElementById('faq2');
+            const faq3 = document.getElementById('faq3');
+            const faq4 = document.getElementById('faq4');
+
+            // Función para mostrar notificaciones elegantes
+            function showNotification(icon, text, bgColor = '#ffffff', iconColor = '#6c5ce7') {
+                const container = document.getElementById('notificationContainer');
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.innerHTML = `<i class="${icon}" style="color: ${iconColor}"></i> ${text}`;
+                notification.style.background = bgColor;
+                
+                container.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.animation = 'fadeOut 0.3s ease';
+                    setTimeout(() => {
+                        container.removeChild(notification);
+                    }, 300);
+                }, 2500);
+            }
+
+            // Botón Boost
+            btnBoost.addEventListener('click', function() {
+                btnBoost.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    btnBoost.style.transform = 'scale(1)';
+                }, 200);
+                showNotification('fas fa-rocket', '🚀 Boost activado! +50 visibilidad', '#6c5ce7', 'white');
+            });
+
+            // Botón Inicio
+            btnInicio.addEventListener('click', function() {
+                window.location.href = 'principal.html';
+            });
+
+            // Botón Mensaje
+            btnMessage.addEventListener('click', function() {
+                showNotification('fas fa-comment-dots', '📬 Buzón de mensajes', '#6c5ce7', 'white');
+            });
+
+            // Botón Likes en footer
+            btnLikesFooter.addEventListener('click', function() {
+                btnLikesFooter.style.transform = 'scale(1.1)';
+                setTimeout(() => {
+                    btnLikesFooter.style.transform = 'scale(1)';
+                }, 200);
+                showNotification('fas fa-heart', '❤️ Tus likes', '#ff4757', 'white');
+            });
+
+            // Botón Cuenta
+            btnCuenta.addEventListener('click', function() {
+                window.location.href = 'cuenta.html';
+            });
+
+            // Contacto Gmail - MODIFICADO para llamar al modal
+contactGmail.addEventListener('click', function() {
+    // Llamar al modal de correo del archivo externo
+    if (typeof mostrarModalCorreo === 'function') {
+        mostrarModalCorreo();
+    } else {
+        // Fallback por si el script no cargó
+        console.warn('Modal de correo no disponible, usando fallback');
+        showNotification('fas fa-envelope', '📧 soporte.amizi@gmail.com - Te responderemos pronto', '#ea4335', 'white');
+        window.open('mailto:soporte.amizi@gmail.com?subject=Consulta desde Amizi');
+    }
+});
+
+            // Contacto WhatsApp
+            contactWhatsapp.addEventListener('click', function() {
+                showNotification('fab fa-whatsapp', '📱 +57 300 123 4567 - Abriendo WhatsApp', '#25d366', 'white');
+                window.open('https://wa.me/573001234567?text=Hola%20necesito%20ayuda%20en%20Amizi');
+            });
+
+            // Contacto App
+            contactApp.addEventListener('click', function() {
+                window.location.href = 'chat.html'
+            });
+
+            // Enviar sugerencia
+            sendSuggestion.addEventListener('click', function() {
+                if (!suggestionMessage.value.trim()) {
+                    showNotification('fas fa-exclamation-circle', '❓ Por favor escribe tu mensaje', '#ff6b6b', 'white');
+                    return;
+                }
+
+                showNotification('fas fa-paper-plane', '✨ ¡Gracias por tu sugerencia! La revisaremos pronto', '#ff6b6b', 'white');
+                
+                // Limpiar formulario
+                suggestionName.value = '';
+                suggestionEmail.value = '';
+                suggestionMessage.value = '';
+            });
+
+            // Cancelar sugerencia
+            cancelSuggestion.addEventListener('click', function() {
+                suggestionName.value = '';
+                suggestionEmail.value = '';
+                suggestionMessage.value = '';
+                showNotification('fas fa-times', '🗑️ Formulario limpiado', '#2d3a4a', 'white');
+            });
+
+            // FAQs
+            faq1.addEventListener('click', function() {
+                showNotification('fas fa-user-friends', '📋 Ve a su perfil → tres puntos → Reportar', '#4a90e2', 'white');
+            });
+
+            faq2.addEventListener('click', function() {
+                showNotification('fas fa-lock', '🔓 Contáctanos por Gmail o WhatsApp', '#6c5ce7', 'white');
+            });
+
+            faq3.addEventListener('click', function() {
+                showNotification('fas fa-gift', '🎁 Los regalos aumentan tu carisma', '#2ecc71', 'white');
+            });
+
+            faq4.addEventListener('click', function() {
+                showNotification('fas fa-crown', '👑 Mantén buen comportamiento y carisma alto', '#ffd700', 'white');
+            });
+        });
+
+           // ============================================
+// ACTIVAR BOTÓN BOOST
+// ============================================
+document.addEventListener('DOMContentLoaded', function() {
+    const btnBoost = document.getElementById('btnBoost');
+    
+    if (btnBoost) {
+        btnBoost.addEventListener('click', function() {
+            // Animación del botón
+            this.style.transform = 'scale(1.1)';
+            setTimeout(() => {
+                this.style.transform = 'scale(1)';
+            }, 200);
+            
+            // Verificar si el modal de Boost está disponible
+            if (typeof mostrarModalBoost === 'function') {
+                mostrarModalBoost();
+            } else {
+                console.warn('Modal de Boost no disponible');
+                // Fallback: mostrar notificación si existe
+                if (typeof showNotification === 'function') {
+                    showNotification('fas fa-rocket', '🚀 Función de Boost próximamente', '#ff6b6b', 'white');
+                }
+            }
+        });
+    }
+});
+    </script>
+</body>
+</html>
