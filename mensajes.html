@@ -1,0 +1,1378 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Amizi · Mensajes</title>
+    <!-- Font Awesome para iconos más lindos -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+     <script src="modulos/boots.js"></script>
+    <style>
+        /* Tus estilos existentes se mantienen IGUAL */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f2f2f7;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        /* CONTENEDOR PRINCIPAL */
+        .app-container {
+            max-width: 900px;
+            width: 100%;
+            background-color: #f8f9ff;
+            border-radius: 60px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            padding: 32px 36px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        /* HEADER CON DEGRADADO AZUL */
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            padding: 15px 25px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            flex-wrap: wrap;
+            gap: 10px;
+            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.3);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .star-icon {
+            color: #ffd700;
+            font-size: 28px;
+            filter: drop-shadow(0 2px 5px rgba(255, 215, 0, 0.5));
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -1px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .carisma-badge {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(5px);
+            border-radius: 60px;
+            padding: 8px 18px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .carisma-num {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            padding: 4px 14px;
+            font-size: 16px;
+            color: white;
+            font-weight: 700;
+        }
+
+        .boost-btn {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 60px;
+            padding: 8px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #4a90e2;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .boost-btn:hover {
+            transform: scale(1.05);
+            background: white;
+        }
+
+        .boost-btn i {
+            color: #ff6b6b;
+        }
+
+        /* POPULAR ROW */
+        .popular-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 12px 25px;
+            border-radius: 60px;
+            border: 1px solid #eeeff5;
+        }
+
+        .popular-tag {
+            font-size: 20px;
+            color: #2d3a4a;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .popular-tag i {
+            color: #ff6b6b;
+            font-size: 22px;
+        }
+
+        .popular-tag span {
+            font-weight: 700;
+            color: #1e2b3a;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            color: #8a9bb0;
+            cursor: pointer;
+        }
+
+        /* CONTENEDOR DE MENSAJES */
+        .mensajes-container {
+            background: white;
+            border-radius: 70px;
+            padding: 30px;
+            border: 1px solid #f0f0f8;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+            margin: 20px 0 30px 0;
+            width: 100%;
+        }
+
+        /* TÍTULO DE MENSAJES */
+        .mensajes-title {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 25px;
+        }
+
+        .mensajes-title i {
+            font-size: 35px;
+            color: #6c5ce7;
+            background: #f0f3fa;
+            padding: 12px;
+            border-radius: 50%;
+        }
+
+        .mensajes-title h2 {
+            font-size: 28px;
+            font-weight: 700;
+            color: #1e2b3a;
+        }
+
+        .mensajes-title span {
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            color: white;
+            padding: 5px 15px;
+            border-radius: 40px;
+            font-size: 16px;
+            margin-left: 10px;
+        }
+
+        /* BARRA DE BÚSQUEDA */
+        .search-container {
+            margin-bottom: 25px;
+        }
+
+        .search-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 15px 20px;
+            padding-left: 55px;
+            padding-right: 45px;
+            border-radius: 60px;
+            border: 2px solid #e4e4f0;
+            background: white;
+            font-size: 16px;
+            transition: all 0.2s ease;
+            outline: none;
+        }
+
+        .search-input:focus {
+            border-color: #4a90e2;
+            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
+        }
+
+        .search-input::placeholder {
+            color: #8a9bb0;
+            font-size: 15px;
+        }
+
+        .search-icon {
+            position: absolute;
+            left: 20px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #8a9bb0;
+            font-size: 18px;
+            pointer-events: none;
+        }
+
+        .search-clear {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: #f0f3fa;
+            border: none;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #8a9bb0;
+            font-size: 14px;
+            transition: all 0.2s;
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .search-clear.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .search-clear:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        /* SECCIÓN EN LÍNEA */
+        .online-section {
+            margin-bottom: 25px;
+        }
+
+        .section-subtitle {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3a4a;
+            margin-bottom: 15px;
+        }
+
+        .section-subtitle i {
+            color: #2ecc71;
+            font-size: 14px;
+        }
+
+        .section-subtitle span {
+            background: #f0f3fa;
+            padding: 4px 12px;
+            border-radius: 40px;
+            font-size: 14px;
+            margin-left: 8px;
+        }
+
+        /* AVATARES EN LÍNEA */
+        .avatares-grid {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding: 5px 0 15px 0;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .avatares-grid::-webkit-scrollbar {
+            display: none;
+        }
+
+        .avatar-online-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            cursor: pointer;
+            min-width: 70px;
+        }
+
+        .avatar-online {
+            position: relative;
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 3px solid white;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+
+        .avatar-online:hover {
+            transform: scale(1.05);
+        }
+
+        .avatar-online i {
+            font-size: 30px;
+            color: white;
+        }
+
+        .online-indicator {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 14px;
+            height: 14px;
+            background: #2ecc71;
+            border-radius: 50%;
+            border: 3px solid white;
+        }
+
+        .avatar-name {
+            font-size: 13px;
+            font-weight: 500;
+            color: #2d3a4a;
+            max-width: 70px;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+        }
+
+        /* LISTA DE CHATS */
+        .chats-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .chat-item {
+            background: #f8f9ff;
+            border: 2px solid #e4e4f0;
+            border-radius: 40px;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+        }
+
+        .chat-item:hover {
+            border-color: #4a90e2;
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
+        }
+
+        .chat-item.unread {
+            background: #f0f7ff;
+            border-color: #4a90e2;
+        }
+
+        .chat-avatar {
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .chat-avatar-img {
+            width: 55px;
+            height: 55px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .chat-avatar-img i {
+            font-size: 30px;
+            color: white;
+        }
+
+        .chat-status {
+            position: absolute;
+            bottom: 2px;
+            right: 2px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            border: 2px solid white;
+        }
+
+        .chat-status.online {
+            background: #2ecc71;
+        }
+
+        .chat-status.offline {
+            background: #8a9bb0;
+        }
+
+        .chat-info {
+            flex: 1;
+        }
+
+        .chat-header-info {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 5px;
+        }
+
+        .chat-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e2b3a;
+        }
+
+        .chat-time {
+            font-size: 12px;
+            color: #8a9bb0;
+        }
+
+        .chat-last-message {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            color: #5a6b7c;
+            font-size: 14px;
+        }
+
+        .chat-last-message i {
+            font-size: 12px;
+            color: #4a90e2;
+        }
+
+        .chat-last-message.unread {
+            color: #1e2b3a;
+            font-weight: 500;
+        }
+
+        .unread-badge {
+            background: #ff6b6b;
+            color: white;
+            font-size: 11px;
+            font-weight: 600;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 6px;
+            margin-left: 8px;
+        }
+
+        .chat-options-btn {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            color: #8a9bb0;
+        }
+
+        .chat-options-btn:hover {
+            background: #f0f3fa;
+            color: #4a90e2;
+        }
+
+        /* ESTADO VACÍO */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+        }
+
+        .empty-state i {
+            font-size: 60px;
+            color: #8a9bb0;
+            margin-bottom: 15px;
+            opacity: 0.5;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2d3a4a;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            font-size: 14px;
+            color: #5a6b7c;
+        }
+
+        /* MODAL DE OPCIONES DE CHAT */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            backdrop-filter: blur(5px);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 10000;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .modal-overlay.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background: linear-gradient(145deg, #ffffff, #f8f9ff);
+            border-radius: 50px;
+            padding: 25px;
+            max-width: 320px;
+            width: 90%;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.3);
+            border: 2px solid rgba(255, 255, 255, 0.8);
+            transform: scale(0.9);
+            transition: transform 0.3s ease;
+            position: relative;
+        }
+
+        .modal-overlay.active .modal-content {
+            transform: scale(1);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            background: #f0f3fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #f0f3fa;
+        }
+
+        .modal-avatar {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-avatar i {
+            font-size: 28px;
+            color: white;
+        }
+
+        .modal-user-info h4 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e2b3a;
+            margin-bottom: 3px;
+        }
+
+        .modal-user-info p {
+            font-size: 13px;
+            color: #5a6b7c;
+        }
+
+        .modal-options {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .modal-option {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 15px;
+            border-radius: 40px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-option:hover {
+            background: #f0f3fa;
+        }
+
+        .modal-option.reportar:hover {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .modal-option.bloquear:hover {
+            background: #2d3a4a;
+            color: white;
+        }
+
+        .modal-option.vaciar:hover {
+            background: #8a9bb0;
+            color: white;
+        }
+
+        .option-icon {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .option-icon.reportar {
+            background: #ff6b6b;
+            color: white;
+        }
+
+        .option-icon.bloquear {
+            background: #2d3a4a;
+            color: white;
+        }
+
+        .option-icon.vaciar {
+            background: #8a9bb0;
+            color: white;
+        }
+
+        .option-text {
+            flex: 1;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        /* NOTIFICACIONES */
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            pointer-events: none;
+            width: auto;
+            max-width: 90%;
+        }
+
+        .notification {
+            background: white;
+            color: #1e2b3a;
+            padding: 16px 32px;
+            border-radius: 60px;
+            font-size: 16px;
+            font-weight: 500;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.3s ease;
+            pointer-events: none;
+        }
+
+        .notification i {
+            font-size: 20px;
+        }
+
+        /* FOOTER - 4 BOTONES */
+        .footer-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 60px;
+            border: 1px solid #eeeff5;
+            margin-top: 20px;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .footer-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .footer-item::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3a4a;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            pointer-events: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-item:hover::after {
+            opacity: 1;
+            visibility: visible;
+            top: -45px;
+        }
+
+        .footer-item i {
+            font-size: 24px;
+        }
+
+        .footer-item span {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .footer-item.inicio {
+            background: #f0f3fa;
+            color: #6c5ce7;
+        }
+
+        .footer-item.mensaje {
+            background: linear-gradient(145deg, #6c5ce7, #8e6ce7);
+            color: white;
+        }
+
+        .footer-item.likes {
+            background: #ff4757;
+            color: white;
+        }
+
+        .footer-item.cuenta {
+            background: #2d3a4a;
+            color: white;
+        }
+
+        .footer-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        /* ANIMACIONES */
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes fadeOut {
+            from {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            to {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+        }
+
+        /* RESPONSIVE */
+        @media (max-width: 900px) {
+            .app-container {
+                padding: 20px;
+            }
+
+            .mensajes-container {
+                padding: 20px;
+            }
+
+            .mensajes-title h2 {
+                font-size: 24px;
+            }
+
+            .footer-nav {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .footer-item {
+                flex: 1 1 calc(50% - 8px);
+                min-width: 120px;
+            }
+        }
+
+        @media (max-width: 700px) {
+            .header {
+                padding: 12px 20px;
+            }
+            
+            .logo {
+                font-size: 30px;
+            }
+            
+            .star-icon {
+                font-size: 24px;
+            }
+            
+            .carisma-badge, .boost-btn {
+                padding: 6px 14px;
+                font-size: 16px;
+            }
+            
+            .carisma-num {
+                padding: 3px 10px;
+                font-size: 14px;
+            }
+
+            .chat-item {
+                padding: 12px 15px;
+            }
+            
+            .chat-avatar-img {
+                width: 45px;
+                height: 45px;
+            }
+            
+            .chat-avatar-img i {
+                font-size: 24px;
+            }
+            
+            .chat-name {
+                font-size: 16px;
+            }
+            
+            .footer-item {
+                padding: 10px 12px;
+            }
+            
+            .footer-item i {
+                font-size: 20px;
+            }
+            
+            .footer-item span {
+                font-size: 14px;
+            }
+        }
+
+        @media (max-width: 500px) {
+            .avatares-grid {
+                gap: 10px;
+            }
+            
+            .avatar-online {
+                width: 50px;
+                height: 50px;
+            }
+            
+            .avatar-online i {
+                font-size: 24px;
+            }
+            
+            .avatar-name {
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- CONTENEDOR DE NOTIFICACIONES -->
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <!-- MODAL DE OPCIONES DE CHAT -->
+    <div class="modal-overlay" id="chatOptionsModal">
+        <div class="modal-content">
+            <div class="modal-close" id="closeOptionsModal">
+                <i class="fas fa-times"></i>
+            </div>
+            <div class="modal-header">
+                <div class="modal-avatar">
+                    <i class="fas fa-user"></i>
+                </div>
+                <div class="modal-user-info">
+                    <h4 id="modalUserName">Laura Gómez</h4>
+                    <p id="modalUserStatus">🟢 En línea</p>
+                </div>
+            </div>
+            <div class="modal-options">
+                <div class="modal-option reportar" id="optionReportar">
+                    <div class="option-icon reportar">
+                        <i class="fas fa-flag"></i>
+                    </div>
+                    <span class="option-text">Reportar conversación</span>
+                </div>
+                <div class="modal-option bloquear" id="optionBloquear">
+                    <div class="option-icon bloquear">
+                        <i class="fas fa-ban"></i>
+                    </div>
+                    <span class="option-text">Bloquear usuario</span>
+                </div>
+                <div class="modal-option vaciar" id="optionVaciar">
+                    <div class="option-icon vaciar">
+                        <i class="fas fa-trash"></i>
+                    </div>
+                    <span class="option-text">Vaciar chat</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="logo-container">
+                <i class="fas fa-star star-icon"></i>
+                <div class="logo">Amizi</div>
+            </div>
+            
+            <div class="header-right">
+                <div class="carisma-badge">
+                    <i class="fas fa-bolt"></i>
+                    Nivel <span class="carisma-num">72</span>
+                </div>
+                
+                <button class="boost-btn" id="btnBoost">
+                    <i class="fas fa-rocket"></i>
+                    Boost
+                </button>
+            </div>
+        </div>
+
+        <!-- POPULAR ROW - FUNCIONA COMO BOTÓN PARA VOLVER -->
+        <div class="popular-row" id="backToPrincipal">
+            <div class="popular-tag">
+                <i class="fas fa-arrow-left"></i>
+                <span>Volver al inicio</span>
+            </div>
+            <div class="menu-icon">
+                <i class="fas fa-ellipsis-h"></i>
+            </div>
+        </div>
+
+        <!-- CONTENEDOR DE MENSAJES -->
+        <div class="mensajes-container">
+            <!-- TÍTULO -->
+            <div class="mensajes-title">
+                <i class="fas fa-comment-dots"></i>
+                <h2>Buzón de Mensajes <span>4</span></h2>
+            </div>
+
+            <!-- BARRA DE BÚSQUEDA -->
+            <div class="search-container">
+                <div class="search-wrapper">
+                    <i class="fas fa-search search-icon"></i>
+                    <input type="text" class="search-input" id="searchInput" placeholder="Buscar conversaciones...">
+                    <button class="search-clear" id="searchClear">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- SECCIÓN EN LÍNEA -->
+            <div class="online-section">
+                <div class="section-subtitle">
+                    <i class="fas fa-circle"></i>
+                    <span>En línea ahora</span>
+                    <span>5</span>
+                </div>
+                <div class="avatares-grid" id="avataresOnline"></div>
+            </div>
+
+            <!-- LISTA DE CHATS -->
+            <div class="chats-list" id="chatsList"></div>
+        </div>
+
+        <!-- FOOTER -->
+        <div class="footer-nav">
+            <div class="footer-item inicio" id="btnInicio" data-tooltip="Ir al inicio">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </div>
+            
+            <div class="footer-item mensaje active" id="btnMessage" data-tooltip="Ver mensajes">
+                <i class="fas fa-comment-dots"></i>
+                <span>Mensaje</span>
+            </div>
+            
+            <div class="footer-item likes" id="btnLikesFooter" data-tooltip="Mis likes">
+                <i class="fas fa-heart"></i>
+                <span>156</span>
+            </div>
+            
+            <div class="footer-item cuenta" id="btnCuenta" data-tooltip="Mi perfil">
+                <i class="fas fa-user"></i>
+                <span>Cuenta</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // ============================================
+            // DATOS DE EJEMPLO
+            // ============================================
+            const CHATS = [
+                { id: 1, nombre: 'Laura Gómez', ultimoMensaje: '¡Hola! ¿Cómo estás?', hora: '10:30', leido: false, mensajesNoLeidos: 2, online: true },
+                { id: 2, nombre: 'Carlos Ruiz', ultimoMensaje: 'Te envié un regalo 🎁', hora: '09:15', leido: true, mensajesNoLeidos: 0, online: false },
+                { id: 3, nombre: 'Ana Martínez', ultimoMensaje: '¿Viste la nueva función?', hora: 'Ayer', leido: true, mensajesNoLeidos: 0, online: true },
+                { id: 4, nombre: 'Miguel Torres', ultimoMensaje: 'Gracias por el boost', hora: 'Ayer', leido: false, mensajesNoLeidos: 1, online: false }
+            ];
+
+            const USUARIOS_ONLINE = [
+                { nombre: 'Laura' }, { nombre: 'Ana' }, { nombre: 'Carlos' }, { nombre: 'Miguel' }, { nombre: 'Sofia' }
+            ];
+
+            // ============================================
+            // ELEMENTOS DEL DOM
+            // ============================================
+            const searchInput = document.getElementById('searchInput');
+            const searchClear = document.getElementById('searchClear');
+            const avataresOnline = document.getElementById('avataresOnline');
+            const chatsList = document.getElementById('chatsList');
+            const modalOverlay = document.getElementById('chatOptionsModal');
+            const closeModal = document.getElementById('closeOptionsModal');
+            const optionReportar = document.getElementById('optionReportar');
+            const optionBloquear = document.getElementById('optionBloquear');
+            const optionVaciar = document.getElementById('optionVaciar');
+            const backToPrincipal = document.getElementById('backToPrincipal');
+            
+            // Botones del footer
+            const btnBoost = document.getElementById('btnBoost');
+            const btnInicio = document.getElementById('btnInicio');
+            const btnMessage = document.getElementById('btnMessage');
+            const btnLikesFooter = document.getElementById('btnLikesFooter');
+            const btnCuenta = document.getElementById('btnCuenta');
+
+            // ============================================
+            // FUNCIÓN DE NOTIFICACIONES
+            // ============================================
+            function showNotification(text, color = '#4a90e2', icon = 'fa-info-circle') {
+                const container = document.getElementById('notificationContainer');
+                const notification = document.createElement('div');
+                notification.className = 'notification';
+                notification.innerHTML = `<i class="fas ${icon}" style="color: ${color}"></i> ${text}`;
+                container.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.style.animation = 'fadeOut 0.3s ease';
+                    setTimeout(() => {
+                        container.removeChild(notification);
+                    }, 300);
+                }, 2500);
+            }
+
+            // ============================================
+            // RENDERIZAR AVATARES EN LÍNEA
+            // ============================================
+            function renderizarAvataresOnline() {
+                if (!avataresOnline) return;
+                
+                let html = '';
+                USUARIOS_ONLINE.forEach(usuario => {
+                    html += `
+                        <div class="avatar-online-item">
+                            <div class="avatar-online">
+                                <i class="fas fa-user"></i>
+                                <div class="online-indicator"></div>
+                            </div>
+                            <span class="avatar-name">${usuario.nombre}</span>
+                        </div>
+                    `;
+                });
+                avataresOnline.innerHTML = html;
+            }
+
+            // ============================================
+            // RENDERIZAR LISTA DE CHATS
+            // ============================================
+            function renderizarChats() {
+                if (!chatsList) return;
+                
+                let html = '';
+                CHATS.forEach(chat => {
+                    const unreadClass = !chat.leido ? 'unread' : '';
+                    const statusClass = chat.online ? 'online' : 'offline';
+                    
+                    html += `
+                        <div class="chat-item ${unreadClass}" data-chat-id="${chat.id}" data-chat-name="${chat.nombre}" data-chat-online="${chat.online}">
+                            <div class="chat-avatar">
+                                <div class="chat-avatar-img">
+                                    <i class="fas fa-user"></i>
+                                </div>
+                                <div class="chat-status ${statusClass}"></div>
+                            </div>
+                            
+                            <div class="chat-info">
+                                <div class="chat-header-info">
+                                    <span class="chat-name">${chat.nombre}</span>
+                                    <span class="chat-time">${chat.hora}</span>
+                                </div>
+                                
+                                <div class="chat-last-message ${!chat.leido ? 'unread' : ''}">
+                                    <i class="fas fa-check${chat.leido ? '-double' : ''}" style="color: ${chat.leido ? '#4a90e2' : '#8a9bb0'}"></i>
+                                    <span>${chat.ultimoMensaje}</span>
+                                    ${chat.mensajesNoLeidos > 0 ? `<span class="unread-badge">${chat.mensajesNoLeidos}</span>` : ''}
+                                </div>
+                            </div>
+                            
+                            <div class="chat-options-btn" onclick="event.stopPropagation(); abrirOpcionesChat('${chat.nombre}', ${chat.online})">
+                                <i class="fas fa-ellipsis-v"></i>
+                            </div>
+                        </div>
+                    `;
+                });
+                chatsList.innerHTML = html;
+            }
+
+            // ============================================
+            // FUNCIÓN DE BÚSQUEDA
+            // ============================================
+            if (searchInput) {
+                searchInput.addEventListener('input', function() {
+                    const termino = this.value.toLowerCase().trim();
+                    
+                    if (termino.length > 0) {
+                        searchClear.classList.add('visible');
+                    } else {
+                        searchClear.classList.remove('visible');
+                    }
+                    
+                    const chatItems = document.querySelectorAll('.chat-item');
+                    chatItems.forEach(item => {
+                        const nombre = item.querySelector('.chat-name')?.textContent.toLowerCase() || '';
+                        if (nombre.includes(termino) || termino === '') {
+                            item.style.display = 'flex';
+                        } else {
+                            item.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            if (searchClear) {
+                searchClear.addEventListener('click', function() {
+                    searchInput.value = '';
+                    searchInput.focus();
+                    this.classList.remove('visible');
+                    
+                    document.querySelectorAll('.chat-item').forEach(item => {
+                        item.style.display = 'flex';
+                    });
+                });
+            }
+
+            // ============================================
+            // MODAL DE OPCIONES DE CHAT
+            // ============================================
+            window.abrirOpcionesChat = function(nombre, online) {
+                document.getElementById('modalUserName').textContent = nombre;
+                document.getElementById('modalUserStatus').textContent = online ? '🟢 En línea' : '⚪ Desconectado';
+                modalOverlay.classList.add('active');
+            };
+
+            if (closeModal) {
+                closeModal.addEventListener('click', () => {
+                    modalOverlay.classList.remove('active');
+                });
+            }
+
+            if (modalOverlay) {
+                modalOverlay.addEventListener('click', function(e) {
+                    if (e.target === modalOverlay) {
+                        modalOverlay.classList.remove('active');
+                    }
+                });
+            }
+
+            // Opciones del modal
+            if (optionReportar) {
+                optionReportar.addEventListener('click', () => {
+                    showNotification('📢 Conversación reportada', '#ff6b6b', 'fa-flag');
+                    modalOverlay.classList.remove('active');
+                });
+            }
+
+            if (optionBloquear) {
+                optionBloquear.addEventListener('click', () => {
+                    showNotification('🚫 Usuario bloqueado', '#2d3a4a', 'fa-ban');
+                    modalOverlay.classList.remove('active');
+                });
+            }
+
+            if (optionVaciar) {
+                optionVaciar.addEventListener('click', () => {
+                    showNotification('🗑️ Chat vaciado', '#8a9bb0', 'fa-trash');
+                    modalOverlay.classList.remove('active');
+                });
+            }
+
+            // ============================================
+            // CLICK EN CHATS - REDIRECCIÓN CORREGIDA
+            // ============================================
+           // CLICK EN CHATS - REDIRECCIÓN CORREGIDA
+// ============================================
+document.addEventListener('click', function(e) {
+    const chatItem = e.target.closest('.chat-item');
+    if (chatItem && !e.target.closest('.chat-options-btn')) {
+        const chatName = chatItem.dataset.chatName;
+        const chatId = chatItem.dataset.chatId;
+        showNotification(`💬 Abriendo chat con ${chatName}`, '#4a90e2', 'fa-comment');
+        
+        // Redirigir a la página de chat individual
+        setTimeout(() => {
+            window.location.href = 'chat-individual.html?id=' + chatId + '&nombre=' + encodeURIComponent(chatName);
+        }, 500);
+    }
+});
+            // ============================================
+            // BOTÓN PARA VOLVER AL PRINCIPAL - CORREGIDO
+            // ============================================
+            if (backToPrincipal) {
+                backToPrincipal.addEventListener('click', function() {
+                    showNotification('Volviendo al inicio...', '#6c5ce7', 'fa-arrow-left');
+                    setTimeout(() => {
+                        window.location.href = 'principal.html';
+                    }, 300);
+                });
+            }
+
+            // ============================================
+            // BOTONES DEL FOOTER - CORREGIDOS
+            // ============================================
+            if (btnBoost) {
+                btnBoost.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.1)';
+                    setTimeout(() => this.style.transform = 'scale(1)', 200);
+                    showNotification('🚀 Boost de visibilidad', '#ff6b6b', 'fa-rocket');
+                    
+                    // Aquí puedes llamar al modal de Boost si existe
+                    if (typeof mostrarModalBoost === 'function') {
+                        mostrarModalBoost();
+                    }
+                });
+            }
+
+            if (btnInicio) {
+                btnInicio.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showNotification('🏠 Volviendo al inicio', '#6c5ce7', 'fa-home');
+                    setTimeout(() => {
+                        window.location.href = 'principal.html';
+                    }, 300);
+                });
+            }
+
+            if (btnMessage) {
+                btnMessage.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showNotification('📬 Ya estás en mensajes', '#6c5ce7', 'fa-comment-dots');
+                });
+            }
+
+            if (btnLikesFooter) {
+                btnLikesFooter.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.1)';
+                    setTimeout(() => this.style.transform = 'scale(1)', 200);
+                    showNotification('❤️ Tus likes: 156', '#ff4757', 'fa-heart');
+                });
+            }
+
+            if (btnCuenta) {
+                btnCuenta.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showNotification('👤 Mi perfil', '#2d3a4a', 'fa-user');
+                    setTimeout(() => {
+                        window.location.href = 'cuenta.html';
+                    }, 300);
+                });
+            }
+
+            // ============================================
+            // INICIALIZAR
+            // ============================================
+            renderizarAvataresOnline();
+            renderizarChats();
+            
+            // Actualizar contador en título
+            document.querySelector('.mensajes-title span').textContent = CHATS.length;
+        });
+    </script>
+</body>
+</html>

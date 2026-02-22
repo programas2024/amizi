@@ -9,6 +9,7 @@
    <script src="modulos/boots.js"></script>
    <script src="modulos/regalos.js"></script>
     <style>
+        /* Tus estilos existentes se mantienen IGUAL */
         * {
             margin: 0;
             padding: 0;
@@ -829,118 +830,137 @@
                 }, 2500);
             }
 
-            // Botón Like (corazón azul)
-            btnLike.addEventListener('click', function() {
-                likesCount++;
-                updateLikes();
-                
-                btnLike.style.transform = 'scale(1.2)';
-                setTimeout(() => {
-                    btnLike.style.transform = 'scale(1)';
-                }, 200);
+            // Botón Like
+            if (btnLike) {
+                btnLike.addEventListener('click', function() {
+                    likesCount++;
+                    updateLikes();
+                    
+                    this.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
 
-                showNotification('fas fa-heart', '¡Like enviado! 💙', '#4a90e2', 'white');
-            });
+                    showNotification('fas fa-heart', '¡Like enviado! 💙', '#4a90e2', 'white');
+                });
+            }
 
-            // Botón Super Like (esmeralda)
-            btnSuperLike.addEventListener('click', function() {
-                likesCount += 2;
-                updateLikes();
-                
-                btnSuperLike.style.transform = 'scale(1.2)';
-                setTimeout(() => {
-                    btnSuperLike.style.transform = 'scale(1)';
-                }, 200);
+            // Botón Super Like
+            if (btnSuperLike) {
+                btnSuperLike.addEventListener('click', function() {
+                    likesCount += 2;
+                    updateLikes();
+                    
+                    this.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
 
-                showNotification('fas fa-star', '¡Super Like! ⭐✨', '#2ecc71', 'white');
-            });
+                    showNotification('fas fa-star', '¡Super Like! ⭐✨', '#2ecc71', 'white');
+                });
+            }
 
             // Botón X
-            btnX.addEventListener('click', function() {
-                btnX.style.transform = 'scale(1.2)';
-                setTimeout(() => {
-                    btnX.style.transform = 'scale(1)';
-                }, 200);
-                showNotification('fas fa-times', 'Descartado', '#2d3a4a', 'white');
-            });
+            if (btnX) {
+                btnX.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                    showNotification('fas fa-times', 'Descartado', '#2d3a4a', 'white');
+                });
+            }
 
-           
-            // Botón Reacción con Mensaje (NUEVO)
-            btnReactionMessage.addEventListener('click', function() {
-                btnReactionMessage.style.transform = 'scale(1.2)';
-                setTimeout(() => {
-                    btnReactionMessage.style.transform = 'scale(1)';
-                }, 200);
-                showNotification('fas fa-comment', '💬 Reacción con mensaje enviada', '#f39c12', 'white');
-            });
+            // Botón Reacción con Mensaje
+            if (btnReactionMessage) {
+                btnReactionMessage.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                    showNotification('fas fa-comment', '💬 Reacción con mensaje enviada', '#f39c12', 'white');
+                });
+            }
 
-            // Botón Mensaje (en footer)
-            btnMessage.addEventListener('click', function() {
-                btnMessage.style.transform = 'scale(1.05)';
-                setTimeout(() => {
-                    btnMessage.style.transform = 'scale(1)';
-                }, 200);
-                showNotification('fas fa-comment-dots', '📬 Buzón de mensajes', '#6c5ce7', 'white');
-            });
+            // Botón Mensaje (en footer) - REDIRECCIÓN CORREGIDA
+            if (btnMessage) {
+                btnMessage.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    this.style.transform = 'scale(1.05)';
+                    showNotification('fas fa-comment-dots', '📬 Abriendo mensajes...', '#6c5ce7', 'white');
+                    setTimeout(() => {
+                        window.location.href = 'mensajes.html';
+                    }, 300);
+                });
+            }
 
-            // Botón Boost
-            btnBoost.addEventListener('click', function() {
-                btnBoost.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    btnBoost.style.transform = 'scale(1)';
-                }, 200);
-                showNotification('fas fa-rocket', '🚀 Boost activado! +50 visibilidad', '#6c5ce7', 'white');
-            });
+            // Botón Boost - MODAL
+            if (btnBoost) {
+                btnBoost.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                    
+                    if (typeof mostrarModalBoost === 'function') {
+                        mostrarModalBoost();
+                    } else {
+                        showNotification('fas fa-rocket', '🚀 Función de Boost próximamente', '#ff6b6b', 'white');
+                    }
+                });
+            }
 
-            // Botón Inicio
-            btnInicio.addEventListener('click', function() {
-                window.location.href = 'principal.html';
-            });
+            // Botón Regalo - MODAL
+            if (btnGift) {
+                btnGift.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.2)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                    
+                    if (typeof mostrarModalRegalos === 'function') {
+                        mostrarModalRegalos();
+                    } else {
+                        showNotification('fas fa-gift', '🎁 Tienda de regalos próximamente', '#ff6b6b', 'white');
+                    }
+                });
+            }
 
-            // Botón Cuenta
-            btnCuenta.addEventListener('click', function() {
-                window.location.href = 'cuenta.html';
-            });
+            // Botón Inicio - REDIRECCIÓN CORREGIDA
+            if (btnInicio) {
+                btnInicio.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showNotification('🏠 Página de inicio', '#6c5ce7', 'fa-home');
+                    setTimeout(() => {
+                        window.location.href = 'principal.html';
+                    }, 300);
+                });
+            }
+
+            // Botón Cuenta - REDIRECCIÓN CORREGIDA
+            if (btnCuenta) {
+                btnCuenta.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    showNotification('👤 Mi perfil', '#2d3a4a', 'fa-user');
+                    setTimeout(() => {
+                        window.location.href = 'cuenta.html';
+                    }, 300);
+                });
+            }
 
             // Botón Likes en footer
-            btnLikesFooter.addEventListener('click', function() {
-                likesCount++;
-                updateLikes();
-                btnLikesFooter.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    btnLikesFooter.style.transform = 'scale(1)';
-                }, 200);
-                showNotification('fas fa-heart', '❤️ +1 like', '#ff4757', 'white');
-            });
-        });
-
-           // ============================================
-// ACTIVAR BOTÓN BOOST
-// ============================================
-document.addEventListener('DOMContentLoaded', function() {
-    const btnBoost = document.getElementById('btnBoost');
-    
-    if (btnBoost) {
-        btnBoost.addEventListener('click', function() {
-            // Animación del botón
-            this.style.transform = 'scale(1.1)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 200);
-            
-            // Verificar si el modal de Boost está disponible
-            if (typeof mostrarModalBoost === 'function') {
-                mostrarModalBoost();
-            } else {
-                console.warn('Modal de Boost no disponible');
-                // Fallback: mostrar notificación si existe
-                if (typeof showNotification === 'function') {
-                    showNotification('fas fa-rocket', '🚀 Función de Boost próximamente', '#ff6b6b', 'white');
-                }
+            if (btnLikesFooter) {
+                btnLikesFooter.addEventListener('click', function() {
+                    likesCount++;
+                    updateLikes();
+                    this.style.transform = 'scale(1.1)';
+                    setTimeout(() => {
+                        this.style.transform = 'scale(1)';
+                    }, 200);
+                    showNotification('fas fa-heart', '❤️ +1 like', '#ff4757', 'white');
+                });
             }
         });
-    }
-});
     </script>
 </body>
 </html>

@@ -1085,7 +1085,8 @@
                 setTimeout(() => {
                     btnBoost.style.transform = 'scale(1)';
                 }, 200);
-                showNotification('fas fa-rocket', '🚀 Boost activado! +50 visibilidad', '#6c5ce7', 'white');
+                
+            
             });
 
             // Botón Inicio
@@ -1095,7 +1096,7 @@
 
             // Botón Mensaje
             btnMessage.addEventListener('click', function() {
-                showNotification('fas fa-comment-dots', '📬 Buzón de mensajes', '#6c5ce7', 'white');
+                window.location.href = 'mensajes.html';
             });
 
             // Botón Likes en footer
