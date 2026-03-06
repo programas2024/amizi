@@ -1,1043 +1,1345 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
-    <title>Amizi · Registrarse</title>
-    <!-- Font Awesome para iconos más lindos -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-        }
-
-        body {
-            min-height: 100vh;
-            background: linear-gradient(145deg, #f0f3fa 0%, #f8f9ff 100%);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 20px;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        /* Fondo con elementos decorativos */
-        .bg-decoration {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            overflow: hidden;
-            z-index: 0;
-        }
-
-        .bg-circle {
-            position: absolute;
-            border-radius: 50%;
-            background: linear-gradient(145deg, rgba(108, 92, 231, 0.1), rgba(163, 99, 217, 0.1));
-            filter: blur(60px);
-        }
-
-        .circle1 {
-            width: 300px;
-            height: 300px;
-            top: -100px;
-            left: -100px;
-        }
-
-        .circle2 {
-            width: 400px;
-            height: 400px;
-            bottom: -150px;
-            right: -150px;
-            background: linear-gradient(145deg, rgba(74, 144, 226, 0.1), rgba(108, 92, 231, 0.1));
-        }
-
-        /* CONTENEDOR PRINCIPAL */
-        .register-container {
-            max-width: 1100px;
-            width: 100%;
-            background: rgba(255, 255, 255, 0.7);
-            backdrop-filter: blur(10px);
-            border-radius: 70px;
-            box-shadow: 0 40px 100px rgba(74, 144, 226, 0.2);
-            overflow: hidden;
-            padding: 40px 50px;
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            position: relative;
-            z-index: 1;
-            animation: fadeIn 0.8s ease;
-        }
-
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-                transform: translateY(20px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
-        }
-
-        /* ESTRELLA ANIMADA */
-        .star-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 15px;
-        }
-
-        .animated-star {
-            position: relative;
-            width: 80px;
-            height: 80px;
-            animation: starPulse 2s ease-in-out;
-        }
-
-        @keyframes starPulse {
-            0% {
-                transform: scale(0.5);
-                opacity: 0.3;
-                filter: drop-shadow(0 0 0 rgba(255, 215, 0, 0));
-            }
-            30% {
-                transform: scale(1.3);
-                opacity: 1;
-                filter: drop-shadow(0 0 30px rgba(255, 215, 0, 0.8));
-            }
-            60% {
-                transform: scale(1);
-                opacity: 1;
-                filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
-            }
-            100% {
-                transform: scale(1);
-                opacity: 1;
-                filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.3));
-            }
-        }
-
-        .animated-star i {
-            font-size: 60px;
-            color: #ffd700;
-            filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
-            animation: starGlow 3s infinite;
-        }
-
-        @keyframes starGlow {
-            0%, 100% {
-                filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.5));
-            }
-            50% {
-                filter: drop-shadow(0 0 40px rgba(255, 215, 0, 0.8));
-            }
-        }
-
-        /* TÍTULO PRINCIPAL */
-        .title-section {
-            text-align: center;
-            margin-bottom: 20px;
-        }
-
-        .main-title {
-            font-size: 60px;
-            font-weight: 800;
-            margin-bottom: 5px;
-            background: linear-gradient(145deg, #4a90e2, #6c5ce7, #a363d9);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            letter-spacing: -2px;
-            text-shadow: 0 5px 20px rgba(108, 92, 231, 0.3);
-        }
-
-        .subtitle {
-            font-size: 18px;
-            color: #5a6b7c;
-            font-weight: 500;
-            background: rgba(255, 255, 255, 0.5);
-            padding: 6px 20px;
-            border-radius: 60px;
-            display: inline-block;
-            backdrop-filter: blur(5px);
-        }
-
-        /* TÍTULO DE REGISTRO */
-        .register-title {
-            text-align: center;
-            margin: 15px 0 25px;
-            font-size: 30px;
-            font-weight: 700;
-            color: #1e2b3a;
-        }
-
-        .register-title i {
-            color: #ffd700;
-            margin-right: 10px;
-        }
-
-        .register-title span {
-            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
-            color: white;
-            padding: 5px 18px;
-            border-radius: 60px;
-            margin-left: 10px;
-            font-size: 22px;
-        }
-
-        /* FORMULARIO DE REGISTRO */
-        .register-form {
-            max-width: 900px;
-            margin: 0 auto 30px;
-        }
-
-        .form-row {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 20px;
-            margin-bottom: 20px;
-        }
-
-        .input-group {
-            margin-bottom: 5px;
-        }
-
-        .input-label {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            margin-bottom: 6px;
-            font-size: 16px;
-            font-weight: 600;
-            color: #2d3a4a;
-        }
-
-        .input-label i {
-            color: #4a90e2;
-            font-size: 18px;
-        }
-
-        .input-field {
-            width: 100%;
-            padding: 14px 20px;
-            border-radius: 50px;
-            border: 2px solid #e4e4f0;
-            background: white;
-            font-size: 16px;
-            transition: all 0.2s ease;
-            outline: none;
-        }
-
-        .input-field:focus {
-            border-color: #4a90e2;
-            box-shadow: 0 0 0 4px rgba(74, 144, 226, 0.1);
-        }
-
-        .input-field::placeholder {
-            color: #8a9bb0;
-            font-size: 14px;
-        }
-
-        select.input-field {
-            appearance: none;
-            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%238a9bb0' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-            background-repeat: no-repeat;
-            background-position: right 20px center;
-            background-size: 16px;
-        }
-
-        textarea.input-field {
-            resize: vertical;
-            min-height: 100px;
-        }
-
-        .password-wrapper {
-            position: relative;
-        }
-
-        .toggle-password {
-            position: absolute;
-            right: 15px;
-            top: 50%;
-            transform: translateY(-50%);
-            background: none;
-            border: none;
-            color: #8a9bb0;
-            cursor: pointer;
-            font-size: 18px;
-            transition: color 0.2s;
-        }
-
-        .toggle-password:hover {
-            color: #4a90e2;
-        }
-
-        /* BOTONES DE ACCIÓN */
-        .register-actions {
-            display: flex;
-            gap: 20px;
-            margin: 30px 0 20px;
-            justify-content: center;
-        }
-
-        .btn-primary {
-            flex: 1;
-            max-width: 250px;
-            padding: 16px 30px;
-            border-radius: 60px;
-            font-size: 20px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            border: none;
-            position: relative;
-        }
-
-        .btn-primary.registrarse {
-            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
-            color: white;
-            box-shadow: 0 15px 30px rgba(74, 144, 226, 0.3);
-        }
-
-        .btn-primary.cancelar {
-            background: #f0f3fa;
-            color: #2d3a4a;
-            border: 2px solid #e4e4f0;
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-3px);
-        }
-
-        .btn-primary.registrarse:hover {
-            box-shadow: 0 20px 40px rgba(74, 144, 226, 0.4);
-        }
-
-        .btn-primary.cancelar:hover {
-            background: #ff6b6b;
-            color: white;
-            border-color: #ff6b6b;
-        }
-
-        .btn-primary i {
-            font-size: 20px;
-        }
-
-        /* TOOLTIPS */
-        .btn-primary::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2d3a4a;
-            color: white;
-            padding: 6px 12px;
-            border-radius: 30px;
-            font-size: 12px;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.2s;
-            margin-top: 8px;
-            z-index: 100;
-            pointer-events: none;
-        }
-
-        .btn-primary:hover::after {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        /* FOOTER */
-        .landing-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 2px solid rgba(108, 92, 231, 0.1);
-            color: #5a6b7c;
-            flex-wrap: wrap;
-            gap: 15px;
-        }
-
-        .footer-left {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-            flex-wrap: wrap;
-        }
-
-        .support-badge {
-            background: #f0f3fa;
-            border-radius: 60px;
-            padding: 8px 16px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            border: 1px solid #e4e4f0;
-            position: relative;
-        }
-
-        .support-badge::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2d3a4a;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 30px;
-            font-size: 11px;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.2s;
-            margin-top: 6px;
-            z-index: 100;
-            pointer-events: none;
-        }
-
-        .support-badge:hover::after {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .support-badge:hover {
-            background: linear-gradient(145deg, #ff6b6b, #ff8e8e);
-            color: white;
-            transform: translateY(-2px);
-        }
-
-        .support-badge:hover i,
-        .support-badge:hover span {
-            color: white;
-        }
-
-        .support-badge i {
-            color: #ff6b6b;
-            font-size: 16px;
-            transition: color 0.2s;
-        }
-
-        .support-badge span {
-            color: #2d3a4a;
-            font-weight: 600;
-            font-size: 14px;
-            transition: color 0.2s;
-        }
-
-        .support-badge .email {
-            color: #4a90e2;
-            font-weight: 700;
-            margin-left: 3px;
-        }
-
-        .footer-links {
-            display: flex;
-            gap: 20px;
-            flex-wrap: wrap;
-        }
-
-        .footer-links span {
-            cursor: pointer;
-            transition: color 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-            font-size: 14px;
-            position: relative;
-        }
-
-        .footer-links span::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2d3a4a;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 30px;
-            font-size: 11px;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.2s;
-            margin-top: 6px;
-            z-index: 100;
-            pointer-events: none;
-        }
-
-        .footer-links span:hover::after {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .footer-links span:hover {
-            color: #6c5ce7;
-        }
-
-        .social-icons {
-            display: flex;
-            gap: 12px;
-        }
-
-        .social-icons i {
-            font-size: 20px;
-            color: #8a9bb0;
-            cursor: pointer;
-            transition: all 0.2s;
-            position: relative;
-        }
-
-        .social-icons i::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2d3a4a;
-            color: white;
-            padding: 5px 10px;
-            border-radius: 30px;
-            font-size: 11px;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.2s;
-            margin-top: 6px;
-            z-index: 100;
-            pointer-events: none;
-        }
-
-        .social-icons i:hover::after {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .social-icons i:hover {
-            color: #6c5ce7;
-            transform: translateY(-2px);
-        }
-
-        /* MODAL DE SOPORTE */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: rgba(0, 0, 0, 0.3);
-            backdrop-filter: blur(5px);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 10000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .modal-correo {
-            background: white;
-            border-radius: 60px;
-            padding: 35px;
-            max-width: 400px;
-            width: 90%;
-            box-shadow: 0 40px 80px rgba(0, 0, 0, 0.2);
-            border: 1px solid rgba(255, 255, 255, 0.8);
-            text-align: center;
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-
-        .modal-overlay.active .modal-correo {
-            transform: scale(1);
-        }
-
-        .modal-correo i {
-            font-size: 50px;
-            color: #ff6b6b;
-            margin-bottom: 15px;
-        }
-
-        .modal-correo h3 {
-            font-size: 24px;
-            font-weight: 700;
-            color: #1e2b3a;
-            margin-bottom: 12px;
-        }
-
-        .modal-correo p {
-            font-size: 16px;
-            color: #5a6b7c;
-            margin-bottom: 20px;
-            line-height: 1.4;
-        }
-
-        .modal-correo .email-highlight {
-            background: #f0f3fa;
-            padding: 12px;
-            border-radius: 40px;
-            font-size: 18px;
-            font-weight: 700;
-            color: #4a90e2;
-            margin-bottom: 20px;
-            border: 1px solid #e4e4f0;
-        }
-
-        .modal-correo .btn-cerrar {
-            background: linear-gradient(145deg, #ff6b6b, #ff8e8e);
-            color: white;
-            border: none;
-            border-radius: 60px;
-            padding: 12px 30px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .modal-correo .btn-cerrar:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(255, 107, 107, 0.3);
-        }
-
-        /* RESPONSIVE */
-        @media (max-width: 900px) {
-            .register-container {
-                padding: 30px 30px;
-            }
-
-            .main-title {
-                font-size: 50px;
-            }
-
-            .form-row {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .register-actions {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn-primary {
-                width: 100%;
-                max-width: 300px;
-            }
-
-            .landing-footer {
-                flex-direction: column;
-                align-items: center;
-                text-align: center;
-            }
-
-            .footer-left {
-                justify-content: center;
-            }
-
-            .footer-links {
-                justify-content: center;
-            }
-        }
-
-        @media (max-width: 500px) {
-            .register-container {
-                padding: 20px 20px;
-            }
-
-            .main-title {
-                font-size: 40px;
-            }
-
-            .register-title {
-                font-size: 24px;
-            }
-
-            .register-title span {
-                font-size: 18px;
-            }
-
-            .animated-star i {
-                font-size: 50px;
-            }
-
-            .input-field {
-                padding: 12px 16px;
-                font-size: 14px;
-            }
-
-            .btn-primary {
-                padding: 14px 25px;
-                font-size: 18px;
-            }
-
-            .footer-left {
-                flex-direction: column;
-                gap: 8px;
-            }
-
-            .support-badge {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-
-        /* Efecto de partículas */
-        .particle {
-            position: absolute;
-            width: 5px;
-            height: 5px;
-            background: #ffd700;
-            border-radius: 50%;
-            opacity: 0.3;
-            animation: float 3s infinite;
-        }
-
-        @keyframes float {
-            0%, 100% {
-                transform: translateY(0);
-            }
-            50% {
-                transform: translateY(-15px);
-            }
-        }
-    </style>
+<meta charset="UTF-8">
+<title>Registro Amizi</title>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+
+body{
+background: white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+font-family:'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+margin:0;
+}
+
+.app-container{
+max-width:420px;
+width:95%;
+background:white;
+border-radius:30px;
+padding:40px 30px;
+box-shadow:0 20px 40px rgba(0,0,0,0.08);
+border: 1px solid #f0f0f0;
+position: relative;
+}
+
+/* Estrella animada */
+.logo{
+text-align:center;
+font-size:48px;
+margin-bottom:5px;
+animation: flotar 3s ease-in-out infinite;
+display: inline-block;
+width: 100%;
+filter: drop-shadow(0 5px 10px rgba(108, 92, 231, 0.2));
+}
+
+@keyframes flotar {
+0%, 100% { transform: translateY(0); }
+50% { transform: translateY(-8px); }
+}
+
+.header{
+text-align:center;
+font-size:22px;
+font-weight:600;
+margin-bottom:5px;
+color:#6c5ce7;
+letter-spacing: -0.5px;
+}
+
+.subheader{
+text-align:center;
+font-size:14px;
+color:#888;
+margin-bottom:25px;
+font-weight:400;
+}
+
+/* Botón de información */
+.info-btn {
+position: absolute;
+top: 20px;
+right: 25px;
+background: none;
+border: none;
+font-size: 24px;
+cursor: pointer;
+color: #6c5ce7;
+width: auto;
+padding: 0;
+margin: 0;
+transition: transform 0.2s;
+}
+
+.info-btn:hover {
+transform: scale(1.1);
+background: none;
+}
+
+.input-group {
+position: relative;
+margin-top: 15px;
+}
+
+.input-icon {
+position: absolute;
+left: 15px;
+top: 50%;
+transform: translateY(-50%);
+color: #6c5ce7;
+font-size: 16px;
+z-index: 1;
+}
+
+input, select{
+width:100%;
+padding:14px 14px 14px 45px;
+border-radius:16px;
+border:1.5px solid #e0e0e0;
+margin-top:0;
+box-sizing: border-box;
+font-size: 15px;
+transition: all 0.3s;
+background: #fafafa;
+}
+
+input:focus, select:focus {
+outline: none;
+border-color: #6c5ce7;
+background: white;
+box-shadow: 0 4px 12px rgba(108, 92, 231, 0.1);
+}
+
+button{
+margin-top:25px;
+width:100%;
+padding:16px;
+border:none;
+border-radius:16px;
+background:#6c5ce7;
+color:white;
+font-size:16px;
+font-weight:600;
+cursor:pointer;
+transition: all 0.3s;
+box-shadow: 0 8px 16px rgba(108, 92, 231, 0.2);
+}
+
+button:hover{
+background:#5a4cd8;
+transform: translateY(-2px);
+box-shadow: 0 12px 20px rgba(108, 92, 231, 0.3);
+}
+
+.paso{
+display:none;
+}
+
+.paso.activo{
+display:block;
+}
+
+/* Categorías de intereses */
+.categorias-container {
+margin-bottom: 20px;
+}
+
+.categoria-tabs {
+display: flex;
+gap: 8px;
+overflow-x: auto;
+padding-bottom: 5px;
+margin-bottom: 15px;
+scrollbar-width: none;
+-ms-overflow-style: none;
+}
+
+.categoria-tabs::-webkit-scrollbar {
+display: none;
+}
+
+.categoria-tab {
+background: #f0f0f0;
+border: none;
+padding: 10px 18px;
+border-radius: 30px;
+font-size: 14px;
+font-weight: 500;
+color: #666;
+cursor: pointer;
+white-space: nowrap;
+transition: all 0.3s;
+margin: 0;
+box-shadow: none;
+width: auto;
+}
+
+.categoria-tab:hover {
+background: #e0e0e0;
+transform: translateY(-1px);
+}
+
+.categoria-tab.active {
+background: #6c5ce7;
+color: white;
+}
+
+/* Grid de intereses */
+.intereses-grid {
+display: grid;
+grid-template-columns: repeat(3, 1fr);
+gap: 12px;
+margin-top: 10px;
+max-height: 280px;
+overflow-y: auto;
+padding-right: 5px;
+scrollbar-width: thin;
+scrollbar-color: #6c5ce7 #f0f0f0;
+}
+
+.intereses-grid::-webkit-scrollbar {
+width: 4px;
+}
+
+.intereses-grid::-webkit-scrollbar-track {
+background: #f0f0f0;
+border-radius: 10px;
+}
+
+.intereses-grid::-webkit-scrollbar-thumb {
+background: #6c5ce7;
+border-radius: 10px;
+}
+
+.interes-btn {
+background: #f8f9ff;
+border-radius: 20px;
+padding: 12px 8px;
+cursor: pointer;
+text-align: center;
+font-size: 13px;
+font-weight: 500;
+border: 2px solid transparent;
+transition: all 0.3s;
+box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+}
+
+.interes-btn:hover {
+transform: translateY(-2px);
+border-color: #6c5ce7;
+box-shadow: 0 8px 16px rgba(108, 92, 231, 0.15);
+}
+
+.interes-btn.selected {
+background: #6c5ce7;
+color: white;
+border-color: #5a4cd8;
+}
+
+/* Tooltip */
+[data-tooltip] {
+position: relative;
+cursor: help;
+}
+
+[data-tooltip]:before {
+content: attr(data-tooltip);
+position: absolute;
+bottom: 100%;
+left: 50%;
+transform: translateX(-50%);
+padding: 8px 12px;
+background: #333;
+color: white;
+font-size: 13px;
+border-radius: 8px;
+white-space: nowrap;
+opacity: 0;
+visibility: hidden;
+transition: all 0.3s;
+pointer-events: none;
+z-index: 10;
+box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+}
+
+[data-tooltip]:hover:before {
+opacity: 1;
+visibility: visible;
+bottom: calc(100% + 10px);
+}
+
+/* Contador de intereses */
+.interes-contador {
+text-align: right;
+font-size: 14px;
+color: #888;
+margin: 15px 0 5px;
+padding-top: 10px;
+border-top: 1px solid #f0f0f0;
+}
+
+.interes-contador span {
+color: #6c5ce7;
+font-weight: 600;
+}
+
+/* Indicador de ubicación */
+.ubicacion-status {
+font-size: 13px;
+color: #6c5ce7;
+margin-top: 10px;
+padding: 10px;
+background: #f0f3ff;
+border-radius: 12px;
+text-align: center;
+}
+
+/* Botón de inicio de sesión */
+.login-link {
+margin-top: 15px;
+text-align: center;
+font-size: 14px;
+color: #888;
+}
+
+.login-link a {
+color: #6c5ce7;
+text-decoration: none;
+font-weight: 600;
+cursor: pointer;
+}
+
+.login-link a:hover {
+text-decoration: underline;
+}
+
+/* Estilos para la foto */
+.foto-container {
+text-align: center;
+margin: 20px 0;
+}
+
+.foto-preview {
+width: 150px;
+height: 150px;
+border-radius: 50%;
+border: 3px dashed #6c5ce7;
+margin: 0 auto 15px;
+display: flex;
+align-items: center;
+justify-content: center;
+overflow: hidden;
+background: #f8f9ff;
+}
+
+.foto-preview img {
+width: 100%;
+height: 100%;
+object-fit: cover;
+}
+
+.foto-preview .placeholder {
+color: #888;
+font-size: 14px;
+text-align: center;
+padding: 20px;
+}
+
+.foto-input {
+display: none;
+}
+
+.foto-label {
+background: #f0f0f0;
+color: #666;
+padding: 12px 24px;
+border-radius: 30px;
+cursor: pointer;
+display: inline-block;
+transition: all 0.3s;
+font-size: 14px;
+}
+
+.foto-label:hover {
+background: #e0e0e0;
+}
+
+.foto-label i {
+margin-right: 8px;
+}
+
+/* Mensajes de validación */
+.validation-message {
+font-size: 12px;
+margin-top: 5px;
+padding-left: 45px;
+}
+
+.validation-message.error {
+color: #e74c3c;
+}
+
+.validation-message.success {
+color: #27ae60;
+}
+
+.validation-message.warning {
+color: #f39c12;
+}
+
+/* Indicador de fortaleza de contraseña */
+.password-strength {
+margin-top: 8px;
+padding-left: 45px;
+}
+
+.strength-bar {
+height: 4px;
+border-radius: 2px;
+margin-top: 5px;
+transition: all 0.3s;
+}
+
+.strength-text {
+font-size: 12px;
+margin-top: 3px;
+}
+
+.strength-weak { color: #e74c3c; }
+.strength-medium { color: #f39c12; }
+.strength-strong { color: #27ae60; }
+.strength-very-strong { color: #2ecc71; }
+
+</style>
 </head>
+
 <body>
-    <!-- Fondo decorativo -->
-    <div class="bg-decoration">
-        <div class="bg-circle circle1"></div>
-        <div class="bg-circle circle2"></div>
-    </div>
 
-    <!-- Partículas (estrellas pequeñas) -->
-    <div class="particle" style="top: 15%; left: 8%;"></div>
-    <div class="particle" style="top: 75%; right: 12%; width: 7px; height: 7px; animation-delay: 0.5s;"></div>
-    <div class="particle" style="top: 45%; right: 18%; width: 4px; height: 4px; animation-delay: 1s;"></div>
-    <div class="particle" style="bottom: 25%; left: 15%; width: 8px; height: 8px; animation-delay: 1.5s;"></div>
+<div class="app-container">
 
-    <!-- MODAL DE SOPORTE -->
-    <div class="modal-overlay" id="modalSoporte">
-        <div class="modal-correo">
-            <i class="fas fa-headset"></i>
-            <h3>Soporte Amizi</h3>
-            <p>¿Necesitas ayuda? Escríbenos y te responderemos a la brevedad</p>
-            <div class="email-highlight">
-                <i class="fas fa-envelope" style="margin-right: 8px;"></i> amizi@gmail.com
-            </div>
-            <button class="btn-cerrar" id="btnCerrarSoporte">Entendido</button>
-        </div>
-    </div>
+<button class="info-btn" onclick="mostrarGuia()" data-tooltip="Guía rápida">ℹ️</button>
 
-    <div class="register-container">
-        <!-- ESTRELLA ANIMADA -->
-        <div class="star-container">
-            <div class="animated-star">
-                <i class="fas fa-star"></i>
-            </div>
-        </div>
+<div class="logo">⭐</div>
+<div class="header">Amizi</div>
+<div class="subheader">Conecta con personas que comparten tus intereses</div>
 
-        <!-- TÍTULO PRINCIPAL -->
-        <div class="title-section">
-            <h1 class="main-title">Amizi</h1>
-            <div class="subtitle">
-                <i class="fas fa-heart" style="color: #ff4757; margin-right: 8px;"></i>
-                Conoce amigos, comparte momentos
-            </div>
-        </div>
+<form id="registroForm">
 
-        <!-- TÍTULO DE REGISTRO -->
-        <div class="register-title">
-            <i class="fas fa-user-plus"></i>
-            Crear Cuenta <span>Amizi</span>
-        </div>
+<!-- PASO 1 - Datos personales -->
+<div class="paso activo" id="paso1">
+<div class="input-group" data-tooltip="Tu nombre completo">
+<span class="input-icon">👤</span>
+<input type="text" id="nombre" placeholder="Nombre completo" required>
+</div>
 
-        <!-- FORMULARIO DE REGISTRO -->
-        <div class="register-form">
-            <div class="form-row">
-                <div class="input-group">
-                    <div class="input-label">
-                        <i class="fas fa-user"></i>
-                        <span>Nombre</span>
-                    </div>
-                    <input type="text" class="input-field" placeholder="Ej: Laura">
-                </div>
-                <div class="input-group">
-                    <div class="input-label">
-                        <i class="fas fa-user-friends"></i>
-                        <span>Apellidos</span>
-                    </div>
-                    <input type="text" class="input-field" placeholder="Ej: González Pérez">
-                </div>
-            </div>
+<div class="input-group" data-tooltip="Tu correo electrónico">
+<span class="input-icon">📧</span>
+<input type="email" id="correo" placeholder="Correo electrónico" required>
+</div>
+<div id="correoValidation" class="validation-message"></div>
 
-            <div class="form-row">
-                <div class="input-group">
-                    <div class="input-label">
-                        <i class="fas fa-calendar-alt"></i>
-                        <span>Edad</span>
-                    </div>
-                    <input type="number" class="input-field" placeholder="Ej: 25" min="18" max="99">
-                </div>
-                <div class="input-group">
-                    <div class="input-label">
-                        <i class="fas fa-venus-mars"></i>
-                        <span>Género</span>
-                    </div>
-                    <select class="input-field">
-                        <option value="" disabled selected>Selecciona una opción</option>
-                        <option value="femenino">Femenino</option>
-                        <option value="masculino">Masculino</option>
-                        <option value="otro">Otro</option>
-                        <option value="prefiero-no">Prefiero no decirlo</option>
-                    </select>
-                </div>
-            </div>
+<div class="input-group" data-tooltip="Tu número de teléfono (opcional)">
+<span class="input-icon">📱</span>
+<input type="tel" id="telefono" placeholder="Teléfono (opcional)">
+</div>
 
-            <div class="form-row">
-                <div class="input-group">
-                    <div class="input-label">
-                        <i class="fas fa-map-marker-alt"></i>
-                        <span>Ciudad de residencia</span>
-                    </div>
-                    <input type="text" class="input-field" placeholder="Ej: Bogotá, Medellín, Cali...">
-                </div>
-                <div class="input-group">
-                    <div class="input-label">
-                        <i class="fas fa-briefcase"></i>
-                        <span>Trabajo / Estudio</span>
-                    </div>
-                    <input type="text" class="input-field" placeholder="Ej: Estudiante, Ingeniero, Doctor...">
-                </div>
-            </div>
+<button type="button" onclick="siguiente(2)">Siguiente →</button>
 
-            <div class="form-row">
-                <div class="input-group" style="grid-column: 1 / -1;">
-                    <div class="input-label">
-                        <i class="fas fa-align-left"></i>
-                        <span>Descripción personal</span>
-                    </div>
-                    <textarea class="input-field" placeholder="Cuéntanos sobre ti, tus hobbies, intereses..."></textarea>
-                </div>
-            </div>
+<div class="login-link">
+¿Ya tienes cuenta? <a onclick="irALogin()">Iniciar sesión</a>
+</div>
+</div>
 
-            <div class="form-row">
-                <div class="input-group">
-                    <div class="input-label">
-                        <i class="fas fa-lock"></i>
-                        <span>Contraseña</span>
-                    </div>
-                    <div class="password-wrapper">
-                        <input type="password" class="input-field" id="passwordField" placeholder="Mínimo 8 caracteres">
-                        <button class="toggle-password" id="togglePassword">
-                            <i class="far fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
-                <div class="input-group">
-                    <div class="input-label">
-                        <i class="fas fa-check-circle"></i>
-                        <span>Confirmar contraseña</span>
-                    </div>
-                    <div class="password-wrapper">
-                        <input type="password" class="input-field" id="confirmPasswordField" placeholder="Repite tu contraseña">
-                        <button class="toggle-password" id="toggleConfirmPassword">
-                            <i class="far fa-eye"></i>
-                        </button>
-                    </div>
-                </div>
-            </div>
+<!-- PASO 2 - Foto de perfil (NUEVO) -->
+<div class="paso" id="paso2">
+<div style="text-align: center; margin-bottom: 20px;">
+<span style="font-size: 24px; display: block;">⭐</span>
+<span style="font-size: 18px; font-weight: 600; color: #6c5ce7;">Amizi</span>
+<div style="font-size: 14px; color: #666; margin-top: 5px;">Elige tu foto de perfil</div>
+</div>
 
-            <div class="register-actions">
-                <button class="btn-primary registrarse" id="btnRegistrarse" data-tooltip="Crear tu cuenta en Amizi">
-                    <i class="fas fa-user-plus"></i>
-                    Registrarse
-                </button>
-                <button class="btn-primary cancelar" id="btnCancelar" data-tooltip="Volver al inicio">
-                    <i class="fas fa-times"></i>
-                    Cancelar
-                </button>
-            </div>
-        </div>
+<div class="foto-container">
+<div class="foto-preview" id="fotoPreview">
+<div class="placeholder">
+📸
+<br>
+Sin foto
+</div>
+</div>
 
-        <!-- FOOTER CON SOPORTE -->
-        <div class="landing-footer">
-            <div class="footer-left">
-                <!-- Soporte con tooltip -->
-                <div class="support-badge" id="btnAbrirSoporte" data-tooltip="Contactar al soporte">
-                    <i class="fas fa-headset"></i>
-                    <span>Soporte <span class="email">amizi@gmail.com</span></span>
-                </div>
-            </div>
+<input type="file" id="fotoInput" class="foto-input" accept="image/jpeg,image/png,image/jpg,image/gif,image/webp">
+<label for="fotoInput" class="foto-label">
+📷 Seleccionar foto
+</label>
+<p style="font-size: 12px; color: #888; margin-top: 10px;">Max. 5MB - JPG, PNG, GIF, WEBP</p>
+</div>
 
-            <div class="footer-links">
-                <span data-tooltip="Preguntas frecuentes"><i class="fas fa-question-circle"></i> FAQ</span>
-                <span data-tooltip="Políticas de privacidad"><i class="fas fa-shield-alt"></i> Privacidad</span>
-                <span data-tooltip="Términos y condiciones"><i class="fas fa-file-alt"></i> Términos</span>
-            </div>
+<button type="button" onclick="siguiente(3)" id="btnSiguienteFoto">Siguiente →</button>
 
-            <div class="social-icons">
-                <i class="fab fa-instagram" data-tooltip="Instagram"></i>
-                <i class="fab fa-twitter" data-tooltip="Twitter"></i>
-                <i class="fab fa-tiktok" data-tooltip="TikTok"></i>
-            </div>
-        </div>
-    </div>
+<div class="login-link">
+¿Ya tienes cuenta? <a onclick="irALogin()">Iniciar sesión</a>
+</div>
+</div>
 
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Elementos del formulario
-            const btnRegistrarse = document.getElementById('btnRegistrarse');
-            const btnCancelar = document.getElementById('btnCancelar');
-            
-            // Toggle contraseñas
-            const togglePassword = document.getElementById('togglePassword');
-            const toggleConfirmPassword = document.getElementById('toggleConfirmPassword');
-            const passwordField = document.getElementById('passwordField');
-            const confirmPasswordField = document.getElementById('confirmPasswordField');
-            
-            // Modal de soporte
-            const modalSoporte = document.getElementById('modalSoporte');
-            const btnAbrirSoporte = document.getElementById('btnAbrirSoporte');
-            const btnCerrarSoporte = document.getElementById('btnCerrarSoporte');
+<!-- PASO 3 - Intereses -->
+<div class="paso" id="paso3">
+<div style="text-align: center; margin-bottom: 15px;">
+<span style="font-size: 24px; display: block;">⭐</span>
+<span style="font-size: 18px; font-weight: 600; color: #6c5ce7;">Amizi</span>
+<div style="font-size: 14px; color: #666; margin-top: 5px;">Escoge tus intereses</div>
+</div>
 
-            // Función para mostrar notificaciones elegantes
-            function showNotification(text, color) {
-                const notification = document.createElement('div');
-                notification.textContent = text;
-                notification.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    background: ${color};
-                    color: white;
-                    padding: 14px 28px;
-                    border-radius: 60px;
-                    font-size: 16px;
-                    z-index: 9999;
-                    animation: slideDown 0.3s ease;
-                    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-                    border: 1px solid rgba(255,255,255,0.2);
-                    font-weight: 500;
-                    text-align: center;
-                    max-width: 90%;
-                    white-space: nowrap;
-                `;
-                document.body.appendChild(notification);
+<div class="categorias-container">
+<div class="categoria-tabs" id="categoriaTabs">
+<button class="categoria-tab active" data-categoria="todos" onclick="filtrarPorCategoria('todos')">✨ Todos</button>
+<button class="categoria-tab" data-categoria="casa" onclick="filtrarPorCategoria('casa')">🏠 Casa</button>
+<button class="categoria-tab" data-categoria="porfuera" onclick="filtrarPorCategoria('porfuera')">🌳 Por fuera</button>
+<button class="categoria-tab" data-categoria="pasatiempos" onclick="filtrarPorCategoria('pasatiempos')">🎨 Pasatiempos</button>
+<button class="categoria-tab" data-categoria="negocio" onclick="filtrarPorCategoria('negocio')">💼 Negocio</button>
+</div>
+</div>
 
-                setTimeout(() => {
-                    notification.style.animation = 'fadeOut 0.3s ease';
-                    setTimeout(() => {
-                        document.body.removeChild(notification);
-                    }, 300);
-                }, 2500);
-            }
+<div id="listaIntereses" class="intereses-grid"></div>
 
-            // Añadir estilos de animación
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes slideDown {
-                    from {
-                        opacity: 0;
-                        transform: translate(-50%, -30px);
-                    }
-                    to {
-                        opacity: 1;
-                        transform: translate(-50%, 0);
-                    }
-                }
-                
-                @keyframes fadeOut {
-                    from {
-                        opacity: 1;
-                        transform: translate(-50%, 0);
-                    }
-                    to {
-                        opacity: 0;
-                        transform: translate(-50%, -30px);
-                    }
-                }
-            `;
-            document.head.appendChild(style);
+<div class="interes-contador" id="contadorIntereses">
+✨ Seleccionados: <span id="contadorValor">0</span>/8
+</div>
 
-            // Event listener para registrarse
-            btnRegistrarse.addEventListener('click', function() {
-                // Validación básica
-                if (passwordField.value !== confirmPasswordField.value) {
-                    showNotification('❌ Las contraseñas no coinciden', '#ff6b6b');
-                    return;
-                }
-                
-                if (passwordField.value.length < 8 && passwordField.value.length > 0) {
-                    showNotification('⚠️ La contraseña debe tener al menos 8 caracteres', '#ff6b6b');
-                    return;
-                }
+<button type="button" onclick="validarYAvanzarIntereses()">Siguiente →</button>
 
-                showNotification('✨ Creando tu cuenta en Amizi...', '#4a90e2');
-                // Aquí iría la lógica de registro
-                setTimeout(() => {
-                    window.location.href = 'index.html'; // Redirige al index después del registro simulado
-                }, 1500);
-            });
+<div class="login-link">
+¿Ya tienes cuenta? <a onclick="irALogin()">Iniciar sesión</a>
+</div>
+</div>
 
-            // Event listener para cancelar
-            btnCancelar.addEventListener('click', function() {
-                showNotification('👋 Registro cancelado', '#2d3a4a');
-                setTimeout(() => {
-                    window.location.href = 'index.html';
-                }, 1000);
-            });
+<!-- PASO 4 - Ubicación -->
+<div class="paso" id="paso4">
+<div class="input-group" data-tooltip="Selecciona tu país">
+<span class="input-icon">🌍</span>
+<select id="pais" required>
+<option value="">Selecciona un país</option>
+</select>
+</div>
 
-            // Toggle mostrar/ocultar contraseña
-            togglePassword.addEventListener('click', function() {
-                const type = passwordField.getAttribute('type') === 'password' ? 'text' : 'password';
-                passwordField.setAttribute('type', type);
-                this.innerHTML = type === 'password' ? '<i class="far fa-eye"></i>' : '<i class="far fa-eye-slash"></i>';
-            });
+<div class="input-group" data-tooltip="Selecciona tu ciudad">
+<span class="input-icon">🏙️</span>
+<select id="ciudad" required>
+<option value="">Primero selecciona un país</option>
+</select>
+</div>
 
-            toggleConfirmPassword.addEventListener('click', function() {
-                const type = confirmPasswordField.getAttribute('type') === 'password' ? 'text' : 'password';
-                confirmPasswordField.setAttribute('type', type);
-                this.innerHTML = type === 'password' ? '<i class="far fa-eye"></i>' : '<i class="far fa-eye-slash"></i>';
-            });
+<button type="button" onclick="obtenerUbicacionManual()" style="background: #5a4cd8; margin-top: 10px; padding: 12px;">
+📍 Obtener mi ubicación actual
+</button>
 
-            // Abrir modal de soporte
-            btnAbrirSoporte.addEventListener('click', function() {
-                modalSoporte.classList.add('active');
-            });
+<div id="ubicacionStatus" class="ubicacion-status">
+📍 No has obtenido tu ubicación aún
+</div>
 
-            // Cerrar modal de soporte
-            btnCerrarSoporte.addEventListener('click', function() {
-                modalSoporte.classList.remove('active');
-            });
+<button type="button" onclick="siguiente(5)" id="btnSiguienteUbicacion">Siguiente →</button>
 
-            // Cerrar modal al hacer clic fuera
-            modalSoporte.addEventListener('click', function(e) {
-                if (e.target === modalSoporte) {
-                    modalSoporte.classList.remove('active');
-                }
-            });
-        });
-    </script>
+<div class="login-link">
+¿Ya tienes cuenta? <a onclick="irALogin()">Iniciar sesión</a>
+</div>
+</div>
+
+<!-- PASO 5 - Contraseña -->
+<div class="paso" id="paso5">
+<div class="input-group" data-tooltip="Crea una contraseña segura">
+<span class="input-icon">🔒</span>
+<input type="password" id="contrasena" placeholder="Contraseña" required>
+</div>
+<div class="password-strength" id="passwordStrength">
+<div class="strength-bar" style="width: 0%; background: #ddd;"></div>
+<div class="strength-text" id="strengthText"></div>
+</div>
+
+<div class="input-group" data-tooltip="Confirma tu contraseña">
+<span class="input-icon">✓</span>
+<input type="password" id="confirmContrasena" placeholder="Confirmar contraseña" required>
+</div>
+<div id="confirmValidation" class="validation-message"></div>
+
+<button type="submit" id="submitBtn">✨ Crear cuenta ✨</button>
+
+<div class="login-link">
+¿Ya tienes cuenta? <a onclick="irALogin()">Iniciar sesión</a>
+</div>
+</div>
+
+</form>
+
+</div>
+
+<script>
+const supabaseUrl = "https://qfwpikteqipzwpmqbllt.supabase.co";
+const supabaseKey = "sb_publishable_W75gkuE187xY7qWeQsP6XQ_3IWzPC3A";
+
+const { createClient } = supabase;
+const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+let interesesSeleccionados = [];
+let todosLosIntereses = [];
+let categoriaActual = 'todos';
+let ubicacionActual = { lat: null, lng: null };
+let fotoSeleccionada = null;
+let fotoFile = null;
+let timeoutId = null;
+
+// Función para ir al login
+function irALogin() {
+window.location.href = "index.html";
+}
+
+// Función para mostrar guía
+function mostrarGuia() {
+Swal.fire({
+title: '✨ Guía de Registro ✨',
+html: `
+<div style="text-align: left; max-height: 400px; overflow-y: auto; padding-right: 10px;">
+<p style="margin: 10px 0">👤 <strong>Nombre:</strong> Tu nombre completo</p>
+<p style="margin: 10px 0">📧 <strong>Correo:</strong> Correo electrónico válido</p>
+<p style="margin: 10px 0">📱 <strong>Teléfono:</strong> Opcional</p>
+<p style="margin: 10px 0">📸 <strong>Foto:</strong> Tu foto de perfil</p>
+<p style="margin: 10px 0">✨ <strong>Intereses:</strong> Elige 1-8 intereses</p>
+<p style="margin: 10px 0">🌍 <strong>Ubicación:</strong> País y ciudad</p>
+<p style="margin: 10px 0">📍 <strong>GPS:</strong> Tu ubicación actual (opcional)</p>
+<p style="margin: 10px 0">🔒 <strong>Contraseña:</strong> Mínimo 6 caracteres</p>
+</div>
+<hr style="margin: 20px 0">
+<p style="color: #6c5ce7; font-weight: 600;">¡Completa todos los pasos y únete a Amizi! ⭐</p>
+`,
+icon: 'info',
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+width: '600px'
+});
+}
+
+// Actualizar contador de intereses
+function actualizarContador() {
+document.getElementById('contadorValor').textContent = interesesSeleccionados.length;
+}
+
+// Validar intereses antes de avanzar
+function validarYAvanzarIntereses() {
+if (interesesSeleccionados.length === 0) {
+Swal.fire({
+title: '¡Espera! ⚠️',
+text: 'Debes seleccionar al menos un interés',
+icon: 'warning',
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+timer: 2000,
+showConfirmButton: true,
+width: '500px'
+});
+return;
+}
+siguiente(4);
+}
+
+// Verificar si el correo ya existe
+async function verificarCorreo(correo) {
+if (!correo || !correo.includes('@') || !correo.includes('.')) return;
+
+try {
+const { data, error } = await supabaseClient
+.from("usuarios")
+.select("correo")
+.eq("correo", correo)
+.maybeSingle();
+
+if (error) return;
+
+const validationDiv = document.getElementById('correoValidation');
+if (data) {
+validationDiv.innerHTML = '⚠️ Este correo ya está registrado. ¿Ya tienes cuenta?';
+validationDiv.className = 'validation-message warning';
+} else {
+validationDiv.innerHTML = '✅ Correo disponible';
+validationDiv.className = 'validation-message success';
+}
+} catch (e) {
+console.log('Error verificando correo:', e);
+}
+}
+
+// Evaluar fortaleza de la contraseña
+function evaluarFortalezaContrasena(contrasena) {
+let fortaleza = 0;
+
+if (contrasena.length >= 8) fortaleza += 25;
+if (contrasena.length >= 12) fortaleza += 15;
+if (/[A-Z]/.test(contrasena)) fortaleza += 20;
+if (/[a-z]/.test(contrasena)) fortaleza += 20;
+if (/[0-9]/.test(contrasena)) fortaleza += 20;
+if (/[^A-Za-z0-9]/.test(contrasena)) fortaleza += 20;
+
+fortaleza = Math.min(fortaleza, 100);
+
+let nivel = '';
+let color = '';
+
+if (fortaleza < 30) { nivel = 'Débil'; color = '#e74c3c'; }
+else if (fortaleza < 50) { nivel = 'Regular'; color = '#f39c12'; }
+else if (fortaleza < 70) { nivel = 'Buena'; color = '#f1c40f'; }
+else if (fortaleza < 90) { nivel = 'Fuerte'; color = '#27ae60'; }
+else { nivel = 'Muy fuerte'; color = '#2ecc71'; }
+
+return { fortaleza, nivel, color };
+}
+
+// Actualizar fortaleza de contraseña
+function actualizarFortalezaContrasena() {
+const contrasena = document.getElementById('contrasena').value;
+const strengthBar = document.querySelector('#passwordStrength .strength-bar');
+const strengthText = document.getElementById('strengthText');
+
+if (!contrasena) {
+strengthBar.style.width = '0%';
+strengthBar.style.background = '#ddd';
+strengthText.innerHTML = '';
+return;
+}
+
+const { fortaleza, nivel, color } = evaluarFortalezaContrasena(contrasena);
+
+strengthBar.style.width = fortaleza + '%';
+strengthBar.style.background = color;
+strengthText.innerHTML = `Fortaleza: <span style="color: ${color}; font-weight: 600;">${nivel}</span>`;
+
+const confirmContrasena = document.getElementById('confirmContrasena').value;
+if (confirmContrasena) verificarCoincidenciaContrasenas();
+}
+
+// Verificar coincidencia de contraseñas
+function verificarCoincidenciaContrasenas() {
+const contrasena = document.getElementById('contrasena').value;
+const confirmContrasena = document.getElementById('confirmContrasena').value;
+const confirmDiv = document.getElementById('confirmValidation');
+
+if (!confirmContrasena) {
+confirmDiv.innerHTML = '';
+return;
+}
+
+if (contrasena === confirmContrasena) {
+confirmDiv.innerHTML = '✅ Las contraseñas coinciden';
+confirmDiv.className = 'validation-message success';
+} else {
+confirmDiv.innerHTML = '❌ Las contraseñas no coinciden';
+confirmDiv.className = 'validation-message error';
+}
+}
+
+// Manejar selección de foto
+document.getElementById('fotoInput').addEventListener('change', function(e) {
+const file = e.target.files[0];
+if (!file) return;
+
+// Validar tamaño (5MB máx)
+if (file.size > 5 * 1024 * 1024) {
+Swal.fire({
+title: 'Archivo muy grande',
+text: 'La foto no debe superar los 5MB',
+icon: 'error',
+confirmButtonColor: '#6c5ce7',
+background: 'white'
+});
+this.value = '';
+return;
+}
+
+// Validar tipo
+if (!file.type.startsWith('image/')) {
+Swal.fire({
+title: 'Formato no válido',
+text: 'Solo se permiten imágenes (JPG, PNG, GIF, WEBP)',
+icon: 'error',
+confirmButtonColor: '#6c5ce7',
+background: 'white'
+});
+this.value = '';
+return;
+}
+
+fotoFile = file;
+
+// Mostrar preview
+const reader = new FileReader();
+reader.onload = function(e) {
+const preview = document.getElementById('fotoPreview');
+preview.innerHTML = `<img src="${e.target.result}" alt="Preview">`;
+};
+reader.readAsDataURL(file);
+});
+
+/* PASOS */
+function siguiente(num) {
+// Validar paso 1
+if (num === 2) {
+const nombre = document.getElementById('nombre').value;
+const correo = document.getElementById('correo').value;
+
+if (!nombre || !correo) {
+Swal.fire({
+title: 'Campos incompletos',
+text: 'Completa nombre y correo',
+icon: 'warning',
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+timer: 1500,
+width: '500px'
+});
+return;
+}
+
+if (!correo.includes('@') || !correo.includes('.')) {
+Swal.fire({
+title: 'Correo inválido',
+text: 'Ingresa un correo electrónico válido',
+icon: 'warning',
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+timer: 1500,
+width: '500px'
+});
+return;
+}
+
+const correoWarning = document.getElementById('correoValidation').classList.contains('warning');
+if (correoWarning) {
+Swal.fire({
+title: 'Correo ya registrado',
+text: 'Este correo ya tiene una cuenta. ¿Deseas iniciar sesión?',
+icon: 'warning',
+showCancelButton: true,
+confirmButtonColor: '#6c5ce7',
+cancelButtonColor: '#888',
+confirmButtonText: 'Ir a iniciar sesión',
+cancelButtonText: 'Usar otro correo',
+background: 'white',
+width: '500px'
+}).then((result) => {
+if (result.isConfirmed) window.location.href = "principal.html";
+});
+return;
+}
+}
+// Validar paso 3 (foto)
+else if (num === 3) {
+if (!fotoFile) {
+Swal.fire({
+title: 'Foto requerida',
+text: 'Por favor selecciona una foto de perfil',
+icon: 'warning',
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+width: '500px'
+});
+return;
+}
+}
+// Validar paso 5 (contraseña desde paso 4)
+else if (num === 5) {
+const pais = document.getElementById('pais').value;
+const ciudad = document.getElementById('ciudad').value;
+if (!pais || !ciudad) {
+Swal.fire({
+title: 'Ubicación incompleta',
+text: 'Selecciona país y ciudad',
+icon: 'warning',
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+timer: 1500,
+width: '500px'
+});
+return;
+}
+}
+
+document.querySelectorAll(".paso").forEach(p => p.classList.remove("activo"));
+document.getElementById("paso" + num).classList.add("activo");
+}
+
+// Filtrar intereses por categoría
+function filtrarPorCategoria(categoria) {
+categoriaActual = categoria;
+const container = document.getElementById("listaIntereses");
+container.innerHTML = '';
+
+let interesesFiltrados = categoria === 'todos' 
+? todosLosIntereses 
+: todosLosIntereses.filter(i => i.categoria === categoria);
+
+interesesFiltrados.forEach(i => {
+let div = crearBotonInteres(i);
+container.appendChild(div);
+});
+
+document.querySelectorAll('.categoria-tab').forEach(tab => {
+if (tab.dataset.categoria === categoria) tab.classList.add('active');
+else tab.classList.remove('active');
+});
+}
+
+// Crear botón de interés
+function crearBotonInteres(i) {
+let div = document.createElement("div");
+div.className = "interes-btn";
+if (interesesSeleccionados.includes(i.nombre)) div.classList.add('selected');
+div.setAttribute('data-tooltip', `Seleccionar ${i.nombre}`);
+div.textContent = i.nombre;
+div.dataset.id = i.id;
+
+div.onclick = () => {
+div.classList.toggle("selected");
+
+if (interesesSeleccionados.includes(i.nombre)) {
+interesesSeleccionados = interesesSeleccionados.filter(x => x != i.nombre);
+} else {
+if (interesesSeleccionados.length >= 8) {
+Swal.fire({
+title: 'Límite alcanzado ⚠️',
+text: 'Máximo 8 intereses permitidos',
+icon: 'warning',
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+timer: 1500,
+showConfirmButton: true,
+width: '500px'
+});
+div.classList.remove("selected");
+return;
+}
+interesesSeleccionados.push(i.nombre);
+}
+actualizarContador();
+};
+
+return div;
+}
+
+/* Cargar intereses */
+async function cargarIntereses() {
+try {
+const { data, error } = await supabaseClient
+.from("intereses")
+.select("*");
+
+if (error) {
+console.error('Error al cargar intereses:', error);
+return;
+}
+
+if (!data || data.length === 0) {
+document.getElementById("listaIntereses").innerHTML = '<p style="text-align: center;">No hay intereses disponibles</p>';
+return;
+}
+
+todosLosIntereses = data.map(interes => {
+if (!interes.categoria) {
+const nombre = interes.nombre.toLowerCase();
+if (['mascotas', 'cocina', 'hogar', 'familia', 'decoración', 'jardinería', 'bricolaje', 'limpieza'].includes(nombre)) {
+interes.categoria = 'casa';
+} else if (['deportes', 'fútbol', 'baloncesto', 'tenis', 'natación', 'correr', 'ciclismo', 'senderismo', 'acampar', 'playa', 'montaña'].includes(nombre)) {
+interes.categoria = 'porfuera';
+} else if (['música', 'baile', 'pintura', 'fotografía', 'lectura', 'videojuegos', 'cine', 'series', 'anime', 'manualidades'].includes(nombre)) {
+interes.categoria = 'pasatiempos';
+} else if (['emprender', 'negocios', 'inversiones', 'marketing', 'ventas', 'finanzas', 'tecnología', 'programación', 'diseño'].includes(nombre)) {
+interes.categoria = 'negocio';
+} else {
+interes.categoria = 'pasatiempos';
+}
+}
+return interes;
+});
+
+filtrarPorCategoria('todos');
+
+} catch (error) {
+console.error('Error inesperado:', error);
+}
+}
+
+/* PAÍSES */
+async function cargarPaises() {
+try {
+const select = document.getElementById("pais");
+select.innerHTML = '<option value="">Cargando países...</option>';
+
+const { data, error } = await supabaseClient
+.from("pais")
+.select("*")
+.order("nombre", { ascending: true });
+
+if (error) {
+console.error('Error al cargar países:', error);
+select.innerHTML = '<option value="">Error al cargar países</option>';
+return;
+}
+
+select.innerHTML = '<option value="">Selecciona un país</option>';
+
+if (data && data.length > 0) {
+data.forEach(p => {
+const option = document.createElement("option");
+option.value = p.id_pais;
+option.textContent = p.nombre;
+select.appendChild(option);
+});
+}
+} catch (error) {
+console.error('Error inesperado:', error);
+}
+}
+
+/* CIUDADES */
+document.getElementById("pais").addEventListener("change", async () => {
+const paisId = document.getElementById("pais").value;
+const ciudadSelect = document.getElementById("ciudad");
+
+if (!paisId) {
+ciudadSelect.innerHTML = '<option value="">Primero selecciona un país</option>';
+return;
+}
+
+try {
+ciudadSelect.innerHTML = '<option value="">Cargando ciudades...</option>';
+
+const { data, error } = await supabaseClient
+.from("ciudad")
+.select("*")
+.eq("id_pais", paisId)
+.order("nombre", { ascending: true });
+
+if (error) {
+console.error('Error al cargar ciudades:', error);
+ciudadSelect.innerHTML = '<option value="">Error al cargar ciudades</option>';
+return;
+}
+
+ciudadSelect.innerHTML = '<option value="">Selecciona una ciudad</option>';
+
+if (data && data.length > 0) {
+data.forEach(c => {
+let op = document.createElement("option");
+op.value = c.id_ciudad;
+op.textContent = c.nombre;
+ciudadSelect.appendChild(op);
+});
+} else {
+ciudadSelect.innerHTML = '<option value="">No hay ciudades disponibles</option>';
+}
+} catch (error) {
+console.error('Error inesperado:', error);
+}
+});
+
+/* OBTENER UBICACIÓN */
+function obtenerUbicacionManual() {
+if (!navigator.geolocation) {
+Swal.fire({
+title: 'Error',
+text: 'Tu navegador no soporta geolocalización',
+icon: 'error',
+confirmButtonColor: '#6c5ce7',
+width: '500px'
+});
+return;
+}
+
+Swal.fire({
+title: 'Obteniendo ubicación',
+text: 'Por favor espera...',
+allowOutsideClick: false,
+background: 'white',
+width: '500px',
+didOpen: () => Swal.showLoading()
+});
+
+navigator.geolocation.getCurrentPosition(
+pos => {
+ubicacionActual = { lat: pos.coords.latitude, lng: pos.coords.longitude };
+Swal.close();
+
+document.getElementById('ubicacionStatus').innerHTML = 
+`📍 Ubicación obtenida:<br>Lat: ${ubicacionActual.lat.toFixed(6)}, Lng: ${ubicacionActual.lng.toFixed(6)}`;
+
+Swal.fire({
+title: '¡Éxito!',
+text: 'Ubicación obtenida correctamente',
+icon: 'success',
+timer: 1500,
+showConfirmButton: false,
+background: 'white',
+width: '500px'
+});
+},
+error => {
+console.error('Error obteniendo ubicación:', error);
+Swal.fire({
+title: 'Error',
+text: 'No se pudo obtener tu ubicación. Asegúrate de haber dado permisos.',
+icon: 'error',
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+width: '500px'
+});
+ubicacionActual = { lat: null, lng: null };
+},
+{ enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
+);
+}
+
+/* REGISTRO - CON FOTO EN STORAGE */
+document.getElementById("registroForm").addEventListener("submit", async function(e) {
+e.preventDefault();
+
+try {
+let nombre = document.getElementById("nombre").value;
+let correo = document.getElementById("correo").value;
+let telefono = document.getElementById("telefono").value || null;
+let pais = document.getElementById("pais").value;
+let ciudad = document.getElementById("ciudad").value;
+let contrasena = document.getElementById("contrasena").value;
+let confirmContrasena = document.getElementById("confirmContrasena").value;
+
+// Validaciones
+if (!nombre || !correo || !contrasena || !confirmContrasena || !pais || !ciudad || !fotoFile) {
+Swal.fire({
+title: "Campos incompletos",
+text: "Completa todos los campos obligatorios",
+icon: "warning",
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+width: '500px'
+});
+return;
+}
+
+if (!correo.includes('@') || !correo.includes('.')) {
+Swal.fire({
+title: "Correo inválido",
+text: "Ingresa un correo electrónico válido",
+icon: "warning",
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+width: '500px'
+});
+return;
+}
+
+if (contrasena !== confirmContrasena) {
+Swal.fire({
+title: "Contraseñas no coinciden",
+text: "Verifica que las contraseñas sean iguales",
+icon: "warning",
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+width: '500px'
+});
+return;
+}
+
+const { fortaleza } = evaluarFortalezaContrasena(contrasena);
+if (fortaleza < 30) {
+Swal.fire({
+title: "Contraseña débil",
+text: "Usa una contraseña más fuerte (mínimo 8 caracteres, mayúsculas, números)",
+icon: "warning",
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+width: '500px'
+});
+return;
+}
+
+if (interesesSeleccionados.length === 0) {
+Swal.fire({
+title: "Selecciona intereses",
+text: "Debes seleccionar al menos un interés",
+icon: "warning",
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+width: '500px'
+});
+return;
+}
+
+Swal.fire({
+title: 'Verificando correo...',
+allowOutsideClick: false,
+background: 'white',
+width: '500px',
+didOpen: () => Swal.showLoading()
+});
+
+// Verificar correo
+const { data: usuarioExistente, error: errorVerificacion } = await supabaseClient
+.from("usuarios")
+.select("correo")
+.eq("correo", correo)
+.maybeSingle();
+
+if (errorVerificacion) throw errorVerificacion;
+
+if (usuarioExistente) {
+Swal.fire({
+title: 'Correo ya registrado ⚠️',
+text: 'Este correo ya tiene una cuenta. ¿Deseas iniciar sesión?',
+icon: 'warning',
+showCancelButton: true,
+confirmButtonColor: '#6c5ce7',
+cancelButtonColor: '#888',
+confirmButtonText: 'Ir a iniciar sesión',
+cancelButtonText: 'Usar otro correo',
+background: 'white',
+width: '500px'
+}).then((result) => {
+if (result.isConfirmed) window.location.href = "principal.html";
+});
+return;
+}
+
+Swal.fire({
+title: 'Subiendo foto...',
+allowOutsideClick: false,
+background: 'white',
+width: '500px',
+didOpen: () => Swal.showLoading()
+});
+
+// 1. SUBIR FOTO A STORAGE
+const fileExt = fotoFile.name.split('.').pop();
+const fileName = `${Date.now()}_${Math.random().toString(36).substring(7)}.${fileExt}`;
+const filePath = `perfiles/${fileName}`;
+
+const { error: uploadError } = await supabaseClient.storage
+.from('fotos-perfil') // Necesitas crear este bucket en Supabase
+.upload(filePath, fotoFile);
+
+if (uploadError) {
+console.error('Error al subir foto:', uploadError);
+Swal.fire({
+title: "Error al subir foto",
+text: uploadError.message,
+icon: "error",
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+width: '500px'
+});
+return;
+}
+
+// 2. OBTENER URL PÚBLICA DE LA FOTO
+const { data: urlData } = supabaseClient.storage
+.from('fotos-perfil')
+.getPublicUrl(filePath);
+
+const fotoUrl = urlData.publicUrl;
+
+Swal.fire({
+title: 'Registrando...',
+allowOutsideClick: false,
+background: 'white',
+width: '500px',
+didOpen: () => Swal.showLoading()
+});
+
+// 3. INSERTAR USUARIO CON LA URL DE LA FOTO
+const { data, error } = await supabaseClient
+.from("usuarios")
+.insert([{
+nombre: nombre,
+correo: correo,
+telefono: telefono,
+id_pais: parseInt(pais),
+id_ciudad: parseInt(ciudad),
+contrasena: contrasena,
+intereses: interesesSeleccionados.join(", "),
+latitud: ubicacionActual.lat,
+longitud: ubicacionActual.lng,
+foto_url: fotoUrl // ← NUEVO CAMPO (debes agregarlo a la tabla)
+}]);
+
+if (error) {
+console.error('Error al registrar:', error);
+Swal.fire({
+title: "Error al registrar",
+text: error.message,
+icon: "error",
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+width: '500px'
+});
+} else {
+Swal.fire({
+title: '¡Éxito! ✨',
+text: 'Cuenta creada correctamente',
+icon: 'success',
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+timer: 2000,
+width: '500px'
+}).then(() => {
+document.getElementById("registroForm").reset();
+interesesSeleccionados = [];
+ubicacionActual = { lat: null, lng: null };
+fotoFile = null;
+document.getElementById('fotoPreview').innerHTML = '<div class="placeholder">📸<br>Sin foto</div>';
+document.querySelectorAll('.interes-btn').forEach(btn => btn.classList.remove('selected'));
+actualizarContador();
+document.getElementById('ubicacionStatus').innerHTML = '📍 No has obtenido tu ubicación aún';
+siguiente(1);
+});
+}
+} catch (error) {
+console.error('Error inesperado:', error);
+Swal.fire({
+title: "Error",
+text: "Ocurrió un error inesperado: " + error.message,
+icon: "error",
+confirmButtonColor: '#6c5ce7',
+background: 'white',
+width: '500px'
+});
+}
+});
+
+// Event listeners
+document.getElementById('correo').addEventListener('input', function() {
+clearTimeout(timeoutId);
+timeoutId = setTimeout(() => verificarCorreo(this.value), 500);
+});
+
+document.getElementById('contrasena').addEventListener('input', actualizarFortalezaContrasena);
+document.getElementById('confirmContrasena').addEventListener('input', verificarCoincidenciaContrasenas);
+
+// Inicializar
+document.addEventListener('DOMContentLoaded', () => {
+cargarIntereses();
+cargarPaises();
+});
+
+// Hacer funciones globales
+window.mostrarGuia = mostrarGuia;
+window.validarYAvanzarIntereses = validarYAvanzarIntereses;
+window.siguiente = siguiente;
+window.filtrarPorCategoria = filtrarPorCategoria;
+window.obtenerUbicacionManual = obtenerUbicacionManual;
+window.irALogin = irALogin;
+
+</script>
+
 </body>
 </html>
