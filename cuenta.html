@@ -4,9 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
     <title>Amizi · Mi Perfil</title>
-    <!-- Font Awesome para iconos más lindos -->
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="modulos/boots.js"></script>
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         * {
             margin: 0;
@@ -21,60 +24,84 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            padding: 20px;
+            padding: 10px;
         }
 
-        /* CONTENEDOR PRINCIPAL */
         .app-container {
             max-width: 900px;
             width: 100%;
             background-color: #f8f9ff;
-            border-radius: 60px;
+            border-radius: 40px;
             box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
             overflow: hidden;
-            padding: 32px 36px;
+            padding: 25px 20px;
             border: 1px solid rgba(255, 255, 255, 0.8);
         }
 
-        /* HEADER CON DEGRADADO AZUL */
+        @media (min-width: 768px) {
+            .app-container {
+                padding: 32px 36px;
+                border-radius: 60px;
+            }
+        }
+
         .header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            margin-bottom: 24px;
+            margin-bottom: 20px;
             background: linear-gradient(145deg, #4a90e2, #6c5ce7);
-            padding: 15px 25px;
-            border-radius: 60px;
+            padding: 12px 18px;
+            border-radius: 50px;
             border: 1px solid rgba(255, 255, 255, 0.3);
             flex-wrap: wrap;
-            gap: 10px;
+            gap: 8px;
             box-shadow: 0 10px 25px rgba(74, 144, 226, 0.3);
+        }
+
+        @media (min-width: 768px) {
+            .header {
+                padding: 15px 25px;
+                margin-bottom: 24px;
+            }
         }
 
         .logo-container {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .star-icon {
             color: #ffd700;
-            font-size: 28px;
+            font-size: 24px;
             filter: drop-shadow(0 2px 5px rgba(255, 215, 0, 0.5));
         }
 
+        @media (min-width: 768px) {
+            .star-icon {
+                font-size: 28px;
+            }
+        }
+
         .logo {
-            font-size: 36px;
+            font-size: 28px;
             font-weight: 800;
             color: white;
             letter-spacing: -1px;
             text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
         }
 
+        @media (min-width: 768px) {
+            .logo {
+                font-size: 36px;
+            }
+        }
+
         .header-right {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             flex-wrap: wrap;
             justify-content: flex-end;
         }
@@ -82,42 +109,77 @@
         .carisma-badge {
             background: rgba(255, 255, 255, 0.25);
             backdrop-filter: blur(5px);
-            border-radius: 60px;
-            padding: 8px 18px;
-            font-size: 18px;
+            border-radius: 40px;
+            padding: 6px 12px;
+            font-size: 14px;
             font-weight: 600;
             color: white;
             border: 1px solid rgba(255, 255, 255, 0.3);
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
             white-space: nowrap;
+            transition: all 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .carisma-badge {
+                padding: 8px 18px;
+                font-size: 18px;
+                border-radius: 60px;
+            }
         }
 
         .carisma-num {
             background: rgba(255, 255, 255, 0.4);
             border-radius: 30px;
-            padding: 4px 14px;
-            font-size: 16px;
+            padding: 3px 10px;
+            font-size: 12px;
             color: white;
             font-weight: 700;
+            transition: all 0.3s ease;
+        }
+
+        @media (min-width: 768px) {
+            .carisma-num {
+                padding: 4px 14px;
+                font-size: 16px;
+            }
+        }
+
+        .badge-animation {
+            animation: nivelUp 0.5s ease;
+        }
+
+        @keyframes nivelUp {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.3); background: #ffd700; color: #1e2b3a; }
+            100% { transform: scale(1); }
         }
 
         .boost-btn {
             background: rgba(255, 255, 255, 0.95);
             border: none;
-            border-radius: 60px;
-            padding: 8px 20px;
-            font-size: 18px;
+            border-radius: 40px;
+            padding: 6px 14px;
+            font-size: 14px;
             font-weight: 600;
             color: #4a90e2;
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 5px;
             cursor: pointer;
             transition: all 0.2s ease;
             white-space: nowrap;
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        @media (min-width: 768px) {
+            .boost-btn {
+                padding: 8px 20px;
+                font-size: 18px;
+                border-radius: 60px;
+            }
         }
 
         .boost-btn:hover {
@@ -129,83 +191,122 @@
             color: #ff6b6b;
         }
 
-        /* POPULAR ROW */
         .popular-row {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 30px;
+            margin-bottom: 20px;
             background: white;
-            padding: 12px 25px;
-            border-radius: 60px;
+            padding: 10px 18px;
+            border-radius: 50px;
             border: 1px solid #eeeff5;
         }
 
+        @media (min-width: 768px) {
+            .popular-row {
+                padding: 12px 25px;
+                margin-bottom: 30px;
+            }
+        }
+
         .popular-tag {
-            font-size: 20px;
+            font-size: 16px;
             color: #2d3a4a;
             font-weight: 500;
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
+        }
+
+        @media (min-width: 768px) {
+            .popular-tag {
+                font-size: 20px;
+            }
         }
 
         .popular-tag i {
             color: #ff6b6b;
-            font-size: 22px;
+            font-size: 18px;
         }
 
-        .popular-tag span {
-            font-weight: 700;
-            color: #1e2b3a;
+        @media (min-width: 768px) {
+            .popular-tag i {
+                font-size: 22px;
+            }
         }
 
         .menu-icon {
-            font-size: 24px;
+            font-size: 20px;
             color: #8a9bb0;
             cursor: pointer;
         }
 
-        /* TARJETA DE PERFIL */
         .profile-card {
             background: white;
-            border-radius: 70px;
-            padding: 40px 40px 30px 40px;
+            border-radius: 50px;
+            padding: 25px 20px;
             border: 1px solid #f0f0f8;
             box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
-            margin: 20px 0 30px 0;
+            margin: 15px 0 20px 0;
             width: 100%;
         }
 
-        /* SECCIÓN DE FOTOS */
+        @media (min-width: 768px) {
+            .profile-card {
+                border-radius: 70px;
+                padding: 40px 40px 30px 40px;
+                margin: 20px 0 30px 0;
+            }
+        }
+
         .photos-section {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .section-title {
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 24px;
+            gap: 8px;
+            font-size: 20px;
             font-weight: 700;
             color: #1e2b3a;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
+        }
+
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 24px;
+                gap: 10px;
+                margin-bottom: 20px;
+            }
         }
 
         .section-title i {
             color: #4a90e2;
-            font-size: 26px;
+            font-size: 22px;
+        }
+
+        @media (min-width: 768px) {
+            .section-title i {
+                font-size: 26px;
+            }
         }
 
         .photos-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            gap: 8px;
+        }
+
+        @media (min-width: 768px) {
+            .photos-grid {
+                gap: 15px;
+            }
         }
 
         .photo-item {
             aspect-ratio: 1;
-            border-radius: 30px;
+            border-radius: 20px;
             background: #f0f3fa;
             display: flex;
             align-items: center;
@@ -215,6 +316,12 @@
             border: 2px dashed #8a9bb0;
             position: relative;
             overflow: hidden;
+        }
+
+        @media (min-width: 768px) {
+            .photo-item {
+                border-radius: 30px;
+            }
         }
 
         .photo-item:hover {
@@ -227,8 +334,14 @@
         }
 
         .photo-item i {
-            font-size: 40px;
+            font-size: 30px;
             color: #8a9bb0;
+        }
+
+        @media (min-width: 768px) {
+            .photo-item i {
+                font-size: 40px;
+            }
         }
 
         .photo-item:hover i {
@@ -237,10 +350,10 @@
 
         .photo-item .remove-photo {
             position: absolute;
-            top: 5px;
-            right: 5px;
-            width: 30px;
-            height: 30px;
+            top: 3px;
+            right: 3px;
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
             background: #ff6b6b;
             color: white;
@@ -250,144 +363,389 @@
             cursor: pointer;
             opacity: 0;
             transition: opacity 0.2s;
+            z-index: 10;
+            font-size: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .photo-item .remove-photo {
+                top: 5px;
+                right: 5px;
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+            }
         }
 
         .photo-item:hover .remove-photo {
             opacity: 1;
         }
 
-        /* INFORMACIÓN DEL PERFIL */
+        .photo-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .principal-badge {
+            position: absolute;
+            bottom: 3px;
+            left: 3px;
+            background: #ffd700;
+            color: #1e2b3a;
+            padding: 3px 6px;
+            border-radius: 15px;
+            font-size: 10px;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 3px;
+            z-index: 10;
+        }
+
+        @media (min-width: 768px) {
+            .principal-badge {
+                bottom: 5px;
+                left: 5px;
+                padding: 4px 8px;
+                border-radius: 20px;
+                font-size: 12px;
+            }
+        }
+
+        .principal-badge i {
+            font-size: 10px;
+            color: #1e2b3a;
+        }
+
+        @media (min-width: 768px) {
+            .principal-badge i {
+                font-size: 12px;
+            }
+        }
+
+        .make-primary {
+            position: absolute;
+            bottom: 3px;
+            right: 3px;
+            background: #4a90e2;
+            color: white;
+            width: 22px;
+            height: 22px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 10;
+            font-size: 12px;
+        }
+
+        @media (min-width: 768px) {
+            .make-primary {
+                bottom: 5px;
+                right: 5px;
+                width: 30px;
+                height: 30px;
+                font-size: 14px;
+            }
+        }
+
+        .photo-item:hover .make-primary {
+            opacity: 1;
+        }
+
+        .make-primary:hover {
+            background: #6c5ce7;
+            transform: scale(1.1);
+        }
+
+        /* Estilos para edición automática */
+        .editable-field {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            position: relative;
+            padding: 5px 8px;
+            border-radius: 30px;
+        }
+
+        .editable-field:hover {
+            background: rgba(74, 144, 226, 0.1);
+        }
+
+        .editable-field::after {
+            content: '\f044';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            right: -15px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 12px;
+            color: #4a90e2;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        @media (min-width: 768px) {
+            .editable-field::after {
+                right: -20px;
+                font-size: 14px;
+            }
+        }
+
+        .editable-field:hover::after {
+            opacity: 1;
+        }
+
+        /* Indicador visual de que se está editando */
+        .editing {
+            position: relative;
+            background: white !important;
+            border-color: #4a90e2 !important;
+            box-shadow: 0 0 0 2px #4a90e2, 0 5px 15px rgba(74, 144, 226, 0.2) !important;
+            transition: all 0.2s ease;
+        }
+
+        /* Cuando termina la edición, volver a la normalidad */
+        .info-item:not(.editing) {
+            transition: all 0.3s ease;
+        }
+
+        .edit-input, .edit-select {
+            width: 100%;
+            padding: 8px 12px;
+            border-radius: 30px;
+            border: 2px solid #4a90e2;
+            font-size: 14px;
+            outline: none;
+            background: white;
+            transition: all 0.2s ease;
+            margin-top: 5px;
+        }
+
+        @media (min-width: 768px) {
+            .edit-input, .edit-select {
+                padding: 8px 15px;
+                font-size: 16px;
+            }
+        }
+
+        .edit-input:focus, .edit-select:focus {
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.2);
+        }
+
+        /* Estilos para intereses */
+        .intereses-modal {
+            max-width: 500px;
+            width: 95%;
+            margin: 0 auto;
+        }
+
+        @media (min-width: 768px) {
+            .intereses-modal {
+                max-width: 600px;
+                width: 90%;
+            }
+        }
+
+        .intereses-categorias {
+            display: flex;
+            gap: 5px;
+            overflow-x: auto;
+            padding: 8px 0;
+            margin-bottom: 10px;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .intereses-categorias::-webkit-scrollbar {
+            display: none;
+        }
+
+        .categoria-tab {
+            background: #f0f0f0;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 500;
+            color: #666;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: all 0.3s;
+        }
+
+        @media (min-width: 768px) {
+            .categoria-tab {
+                padding: 8px 16px;
+                font-size: 14px;
+            }
+        }
+
+        .categoria-tab.active {
+            background: #6c5ce7;
+            color: white;
+        }
+
+        .intereses-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 8px;
+            max-height: 250px;
+            overflow-y: auto;
+            padding: 5px;
+            scrollbar-width: thin;
+        }
+
+        @media (min-width: 480px) {
+            .intereses-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+
+        /* Ocultar scrollbar pero mantener funcionalidad */
+        .intereses-grid::-webkit-scrollbar {
+            width: 3px;
+        }
+
+        .intereses-grid::-webkit-scrollbar-track {
+            background: #f0f0f0;
+            border-radius: 10px;
+        }
+
+        .intereses-grid::-webkit-scrollbar-thumb {
+            background: #6c5ce7;
+            border-radius: 10px;
+        }
+
+        .interes-btn {
+            background: #f8f9ff;
+            border-radius: 30px;
+            padding: 10px 5px;
+            cursor: pointer;
+            text-align: center;
+            font-size: 12px;
+            font-weight: 500;
+            border: 2px solid transparent;
+            transition: all 0.3s;
+            word-break: break-word;
+        }
+
+        @media (min-width: 768px) {
+            .interes-btn {
+                padding: 12px 8px;
+                font-size: 14px;
+            }
+        }
+
+        .interes-btn.selected {
+            background: #6c5ce7;
+            color: white;
+        }
+
         .info-section {
-            margin-bottom: 30px;
+            margin-bottom: 25px;
         }
 
         .info-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
-            gap: 20px;
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
+
+        @media (min-width: 640px) {
+            .info-grid {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 20px;
+            }
         }
 
         .info-item {
             background: #f8f9ff;
-            border-radius: 40px;
-            padding: 18px 25px;
+            border-radius: 30px;
+            padding: 15px 18px;
             border: 1px solid #e4e4f0;
+            transition: all 0.2s ease;
+        }
+
+        @media (min-width: 768px) {
+            .info-item {
+                border-radius: 40px;
+                padding: 18px 25px;
+            }
+        }
+
+        .info-item.editing {
+            background: white;
+            border-color: #4a90e2;
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.2);
         }
 
         .info-label {
             display: flex;
             align-items: center;
-            gap: 8px;
-            font-size: 16px;
+            gap: 6px;
+            font-size: 14px;
             color: #5a6b7c;
-            margin-bottom: 8px;
+            margin-bottom: 5px;
+        }
+
+        @media (min-width: 768px) {
+            .info-label {
+                gap: 8px;
+                font-size: 16px;
+                margin-bottom: 8px;
+            }
         }
 
         .info-label i {
             color: #4a90e2;
-            font-size: 18px;
+            font-size: 16px;
+        }
+
+        @media (min-width: 768px) {
+            .info-label i {
+                font-size: 18px;
+            }
         }
 
         .info-value {
-            font-size: 20px;
+            font-size: 16px;
             font-weight: 600;
             color: #1e2b3a;
-            padding-left: 26px;
+            padding-left: 22px;
+            word-break: break-word;
+        }
+
+        @media (min-width: 768px) {
+            .info-value {
+                font-size: 20px;
+                padding-left: 26px;
+            }
         }
 
         .info-value.description {
-            font-size: 18px;
+            font-size: 14px;
             font-weight: 400;
-            line-height: 1.5;
+            line-height: 1.4;
+        }
+
+        @media (min-width: 768px) {
+            .info-value.description {
+                font-size: 18px;
+                line-height: 1.5;
+            }
         }
 
         .full-width {
             grid-column: 1 / -1;
         }
 
-        /* BOTONES DE ACCIÓN PRINCIPALES */
-        .action-buttons {
-            display: flex;
-            justify-content: center;
-            gap: 20px;
-            margin: 30px 0 20px;
-            flex-wrap: wrap;
-        }
-
-        .action-btn {
-            padding: 16px 40px;
-            border-radius: 60px;
-            font-size: 20px;
-            font-weight: 600;
-            border: none;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 12px;
-            min-width: 200px;
-            position: relative;
-        }
-
-        /* TOOLTIPS */
-        .action-btn::after {
-            content: attr(data-tooltip);
-            position: absolute;
-            top: 100%;
-            left: 50%;
-            transform: translateX(-50%);
-            background: #2d3a4a;
-            color: white;
-            padding: 6px 15px;
-            border-radius: 30px;
-            font-size: 14px;
-            white-space: nowrap;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.2s ease;
-            margin-top: 10px;
-            pointer-events: none;
-            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            z-index: 10;
-        }
-
-        .action-btn:hover::after {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .action-btn.edit {
-            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
-            color: white;
-            box-shadow: 0 15px 30px rgba(74, 144, 226, 0.3);
-        }
-
-        .action-btn.save {
-            background: #2ecc71;
-            color: white;
-            box-shadow: 0 15px 30px rgba(46, 204, 113, 0.3);
-        }
-
-        .action-btn:hover {
-            transform: translateY(-3px);
-        }
-
-        .action-btn.edit:hover {
-            box-shadow: 0 20px 40px rgba(74, 144, 226, 0.4);
-        }
-
-        .action-btn.save:hover {
-            box-shadow: 0 20px 40px rgba(46, 204, 113, 0.4);
-        }
-
-        .action-btn i {
-            font-size: 22px;
-        }
-
-        /* CONTENEDOR COLAPSABLE DE OPCIONES */
         .options-container {
-            margin: 20px 0 10px;
+            margin: 15px 0 10px;
             border-radius: 30px;
             background: #f0f3fa;
             overflow: hidden;
@@ -398,11 +756,18 @@
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 16px 25px;
+            padding: 12px 18px;
             cursor: pointer;
             background: #f0f3fa;
-            border-radius: 50px;
+            border-radius: 40px;
             transition: all 0.2s ease;
+        }
+
+        @media (min-width: 768px) {
+            .options-header {
+                padding: 16px 25px;
+                border-radius: 50px;
+            }
         }
 
         .options-header:hover {
@@ -412,23 +777,29 @@
         .options-header-left {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 8px;
         }
 
         .options-header-left i {
-            font-size: 22px;
+            font-size: 18px;
             color: #6c5ce7;
             transition: transform 0.3s ease;
         }
 
+        @media (min-width: 768px) {
+            .options-header-left i {
+                font-size: 22px;
+            }
+        }
+
         .options-header-left span {
-            font-size: 18px;
+            font-size: 16px;
             font-weight: 600;
             color: #2d3a4a;
         }
 
         .options-header .arrow {
-            font-size: 20px;
+            font-size: 18px;
             color: #6c5ce7;
             transition: transform 0.3s ease;
         }
@@ -442,32 +813,37 @@
             opacity: 0;
             visibility: hidden;
             transition: all 0.3s ease;
-            padding: 0 20px;
+            padding: 0 15px;
         }
 
         .options-content.open {
-            max-height: 500px;
+            max-height: 300px;
             opacity: 1;
             visibility: visible;
-            padding: 20px;
+            padding: 15px;
         }
 
-        /* BOTONES SUTILES DENTRO DEL CONTENEDOR */
         .options-grid {
             display: grid;
-            grid-template-columns: repeat(4, 1fr);
-            gap: 12px;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+
+        @media (min-width: 480px) {
+            .options-grid {
+                grid-template-columns: repeat(4, 1fr);
+            }
         }
 
         .option-btn {
             background: white;
             border: 1px solid #e4e4f0;
-            border-radius: 40px;
-            padding: 12px 8px;
+            border-radius: 30px;
+            padding: 10px 5px;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 6px;
+            gap: 4px;
             cursor: pointer;
             transition: all 0.2s ease;
             position: relative;
@@ -475,23 +851,22 @@
         }
 
         .option-btn:hover {
-            transform: translateY(-3px);
+            transform: translateY(-2px);
             box-shadow: 0 8px 16px rgba(0, 0, 0, 0.05);
         }
 
         .option-btn i {
-            font-size: 22px;
+            font-size: 18px;
             transition: all 0.2s ease;
         }
 
         .option-btn span {
-            font-size: 13px;
+            font-size: 11px;
             font-weight: 500;
             color: #2d3a4a;
             text-align: center;
         }
 
-        /* Tooltips para opciones */
         .option-btn::after {
             content: attr(data-tooltip);
             position: absolute;
@@ -500,9 +875,9 @@
             transform: translateX(-50%);
             background: #2d3a4a;
             color: white;
-            padding: 4px 10px;
+            padding: 4px 8px;
             border-radius: 20px;
-            font-size: 11px;
+            font-size: 10px;
             white-space: nowrap;
             opacity: 0;
             visibility: hidden;
@@ -517,88 +892,80 @@
             visibility: visible;
         }
 
-        .option-btn.privacidad i {
-            color: #4a90e2;
-        }
+        .option-btn.privacidad i { color: #4a90e2; }
+        .option-btn.privacidad:hover { background: #4a90e2; border-color: #4a90e2; }
+        .option-btn.faq i { color: #6c5ce7; }
+        .option-btn.faq:hover { background: #6c5ce7; border-color: #6c5ce7; }
+        .option-btn.soporte i { color: #ff6b6b; }
+        .option-btn.soporte:hover { background: #ff6b6b; border-color: #ff6b6b; }
+        .option-btn.test i { color: #2ecc71; }
+        .option-btn.test:hover { background: #2ecc71; border-color: #2ecc71; }
+        .option-btn:hover i, .option-btn:hover span { color: white; }
 
-        .option-btn.privacidad:hover {
-            background: #4a90e2;
-            border-color: #4a90e2;
-        }
-
-        .option-btn.faq i {
-            color: #6c5ce7;
-        }
-
-        .option-btn.faq:hover {
-            background: #6c5ce7;
-            border-color: #6c5ce7;
-        }
-
-        .option-btn.soporte i {
-            color: #ff6b6b;
-        }
-
-        .option-btn.soporte:hover {
-            background: #ff6b6b;
-            border-color: #ff6b6b;
-        }
-
-        .option-btn.test i {
-            color: #2ecc71;
-        }
-
-        .option-btn.test:hover {
-            background: #2ecc71;
-            border-color: #2ecc71;
-        }
-
-        .option-btn:hover i,
-        .option-btn:hover span {
-            color: white;
-        }
-
-        /* FOOTER - 4 BOTONES EN UNA SOLA FILA HORIZONTAL */
         .footer-nav {
             display: flex;
             align-items: center;
             justify-content: space-between;
             background: white;
-            padding: 15px 20px;
-            border-radius: 60px;
+            padding: 10px 12px;
+            border-radius: 50px;
             border: 1px solid #eeeff5;
-            margin-top: 20px;
-            gap: 10px;
+            margin-top: 15px;
+            gap: 5px;
             width: 100%;
+        }
+
+        @media (min-width: 768px) {
+            .footer-nav {
+                padding: 15px 20px;
+                border-radius: 60px;
+                margin-top: 20px;
+                gap: 10px;
+            }
         }
 
         .footer-item {
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 10px;
-            padding: 12px 20px;
-            border-radius: 50px;
+            gap: 4px;
+            padding: 8px 10px;
+            border-radius: 40px;
             cursor: pointer;
             transition: all 0.2s ease;
             flex: 1;
             white-space: nowrap;
             position: relative;
+            font-size: 12px;
         }
 
-        /* Tooltips para footer */
+        @media (min-width: 480px) {
+            .footer-item {
+                padding: 10px 15px;
+                font-size: 14px;
+                gap: 6px;
+            }
+        }
+
+        @media (min-width: 768px) {
+            .footer-item {
+                padding: 12px 20px;
+                font-size: 18px;
+                gap: 10px;
+            }
+        }
+
         .footer-item::after {
             content: attr(data-tooltip);
             position: absolute;
-            top: -40px;
+            top: -35px;
             left: 50%;
             transform: translateX(-50%);
             background: #2d3a4a;
             color: white;
-            padding: 6px 15px;
+            padding: 4px 10px;
             border-radius: 30px;
-            font-size: 14px;
-            font-weight: 500;
+            font-size: 11px;
             white-space: nowrap;
             opacity: 0;
             visibility: hidden;
@@ -610,54 +977,38 @@
         .footer-item:hover::after {
             opacity: 1;
             visibility: visible;
-            top: -45px;
+            top: -40px;
         }
 
-        .footer-item i {
-            font-size: 24px;
+        .footer-item i { font-size: 18px; }
+        .footer-item span { font-size: 12px; font-weight: 600; }
+
+        @media (min-width: 480px) {
+            .footer-item i { font-size: 20px; }
+            .footer-item span { font-size: 14px; }
         }
 
-        .footer-item span {
-            font-size: 18px;
-            font-weight: 600;
+        @media (min-width: 768px) {
+            .footer-item i { font-size: 24px; }
+            .footer-item span { font-size: 18px; }
         }
 
-        .footer-item.inicio {
-            background: #f0f3fa;
-            color: #6c5ce7;
-        }
+        .footer-item.inicio { background: #f0f3fa; color: #6c5ce7; }
+        .footer-item.mensaje { background: linear-gradient(145deg, #6c5ce7, #8e6ce7); color: white; }
+        .footer-item.likes { background: #ff4757; color: white; }
+        .footer-item.cuenta { background: #2d3a4a; color: white; }
+        .footer-item:hover { transform: translateY(-2px); box-shadow: 0 8px 15px rgba(0, 0, 0, 0.1); }
 
-        .footer-item.mensaje {
-            background: linear-gradient(145deg, #6c5ce7, #8e6ce7);
-            color: white;
-        }
-
-        .footer-item.likes {
-            background: #ff4757;
-            color: white;
-        }
-
-        .footer-item.cuenta {
-            background: #2d3a4a;
-            color: white;
-        }
-
-        .footer-item:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
-        }
-
-        /* NOTIFICACIONES ELEGANTES ARRIBA */
         .notification-container {
             position: fixed;
-            top: 20px;
+            top: 10px;
             left: 50%;
             transform: translateX(-50%);
             z-index: 9999;
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
             pointer-events: none;
             width: auto;
             max-width: 90%;
@@ -666,184 +1017,62 @@
         .notification {
             background: white;
             color: #1e2b3a;
-            padding: 16px 32px;
-            border-radius: 60px;
-            font-size: 18px;
+            padding: 12px 24px;
+            border-radius: 50px;
+            font-size: 14px;
             font-weight: 500;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.15);
             border: 1px solid rgba(255, 255, 255, 0.5);
             backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 10px;
             animation: slideDown 0.3s ease;
             pointer-events: none;
         }
 
-        .notification i {
-            font-size: 24px;
+        .notification i { font-size: 20px; }
+
+        @media (min-width: 768px) {
+            .notification {
+                padding: 16px 32px;
+                font-size: 18px;
+            }
+            .notification i { font-size: 24px; }
         }
 
         @keyframes slideDown {
-            from {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
-            to {
-                opacity: 1;
-                transform: translateY(0);
-            }
+            from { opacity: 0; transform: translateY(-20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         @keyframes fadeOut {
-            from {
-                opacity: 1;
-                transform: translateY(0);
-            }
-            to {
-                opacity: 0;
-                transform: translateY(-30px);
-            }
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-20px); }
         }
 
-        /* RESPONSIVE */
-        @media (max-width: 900px) {
-            .app-container {
-                padding: 20px;
-            }
-
-            .profile-card {
-                padding: 25px;
-            }
-
-            .photos-grid {
-                grid-template-columns: repeat(3, 1fr);
-            }
-
-            .info-grid {
-                grid-template-columns: 1fr;
-                gap: 15px;
-            }
-
-            .options-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
+        .upload-progress {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 3px;
+            background: rgba(74, 144, 226, 0.2);
+            overflow: hidden;
         }
 
-        @media (max-width: 700px) {
-            .header {
-                padding: 12px 20px;
-            }
-            
-            .logo {
-                font-size: 30px;
-            }
-            
-            .star-icon {
-                font-size: 24px;
-            }
-            
-            .carisma-badge, .boost-btn {
-                padding: 6px 14px;
-                font-size: 16px;
-            }
-            
-            .carisma-num {
-                padding: 3px 10px;
-                font-size: 14px;
-            }
-
-            .photos-grid {
-                grid-template-columns: repeat(2, 1fr);
-            }
-
-            .action-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .action-btn {
-                width: 100%;
-                max-width: 300px;
-            }
-
-            .footer-nav {
-                flex-wrap: wrap;
-                gap: 8px;
-            }
-            
-            .footer-item {
-                flex: 1 1 calc(50% - 8px);
-                min-width: 120px;
-            }
-        }
-
-        @media (max-width: 500px) {
-            .photos-grid {
-                grid-template-columns: repeat(2, 1fr);
-                gap: 10px;
-            }
-
-            .photo-item i {
-                font-size: 30px;
-            }
-
-            .info-item {
-                padding: 15px 20px;
-            }
-
-            .info-value {
-                font-size: 18px;
-            }
-
-            .options-grid {
-                grid-template-columns: 1fr;
-                gap: 8px;
-            }
-
-            .option-btn {
-                flex-direction: row;
-                justify-content: center;
-                gap: 10px;
-                padding: 10px;
-            }
-
-            .option-btn i {
-                font-size: 18px;
-            }
-
-            .footer-item {
-                padding: 10px 12px;
-            }
-            
-            .footer-item i {
-                font-size: 20px;
-            }
-            
-            .footer-item span {
-                font-size: 14px;
-            }
-        }
-
-        /* Asegurar que Nivel y Boost siempre estén horizontales */
-        @media (max-width: 400px) {
-            .header-right {
-                flex-direction: row;
-                width: auto;
-            }
-            
-            .carisma-badge, .boost-btn {
-                white-space: nowrap;
-            }
+        .upload-progress-bar {
+            height: 100%;
+            background: #4a90e2;
+            width: 0%;
+            transition: width 0.3s ease;
         }
     </style>
 </head>
 <body>
-    <!-- CONTENEDOR DE NOTIFICACIONES ELEGANTES -->
     <div class="notification-container" id="notificationContainer"></div>
 
     <div class="app-container">
-        <!-- HEADER CON DEGRADADO AZUL -->
         <div class="header">
             <div class="logo-container">
                 <i class="fas fa-star star-icon"></i>
@@ -851,9 +1080,9 @@
             </div>
             
             <div class="header-right">
-                <div class="carisma-badge">
+                <div class="carisma-badge" id="nivelBadge">
                     <i class="fas fa-bolt"></i>
-                    Nivel <span class="carisma-num">72</span>
+                    Nivel <span class="carisma-num" id="nivelValor">1</span>
                 </div>
                 
                 <button class="boost-btn" id="btnBoost">
@@ -863,70 +1092,91 @@
             </div>
         </div>
 
-        <!-- POPULAR ROW -->
         <div class="popular-row">
             <div class="popular-tag">
                 <i class="fas fa-fire"></i>
-                <span>Mi Perfil</span> · Laura
+                <span>Mi Perfil</span> · <span id="nombreUsuario">Laura</span>
             </div>
             <div class="menu-icon">
                 <i class="fas fa-ellipsis-h"></i>
             </div>
         </div>
-         <!-- CONTENEDOR COLAPSABLE DE OPCIONES -->
-            <div class="options-container">
-                <div class="options-header" id="optionsHeader">
-                    <div class="options-header-left">
-                        <i class="fas fa-cog"></i>
-                        <span>Opciones</span>
-                    </div>
-                    <i class="fas fa-chevron-down arrow"></i>
+        
+        <div class="options-container">
+            <div class="options-header" id="optionsHeader">
+                <div class="options-header-left">
+                    <i class="fas fa-cog"></i>
+                    <span>Opciones</span>
                 </div>
-                <div class="options-content" id="optionsContent">
-                    <div class="options-grid">
-                        <div class="option-btn privacidad" id="btnPrivacidad" data-tooltip="Configura tu privacidad">
-                            <i class="fas fa-shield-alt"></i>
-                            <span>Privacidad</span>
-                        </div>
-                        <div class="option-btn faq" id="btnFaq" data-tooltip="Preguntas frecuentes">
-                            <i class="fas fa-question-circle"></i>
-                            <span>FAQ</span>
-                        </div>
-                        <div class="option-btn soporte" id="btnSoporte" data-tooltip="Contactar soporte">
-                            <i class="fas fa-headset"></i>
-                            <span>Soporte</span>
-                        </div>
-                        <div class="option-btn test" id="btnTest" data-tooltip="Hacer test de compatibilidad">
-                            <i class="fas fa-vial"></i>
-                            <span>Test</span>
-                        </div>
+                <i class="fas fa-chevron-down arrow"></i>
+            </div>
+            <div class="options-content" id="optionsContent">
+                <div class="options-grid">
+                    <div class="option-btn privacidad" id="btnPrivacidad" data-tooltip="Configura tu privacidad">
+                        <i class="fas fa-shield-alt"></i><span>Privacidad</span>
+                    </div>
+                    <div class="option-btn faq" id="btnFaq" data-tooltip="Preguntas frecuentes">
+                        <i class="fas fa-question-circle"></i><span>FAQ</span>
+                    </div>
+                    <div class="option-btn soporte" id="btnSoporte" data-tooltip="Contactar soporte">
+                        <i class="fas fa-headset"></i><span>Soporte</span>
+                    </div>
+                    <div class="option-btn test" id="btnTest" data-tooltip="Hacer test de compatibilidad">
+                        <i class="fas fa-vial"></i><span>Test</span>
                     </div>
                 </div>
             </div>
+        </div>
         
-        <!-- TARJETA DE PERFIL COMPLETA -->
         <div class="profile-card">
-            <!-- SECCIÓN DE FOTOS -->
             <div class="photos-section">
                 <div class="section-title">
                     <i class="fas fa-camera"></i>
                     <span>Mis Fotos</span>
                 </div>
-                <div class="photos-grid">
-                    <div class="photo-item has-image" id="photo1">
-                        <i class="fas fa-user-circle"></i>
-                        <div class="remove-photo" data-photo="1">
+                <div class="photos-grid" id="photosGrid">
+                    <!-- Foto Principal -->
+                    <div class="photo-item has-image" id="photo1" data-es-principal="true">
+                        <img src="" alt="Foto perfil" style="width: 100%; height: 100%; object-fit: cover; display: none;" id="fotoPerfilImg">
+                        <i class="fas fa-user-circle" id="fotoPlaceholder"></i>
+                        <div class="principal-badge" id="principalBadge" style="display: none;">
+                            <i class="fas fa-star"></i> Principal
+                        </div>
+                        <div class="remove-photo" style="display: none;">
                             <i class="fas fa-times"></i>
                         </div>
+                        <div class="upload-progress" style="display: none;">
+                            <div class="upload-progress-bar"></div>
+                        </div>
                     </div>
-                    <div class="photo-item" id="photo2">
+                    
+                    <!-- Fotos Adicionales -->
+                    <div class="photo-item" id="photo2" data-orden="2">
                         <i class="fas fa-plus"></i>
+                        <div class="make-primary" title="Hacer principal">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="upload-progress" style="display: none;">
+                            <div class="upload-progress-bar"></div>
+                        </div>
                     </div>
-                    <div class="photo-item" id="photo3">
+                    <div class="photo-item" id="photo3" data-orden="3">
                         <i class="fas fa-plus"></i>
+                        <div class="make-primary" title="Hacer principal">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="upload-progress" style="display: none;">
+                            <div class="upload-progress-bar"></div>
+                        </div>
                     </div>
-                    <div class="photo-item" id="photo4">
+                    <div class="photo-item" id="photo4" data-orden="4">
                         <i class="fas fa-plus"></i>
+                        <div class="make-primary" title="Hacer principal">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="upload-progress" style="display: none;">
+                            <div class="upload-progress-bar"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -938,124 +1188,1469 @@
                     <span>Información Personal</span>
                 </div>
                 <div class="info-grid">
-                    <div class="info-item">
-                        <div class="info-label">
-                            <i class="fas fa-user"></i>
-                            <span>Nombre completo</span>
-                        </div>
-                        <div class="info-value">Laura González Pérez</div>
+                    <!-- Nombre (editable con input) -->
+                    <div class="info-item" id="info-nombre-container">
+                        <div class="info-label"><i class="fas fa-user"></i><span>Nombre completo</span></div>
+                        <div class="info-value editable-field" id="infoNombre" onclick="iniciarEdicion('nombre')">Cargando...</div>
                     </div>
-                    <div class="info-item">
-                        <div class="info-label">
-                            <i class="fas fa-calendar-alt"></i>
-                            <span>Edad</span>
-                        </div>
-                        <div class="info-value">21 años</div>
+                    
+                    <!-- Edad (editable con select) -->
+                    <div class="info-item" id="info-edad-container">
+                        <div class="info-label"><i class="fas fa-calendar-alt"></i><span>Edad</span></div>
+                        <div class="info-value editable-field" id="infoEdad" onclick="iniciarEdicion('edad')">Cargando...</div>
                     </div>
+                    
+                    <!-- Correo (no editable) -->
                     <div class="info-item">
-                        <div class="info-label">
-                            <i class="fas fa-venus-mars"></i>
-                            <span>Género</span>
-                        </div>
-                        <div class="info-value">Femenino</div>
+                        <div class="info-label"><i class="fas fa-envelope"></i><span>Correo</span></div>
+                        <div class="info-value" id="infoCorreo">Cargando...</div>
                     </div>
+                    
+                    <!-- Teléfono (no editable) -->
                     <div class="info-item">
-                        <div class="info-label">
-                            <i class="fas fa-map-marker-alt"></i>
-                            <span>Ciudad</span>
-                        </div>
-                        <div class="info-value">Bogotá, Colombia</div>
+                        <div class="info-label"><i class="fas fa-phone"></i><span>Teléfono</span></div>
+                        <div class="info-value" id="infoTelefono">Cargando...</div>
                     </div>
-                    <div class="info-item">
-                        <div class="info-label">
-                            <i class="fas fa-briefcase"></i>
-                            <span>Trabajo / Estudio</span>
-                        </div>
-                        <div class="info-value">Estudiante de Diseño Gráfico</div>
+                    
+                    <!-- Descripción (editable con select de frases) -->
+                    <div class="info-item full-width" id="info-descripcion-container">
+                        <div class="info-label"><i class="fas fa-smile"></i><span>Descripción</span></div>
+                        <div class="info-value description editable-field" id="infoDescripcion" onclick="iniciarEdicion('descripcion')">Cargando...</div>
                     </div>
-                    <div class="info-item">
-                        <div class="info-label">
-                            <i class="fas fa-heart"></i>
-                            <span>Intereses</span>
-                        </div>
-                        <div class="info-value">Fútbol, Videojuegos, Música</div>
+                    
+                    <!-- Ciudad/País (editable - combo dependiente) -->
+                    <div class="info-item full-width" id="info-ubicacion-container">
+                        <div class="info-label"><i class="fas fa-map-marker-alt"></i><span>Ciudad, País</span></div>
+                        <div class="info-value editable-field" id="infoUbicacion" onclick="iniciarEdicion('ubicacion')">Cargando...</div>
                     </div>
-                    <div class="info-item full-width">
-                        <div class="info-label">
-                            <i class="fas fa-align-left"></i>
-                            <span>Sobre mí</span>
-                        </div>
-                        <div class="info-value description">
-                            Apasionada por el fútbol y los videojuegos. Me encanta conocer nuevas personas y compartir momentos divertidos. Busco amigos para jugar y pasar el rato.
-                        </div>
+                    
+                    <!-- Intereses (editable - modal) -->
+                    <div class="info-item full-width" id="info-intereses-container">
+                        <div class="info-label"><i class="fas fa-heart"></i><span>Intereses</span></div>
+                        <div class="info-value editable-field" id="infoIntereses" onclick="iniciarEdicion('intereses')">Cargando...</div>
                     </div>
                 </div>
             </div>
+        </div>
 
-            <!-- BOTONES DE ACCIÓN PRINCIPALES -->
-            <div class="action-buttons">
-                <button class="action-btn edit" id="btnEditar" data-tooltip="Editar mi perfil">
-                    <i class="fas fa-edit"></i>
-                    Editar Perfil
-                </button>
-                <button class="action-btn save" id="btnGuardar" data-tooltip="Guardar cambios">
-                    <i class="fas fa-save"></i>
-                    Guardar
-                </button>
-            </div>
-
-           
-
-        <!-- FOOTER CON 4 BOTONES EN UNA SOLA FILA HORIZONTAL Y TOOLTIPS -->
         <div class="footer-nav">
             <div class="footer-item inicio" id="btnInicio" data-tooltip="Ir al inicio">
-                <i class="fas fa-home"></i>
-                <span>Inicio</span>
+                <i class="fas fa-home"></i> <span>Inicio</span>
             </div>
-            
             <div class="footer-item mensaje" id="btnMessage" data-tooltip="Ver mensajes">
-                <i class="fas fa-comment-dots"></i>
-                <span>Mensaje</span>
+                <i class="fas fa-comment-dots"></i> <span>Mensaje</span>
             </div>
-            
             <div class="footer-item likes" id="btnLikesFooter" data-tooltip="Mis likes">
-                <i class="fas fa-heart"></i>
-                <span id="footerLikesCount">156</span>
+                <i class="fas fa-heart"></i> <span id="footerLikesCount">156</span>
             </div>
-            
             <div class="footer-item cuenta active" id="btnCuenta" data-tooltip="Mi perfil">
-                <i class="fas fa-user"></i>
-                <span>Cuenta</span>
+                <i class="fas fa-user"></i> <span>Cuenta</span>
             </div>
         </div>
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Elementos de botones
+        // Configuración de Supabase
+        const supabaseUrl = "https://qfwpikteqipzwpmqbllt.supabase.co";
+        const supabaseKey = "sb_publishable_W75gkuE187xY7qWeQsP6XQ_3IWzPC3A";
+        
+        const { createClient } = supabase;
+        const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+        document.addEventListener('DOMContentLoaded', async function() {
+            // Elementos
             const btnBoost = document.getElementById('btnBoost');
             const btnInicio = document.getElementById('btnInicio');
             const btnMessage = document.getElementById('btnMessage');
             const btnLikesFooter = document.getElementById('btnLikesFooter');
             const btnCuenta = document.getElementById('btnCuenta');
-            const btnEditar = document.getElementById('btnEditar');
-            const btnGuardar = document.getElementById('btnGuardar');
-            
-            // Elementos del contenedor colapsable
             const optionsHeader = document.getElementById('optionsHeader');
             const optionsContent = document.getElementById('optionsContent');
-            
-            // Botones de opciones
             const btnPrivacidad = document.getElementById('btnPrivacidad');
             const btnFaq = document.getElementById('btnFaq');
             const btnSoporte = document.getElementById('btnSoporte');
             const btnTest = document.getElementById('btnTest');
+            const nivelValor = document.getElementById('nivelValor');
+            const nivelBadge = document.getElementById('nivelBadge');
             
-            // Elementos de fotos
-            const photoItems = document.querySelectorAll('.photo-item');
-            const removeButtons = document.querySelectorAll('.remove-photo');
+            let usuarioActual = null;
+            let usuarioId = null;
+            let fotoPrincipalId = null;
+            let fotoPrincipalUrl = null;
+            let nivelActual = 1;
+            let nivelInicialCargado = false;
+            let todosLosIntereses = [];
+            let paises = [];
+            let ciudades = [];
+            let editando = false;
 
-            // Función para mostrar notificaciones elegantes arriba
+            // Frases predefinidas para descripción
+            const frasesDescripcion = [
+                '¡Hola! Soy una persona alegre y sociable',
+                'Amante de la naturaleza y los animales',
+                'Buscando nuevas amistades para compartir momentos',
+                'Apasionado por la música y el arte',
+                'Me encanta viajar y conocer culturas nuevas',
+                'Persona tranquila que disfruta de las conversaciones profundas',
+                'Deportista y vida saludable',
+                'Amante de los videojuegos y la tecnología',
+                'Siempre listo para una aventura',
+                'Disfruto de los planes tranquilos y el cine'
+            ];
+
+            // Hacer funciones globales para edición
+            window.iniciarEdicion = iniciarEdicion;
+
+            // ============================================
+            // FUNCIÓN PARA ACTUALIZAR NIVEL EN BD
+            // ============================================
+            async function actualizarNivelEnBD() {
+                // Contar cuántas fotos tienen imagen
+                let fotosConImagen = 0;
+                
+                for (let i = 1; i <= 4; i++) {
+                    const photoItem = document.getElementById(`photo${i}`);
+                    if (photoItem && photoItem.classList.contains('has-image')) {
+                        fotosConImagen++;
+                    }
+                }
+                
+                const nuevoNivel = fotosConImagen >= 4 ? 2 : 1;
+                
+                // Si el nivel cambió
+                if (nuevoNivel !== nivelActual) {
+                    nivelActual = nuevoNivel;
+                    
+                    // Actualizar en BD
+                    const { error } = await supabaseClient
+                        .from('usuarios')
+                        .update({ nivel: nivelActual })
+                        .eq('id_usuario', usuarioId);
+                    
+                    if (error) {
+                        console.error('Error al actualizar nivel:', error);
+                    } else {
+                        // Actualizar UI
+                        nivelValor.textContent = nivelActual;
+                        
+                        // Animación si es la primera vez que llega a nivel 2
+                        if (nivelActual === 2 && nivelInicialCargado) {
+                            nivelBadge.classList.add('badge-animation');
+                            setTimeout(() => {
+                                nivelBadge.classList.remove('badge-animation');
+                            }, 500);
+                            
+                            showNotification('fas fa-star', '✨ ¡Felicidades! Has alcanzado el Nivel 2 (4 fotos)', '#ffd700', '#1e2b3a');
+                        }
+                    }
+                } else if (!nivelInicialCargado) {
+                    nivelValor.textContent = nivelActual;
+                    nivelInicialCargado = true;
+                }
+            }
+
+            // ============================================
+            // CARGAR DATOS DEL USUARIO
+            // ============================================
+            async function cargarDatosUsuario() {
+                try {
+                    const usuarioGuardado = sessionStorage.getItem('usuario_actual');
+                    
+                    if (!usuarioGuardado) {
+                        window.location.href = 'login.html';
+                        return;
+                    }
+
+                    usuarioActual = JSON.parse(usuarioGuardado);
+                    usuarioId = usuarioActual.id;
+
+                    showNotification('fas fa-spinner fa-spin', 'Cargando perfil...', '#4a90e2', 'white');
+
+                    const { data: usuarioData, error } = await supabaseClient
+                        .from('usuarios')
+                        .select(`
+                            *,
+                            pais: id_pais (id_pais, nombre),
+                            ciudad: id_ciudad (id_ciudad, nombre)
+                        `)
+                        .eq('id_usuario', usuarioId)
+                        .single();
+
+                    if (error) throw error;
+
+                    // Guardar nivel actual
+                    nivelActual = usuarioData.nivel || 1;
+                    
+                    fotoPrincipalUrl = usuarioData.foto_url;
+                    actualizarUI(usuarioData);
+                    await cargarTodasLasFotos();
+                    await cargarPaises(); // Para el combo de ubicación
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    showNotification('fas fa-exclamation-triangle', 'Error al cargar perfil', '#ff6b6b', 'white');
+                }
+            }
+
+            function actualizarUI(usuario) {
+                document.getElementById('nombreUsuario').textContent = usuario.nombre || 'Usuario';
+                document.getElementById('infoNombre').textContent = usuario.nombre || 'No especificado';
+                document.getElementById('infoEdad').textContent = usuario.edad ? `${usuario.edad} años` : 'No especificada';
+                document.getElementById('infoCorreo').textContent = usuario.correo || 'No especificado';
+                document.getElementById('infoTelefono').textContent = usuario.telefono || 'No especificado';
+                
+                // Descripción (usando el campo sobre_mi)
+                document.getElementById('infoDescripcion').textContent = usuario.sobre_mi || frasesDescripcion[0];
+                
+                const pais = usuario.pais?.nombre || '';
+                const ciudad = usuario.ciudad?.nombre || '';
+                document.getElementById('infoUbicacion').textContent = 
+                    (ciudad && pais) ? `${ciudad}, ${pais}` : (pais || ciudad || 'No especificada');
+                
+                document.getElementById('infoIntereses').textContent = usuario.intereses || 'No especificados';
+            }
+
+            // ============================================
+            // FUNCIONES DE EDICIÓN AUTOMÁTICA
+            // ============================================
+            
+            // Iniciar edición de un campo
+            function iniciarEdicion(campo) {
+                if (editando) {
+                    showNotification('fas fa-info-circle', 'Termina de editar el campo actual primero', '#ffd700', '#1e2b3a');
+                    return;
+                }
+                
+                switch(campo) {
+                    case 'nombre':
+                        editarNombre();
+                        break;
+                    case 'edad':
+                        editarEdad();
+                        break;
+                    case 'descripcion':
+                        editarDescripcion();
+                        break;
+                    case 'ubicacion':
+                        editarUbicacion();
+                        break;
+                    case 'intereses':
+                        editarIntereses();
+                        break;
+                }
+            }
+
+            // Función para guardar automáticamente al perder foco
+            function setupAutoSave(input, campo, valorOriginal) {
+                editando = true;
+                
+                let guardado = false;
+                
+                const guardar = async (nuevoValor) => {
+                    if (guardado) return;
+                    guardado = true;
+                    
+                    if (nuevoValor === valorOriginal) {
+                        cancelarEdicion(campo);
+                        return;
+                    }
+                    
+                    await guardarCampo(campo, nuevoValor);
+                };
+                
+                // Enter guarda
+                input.addEventListener('keypress', (e) => {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        guardar(input.value);
+                    }
+                });
+                
+                // Perder foco guarda
+                input.addEventListener('blur', () => {
+                    setTimeout(() => {
+                        if (!guardado) {
+                            guardar(input.value);
+                        }
+                    }, 100);
+                });
+                
+                // Tecla Escape cancela
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Escape') {
+                        e.preventDefault();
+                        guardado = true;
+                        cancelarEdicion(campo);
+                    }
+                });
+            }
+
+         // Reemplaza la función guardarCampo completa con esta versión corregida:
+
+async function guardarCampo(campo, valor) {
+    try {
+        let updateData = {};
+        
+        switch(campo) {
+            case 'nombre':
+                updateData = { nombre: valor };
+                break;
+            case 'edad':
+                if (valor < 18) {
+                    showNotification('fas fa-exclamation-triangle', 'Edad mínima 18 años', '#ff6b6b', 'white');
+                    cancelarEdicion(campo);
+                    return;
+                }
+                updateData = { edad: parseInt(valor) };
+                break;
+            case 'descripcion':
+                updateData = { sobre_mi: valor };
+                break;
+        }
+        
+        const { error } = await supabaseClient
+            .from('usuarios')
+            .update(updateData)
+            .eq('id_usuario', usuarioId);
+        
+        if (error) throw error;
+        
+        // Actualizar UI solo si los elementos existen
+        if (campo === 'nombre') {
+            const infoNombre = document.getElementById('infoNombre');
+            const nombreUsuario = document.getElementById('nombreUsuario');
+            if (infoNombre) infoNombre.textContent = valor;
+            if (nombreUsuario) nombreUsuario.textContent = valor;
+        } else if (campo === 'edad') {
+            const infoEdad = document.getElementById('infoEdad');
+            if (infoEdad) infoEdad.textContent = `${valor} años`;
+        } else if (campo === 'descripcion') {
+            const infoDescripcion = document.getElementById('infoDescripcion');
+            if (infoDescripcion) infoDescripcion.textContent = valor;
+        }
+        
+        // Restaurar vista
+        cancelarEdicion(campo);
+        
+        showNotification('fas fa-check', '✅ Actualizado', '#2ecc71', 'white');
+        
+    } catch (error) {
+        console.error('Error:', error);
+        showNotification('fas fa-exclamation-triangle', 'Error al actualizar', '#ff6b6b', 'white');
+        cancelarEdicion(campo);
+    }
+}
+
+            // Editar nombre (input)
+           // Reemplaza la función editarNombre completa con esta:
+
+function editarNombre() {
+    const container = document.getElementById('info-nombre-container');
+    const valorActual = document.getElementById('infoNombre').textContent;
+    
+    const input = document.createElement('input');
+    input.type = 'text';
+    input.className = 'edit-input';
+    input.value = valorActual === 'No especificado' ? '' : valorActual;
+    input.placeholder = 'Tu nombre';
+    input.autofocus = true;
+    
+    container.innerHTML = `
+        <div class="info-label"><i class="fas fa-user"></i><span>Nombre completo</span></div>
+    `;
+    container.appendChild(input);
+    container.classList.add('editing');
+    
+    editando = true;
+    let guardado = false;
+    
+    const guardarNombre = async () => {
+        if (guardado) return;
+        guardado = true;
+        
+        const nuevoValor = input.value;
+        if (nuevoValor === valorActual || nuevoValor === '') {
+            // Restaurar el valor original y quitar edición
+            container.innerHTML = `
+                <div class="info-label"><i class="fas fa-user"></i><span>Nombre completo</span></div>
+                <div class="info-value editable-field" id="infoNombre" onclick="iniciarEdicion('nombre')">${valorActual}</div>
+            `;
+            container.classList.remove('editing');
+            editando = false;
+            return;
+        }
+        
+        try {
+            const { error } = await supabaseClient
+                .from('usuarios')
+                .update({ nombre: nuevoValor })
+                .eq('id_usuario', usuarioId);
+            
+            if (error) throw error;
+            
+            // Actualizar UI y quitar edición
+            container.innerHTML = `
+                <div class="info-label"><i class="fas fa-user"></i><span>Nombre completo</span></div>
+                <div class="info-value editable-field" id="infoNombre" onclick="iniciarEdicion('nombre')">${nuevoValor}</div>
+            `;
+            container.classList.remove('editing');
+            
+            const nombreUsuario = document.getElementById('nombreUsuario');
+            if (nombreUsuario) nombreUsuario.textContent = nuevoValor;
+            
+            editando = false;
+            
+            showNotification('fas fa-check', '✅ Nombre actualizado', '#2ecc71', 'white');
+            
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('fas fa-exclamation-triangle', 'Error al actualizar', '#ff6b6b', 'white');
+            
+            // Restaurar valor original en caso de error
+            container.innerHTML = `
+                <div class="info-label"><i class="fas fa-user"></i><span>Nombre completo</span></div>
+                <div class="info-value editable-field" id="infoNombre" onclick="iniciarEdicion('nombre')">${valorActual}</div>
+            `;
+            container.classList.remove('editing');
+            editando = false;
+        }
+    };
+    
+    // Enter guarda
+    input.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            e.preventDefault();
+            guardarNombre();
+        }
+    });
+    
+    // Perder foco guarda
+    input.addEventListener('blur', () => {
+        setTimeout(() => {
+            if (!guardado) {
+                guardarNombre();
+            }
+        }, 100);
+    });
+    
+    // Escape cancela
+    input.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            guardado = true;
+            container.innerHTML = `
+                <div class="info-label"><i class="fas fa-user"></i><span>Nombre completo</span></div>
+                <div class="info-value editable-field" id="infoNombre" onclick="iniciarEdicion('nombre')">${valorActual}</div>
+            `;
+            container.classList.remove('editing');
+            editando = false;
+        }
+    });
+}
+
+// Reemplaza la función editarEdad completa con esta:
+
+function editarEdad() {
+    const container = document.getElementById('info-edad-container');
+    const valorActual = document.getElementById('infoEdad').textContent;
+    const edadActual = valorActual.replace(' años', '');
+    
+    const select = document.createElement('select');
+    select.className = 'edit-select';
+    select.autofocus = true;
+    
+    // Generar opciones de 18 a 100 años
+    for (let i = 18; i <= 100; i++) {
+        const option = document.createElement('option');
+        option.value = i;
+        option.textContent = i + ' años';
+        if (edadActual == i) option.selected = true;
+        select.appendChild(option);
+    }
+    
+    container.innerHTML = `
+        <div class="info-label"><i class="fas fa-calendar-alt"></i><span>Edad</span></div>
+    `;
+    container.appendChild(select);
+    container.classList.add('editing');
+    
+    editando = true;
+    
+    // Guardar al cambiar
+    select.addEventListener('change', async () => {
+        const nuevoValor = select.value;
+        if (nuevoValor == edadActual) {
+            // Restaurar y quitar edición
+            container.innerHTML = `
+                <div class="info-label"><i class="fas fa-calendar-alt"></i><span>Edad</span></div>
+                <div class="info-value editable-field" id="infoEdad" onclick="iniciarEdicion('edad')">${valorActual}</div>
+            `;
+            container.classList.remove('editing');
+            editando = false;
+            return;
+        }
+        
+        try {
+            const { error } = await supabaseClient
+                .from('usuarios')
+                .update({ edad: parseInt(nuevoValor) })
+                .eq('id_usuario', usuarioId);
+            
+            if (error) throw error;
+            
+            // Actualizar UI y quitar edición
+            container.innerHTML = `
+                <div class="info-label"><i class="fas fa-calendar-alt"></i><span>Edad</span></div>
+                <div class="info-value editable-field" id="infoEdad" onclick="iniciarEdicion('edad')">${nuevoValor} años</div>
+            `;
+            container.classList.remove('editing');
+            editando = false;
+            
+            showNotification('fas fa-check', '✅ Edad actualizada', '#2ecc71', 'white');
+            
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('fas fa-exclamation-triangle', 'Error al actualizar', '#ff6b6b', 'white');
+            
+            // Restaurar valor original en caso de error
+            container.innerHTML = `
+                <div class="info-label"><i class="fas fa-calendar-alt"></i><span>Edad</span></div>
+                <div class="info-value editable-field" id="infoEdad" onclick="iniciarEdicion('edad')">${valorActual}</div>
+            `;
+            container.classList.remove('editing');
+            editando = false;
+        }
+    });
+    
+    // Escape cancela
+    select.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            container.innerHTML = `
+                <div class="info-label"><i class="fas fa-calendar-alt"></i><span>Edad</span></div>
+                <div class="info-value editable-field" id="infoEdad" onclick="iniciarEdicion('edad')">${valorActual}</div>
+            `;
+            container.classList.remove('editing');
+            editando = false;
+        }
+    });
+}
+            // Editar descripción (select con frases)
+            // Reemplaza la función editarDescripcion completa con esta:
+
+// Reemplaza la función editarDescripcion completa con esta:
+
+function editarDescripcion() {
+    const container = document.getElementById('info-descripcion-container');
+    const valorActual = document.getElementById('infoDescripcion').textContent;
+    
+    const select = document.createElement('select');
+    select.className = 'edit-select';
+    select.autofocus = true;
+    
+    // Agregar frases como opciones
+    frasesDescripcion.forEach(frase => {
+        const option = document.createElement('option');
+        option.value = frase;
+        option.textContent = frase.length > 40 ? frase.substring(0, 40) + '...' : frase;
+        option.title = frase;
+        if (frase === valorActual) option.selected = true;
+        select.appendChild(option);
+    });
+    
+    container.innerHTML = `
+        <div class="info-label"><i class="fas fa-smile"></i><span>Descripción</span></div>
+    `;
+    container.appendChild(select);
+    container.classList.add('editing');
+    
+    editando = true;
+    
+    // Guardar al cambiar
+    select.addEventListener('change', async () => {
+        const nuevoValor = select.value;
+        if (nuevoValor === valorActual) {
+            // Restaurar y quitar edición
+            container.innerHTML = `
+                <div class="info-label"><i class="fas fa-smile"></i><span>Descripción</span></div>
+                <div class="info-value description editable-field" id="infoDescripcion" onclick="iniciarEdicion('descripcion')">${valorActual}</div>
+            `;
+            container.classList.remove('editing');
+            editando = false;
+            return;
+        }
+        
+        try {
+            const { error } = await supabaseClient
+                .from('usuarios')
+                .update({ sobre_mi: nuevoValor })
+                .eq('id_usuario', usuarioId);
+            
+            if (error) throw error;
+            
+            // Actualizar UI y quitar edición
+            container.innerHTML = `
+                <div class="info-label"><i class="fas fa-smile"></i><span>Descripción</span></div>
+                <div class="info-value description editable-field" id="infoDescripcion" onclick="iniciarEdicion('descripcion')">${nuevoValor}</div>
+            `;
+            container.classList.remove('editing');
+            editando = false;
+            
+            showNotification('fas fa-check', '✅ Descripción actualizada', '#2ecc71', 'white');
+            
+        } catch (error) {
+            console.error('Error:', error);
+            showNotification('fas fa-exclamation-triangle', 'Error al actualizar', '#ff6b6b', 'white');
+            
+            // Restaurar valor original en caso de error
+            container.innerHTML = `
+                <div class="info-label"><i class="fas fa-smile"></i><span>Descripción</span></div>
+                <div class="info-value description editable-field" id="infoDescripcion" onclick="iniciarEdicion('descripcion')">${valorActual}</div>
+            `;
+            container.classList.remove('editing');
+            editando = false;
+        }
+    });
+    
+    // Escape cancela
+    select.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            e.preventDefault();
+            container.innerHTML = `
+                <div class="info-label"><i class="fas fa-smile"></i><span>Descripción</span></div>
+                <div class="info-value description editable-field" id="infoDescripcion" onclick="iniciarEdicion('descripcion')">${valorActual}</div>
+            `;
+            container.classList.remove('editing');
+            editando = false;
+        }
+    });
+}
+            // Editar ubicación (combo dependiente)
+            async function editarUbicacion() {
+                const container = document.getElementById('info-ubicacion-container');
+                
+                // Obtener IDs actuales
+                const { data: usuario } = await supabaseClient
+                    .from('usuarios')
+                    .select('id_pais, id_ciudad')
+                    .eq('id_usuario', usuarioId)
+                    .single();
+                
+                const paisSelect = document.createElement('select');
+                paisSelect.className = 'edit-select';
+                paisSelect.innerHTML = '<option value="">Selecciona un país</option>';
+                
+                paises.forEach(p => {
+                    const option = document.createElement('option');
+                    option.value = p.id_pais;
+                    option.textContent = p.nombre;
+                    if (usuario?.id_pais === p.id_pais) option.selected = true;
+                    paisSelect.appendChild(option);
+                });
+                
+                const ciudadSelect = document.createElement('select');
+                ciudadSelect.className = 'edit-select';
+                ciudadSelect.innerHTML = '<option value="">Primero selecciona un país</option>';
+                
+                container.innerHTML = `
+                    <div class="info-label"><i class="fas fa-map-marker-alt"></i><span>País y Ciudad</span></div>
+                `;
+                container.appendChild(paisSelect);
+                container.appendChild(ciudadSelect);
+                container.classList.add('editing');
+                
+                editando = true;
+                
+                // Si ya hay país seleccionado, cargar ciudades
+                if (usuario?.id_pais) {
+                    await cargarCiudadesSelect(usuario.id_pais, ciudadSelect, usuario.id_ciudad);
+                }
+                
+                // Evento cambio de país
+                paisSelect.addEventListener('change', async () => {
+                    await cargarCiudadesSelect(paisSelect.value, ciudadSelect);
+                });
+                
+                // Evento cambio de ciudad - guardar automáticamente
+                ciudadSelect.addEventListener('change', async () => {
+                    if (paisSelect.value && ciudadSelect.value) {
+                        await guardarUbicacion(paisSelect.value, ciudadSelect.value);
+                    }
+                });
+            }
+
+            // Cargar ciudades en select
+            async function cargarCiudadesSelect(paisId, ciudadSelect, ciudadSeleccionada = null) {
+                if (!paisId) {
+                    ciudadSelect.innerHTML = '<option value="">Primero selecciona un país</option>';
+                    return;
+                }
+
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('ciudad')
+                        .select('*')
+                        .eq('id_pais', paisId)
+                        .order('nombre');
+
+                    if (error) throw error;
+
+                    ciudades = data;
+                    
+                    ciudadSelect.innerHTML = '<option value="">Selecciona una ciudad</option>';
+                    data.forEach(c => {
+                        const option = document.createElement('option');
+                        option.value = c.id_ciudad;
+                        option.textContent = c.nombre;
+                        if (ciudadSeleccionada === c.id_ciudad) option.selected = true;
+                        ciudadSelect.appendChild(option);
+                    });
+                } catch (error) {
+                    console.error('Error cargando ciudades:', error);
+                }
+            }
+
+            // Guardar ubicación
+            async function guardarUbicacion(paisId, ciudadId) {
+                try {
+                    const { error } = await supabaseClient
+                        .from('usuarios')
+                        .update({ 
+                            id_pais: parseInt(paisId),
+                            id_ciudad: parseInt(ciudadId)
+                        })
+                        .eq('id_usuario', usuarioId);
+
+                    if (error) throw error;
+
+                    // Obtener nombres para mostrar
+                    const pais = paises.find(p => p.id_pais === parseInt(paisId))?.nombre || '';
+                    const { data: ciudad } = await supabaseClient
+                        .from('ciudad')
+                        .select('nombre')
+                        .eq('id_ciudad', ciudadId)
+                        .single();
+
+                    const container = document.getElementById('info-ubicacion-container');
+                    container.innerHTML = `
+                        <div class="info-label"><i class="fas fa-map-marker-alt"></i><span>Ciudad, País</span></div>
+                        <div class="info-value editable-field" id="infoUbicacion" onclick="iniciarEdicion('ubicacion')">${ciudad.nombre}, ${pais}</div>
+                    `;
+                    container.classList.remove('editing');
+                    editando = false;
+                    
+                    showNotification('fas fa-check', '✅ Ubicación actualizada', '#2ecc71', 'white');
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    showNotification('fas fa-exclamation-triangle', 'Error al actualizar', '#ff6b6b', 'white');
+                    cancelarEdicion('ubicacion');
+                }
+            }
+
+            // Editar intereses (modal)
+            async function editarIntereses() {
+                await cargarIntereses();
+                
+                // Obtener intereses actuales
+                const { data: usuario } = await supabaseClient
+                    .from('usuarios')
+                    .select('intereses')
+                    .eq('id_usuario', usuarioId)
+                    .single();
+                
+                const interesesActuales = usuario.intereses ? usuario.intereses.split(', ') : [];
+                
+                editando = true;
+                
+                Swal.fire({
+                    title: 'Selecciona tus intereses',
+                    html: `
+                        <div class="intereses-categorias" id="modalCategoriaTabs">
+                            <button class="categoria-tab active" data-categoria="todos">✨ Todos</button>
+                            <button class="categoria-tab" data-categoria="casa">🏠 Casa</button>
+                            <button class="categoria-tab" data-categoria="porfuera">🌳 Por fuera</button>
+                            <button class="categoria-tab" data-categoria="pasatiempos">🎨 Pasatiempos</button>
+                        </div>
+                        <div class="intereses-grid" id="modalInteresesGrid"></div>
+                        <div style="margin-top: 10px; text-align: right; font-size: 14px;">
+                            Seleccionados: <span id="modalContador">${interesesActuales.length}</span>/8
+                        </div>
+                    `,
+                    showCancelButton: true,
+                    confirmButtonText: 'Guardar',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: '#6c5ce7',
+                    background: 'white',
+                    width: window.innerWidth < 500 ? '95%' : '600px',
+                    customClass: { popup: 'intereses-modal' },
+                    didOpen: () => {
+                        let interesesSeleccionados = [...interesesActuales];
+                        
+                        const grid = document.getElementById('modalInteresesGrid');
+                        grid.innerHTML = '';
+                        
+                        todosLosIntereses.forEach(i => {
+                            // Saltar categoría negocio
+                            if (i.categoria === 'negocio') return;
+                            
+                            const btn = document.createElement('div');
+                            btn.className = 'interes-btn' + (interesesSeleccionados.includes(i.nombre) ? ' selected' : '');
+                            btn.textContent = i.nombre;
+                            btn.dataset.id = i.id;
+                            btn.dataset.categoria = i.categoria || 'pasatiempos';
+                            
+                            btn.onclick = () => {
+                                btn.classList.toggle('selected');
+                                
+                                if (interesesSeleccionados.includes(i.nombre)) {
+                                    interesesSeleccionados = interesesSeleccionados.filter(x => x !== i.nombre);
+                                } else {
+                                    if (interesesSeleccionados.length >= 8) {
+                                        Swal.showValidationMessage('Máximo 8 intereses');
+                                        btn.classList.remove('selected');
+                                        return;
+                                    }
+                                    interesesSeleccionados.push(i.nombre);
+                                }
+                                document.getElementById('modalContador').textContent = interesesSeleccionados.length;
+                            };
+                            
+                            grid.appendChild(btn);
+                        });
+                        
+                        // Filtrar por categoría
+                        document.querySelectorAll('#modalCategoriaTabs .categoria-tab').forEach(tab => {
+                            tab.addEventListener('click', () => {
+                                document.querySelectorAll('#modalCategoriaTabs .categoria-tab').forEach(t => t.classList.remove('active'));
+                                tab.classList.add('active');
+                                
+                                const categoria = tab.dataset.categoria;
+                                document.querySelectorAll('#modalInteresesGrid .interes-btn').forEach(btn => {
+                                    if (categoria === 'todos' || btn.dataset.categoria === categoria) {
+                                        btn.style.display = 'flex';
+                                    } else {
+                                        btn.style.display = 'none';
+                                    }
+                                });
+                            });
+                        });
+                        
+                        window.interesesSeleccionadosModal = interesesSeleccionados;
+                    },
+                    preConfirm: () => {
+                        if (window.interesesSeleccionadosModal.length === 0) {
+                            Swal.showValidationMessage('Selecciona al menos un interés');
+                            return false;
+                        }
+                        return window.interesesSeleccionadosModal;
+                    }
+                }).then(async (result) => {
+                    if (result.isConfirmed) {
+                        await guardarIntereses(result.value);
+                    } else {
+                        editando = false;
+                    }
+                });
+            }
+
+            // Guardar intereses
+            async function guardarIntereses(intereses) {
+                try {
+                    const interesesString = intereses.join(', ');
+                    
+                    const { error } = await supabaseClient
+                        .from('usuarios')
+                        .update({ intereses: interesesString })
+                        .eq('id_usuario', usuarioId);
+
+                    if (error) throw error;
+
+                    document.getElementById('infoIntereses').textContent = interesesString;
+                    showNotification('fas fa-check', '✅ Intereses actualizados', '#2ecc71', 'white');
+                    editando = false;
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    showNotification('fas fa-exclamation-triangle', 'Error al actualizar', '#ff6b6b', 'white');
+                }
+            }
+
+            // Cancelar edición
+            function cancelarEdicion(campo) {
+                editando = false;
+                const container = document.getElementById(`info-${campo}-container`);
+                if (!container) return;
+                
+                container.classList.remove('editing');
+                
+                // Restaurar el contenido original
+                if (campo === 'nombre') {
+                    // Ya se actualizó en guardarCampo
+                } else if (campo === 'edad') {
+                    // Ya se actualizó en guardarCampo
+                } else if (campo === 'descripcion') {
+                    // Ya se actualizó en guardarCampo
+                } else if (campo === 'ubicacion') {
+                    // Si la ubicación no se guardó, restaurar el valor original
+                    supabaseClient
+                        .from('usuarios')
+                        .select('id_pais, id_ciudad')
+                        .eq('id_usuario', usuarioId)
+                        .single()
+                        .then(({ data }) => {
+                            if (data && data.id_pais && data.id_ciudad) {
+                                const pais = paises.find(p => p.id_pais === data.id_pais)?.nombre || '';
+                                supabaseClient
+                                    .from('ciudad')
+                                    .select('nombre')
+                                    .eq('id_ciudad', data.id_ciudad)
+                                    .single()
+                                    .then(({ data: ciudad }) => {
+                                        if (ciudad) {
+                                            container.innerHTML = `
+                                                <div class="info-label"><i class="fas fa-map-marker-alt"></i><span>Ciudad, País</span></div>
+                                                <div class="info-value editable-field" id="infoUbicacion" onclick="iniciarEdicion('ubicacion')">${ciudad.nombre}, ${pais}</div>
+                                            `;
+                                        }
+                                    });
+                            } else {
+                                container.innerHTML = `
+                                    <div class="info-label"><i class="fas fa-map-marker-alt"></i><span>Ciudad, País</span></div>
+                                    <div class="info-value editable-field" id="infoUbicacion" onclick="iniciarEdicion('ubicacion')">No especificada</div>
+                                `;
+                            }
+                        });
+                }
+            }
+
+            // ============================================
+            // FUNCIONES AUXILIARES (Cargar datos)
+            // ============================================
+            
+            async function cargarPaises() {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('pais')
+                        .select('*')
+                        .order('nombre');
+                    
+                    if (error) throw error;
+                    paises = data;
+                } catch (error) {
+                    console.error('Error cargando países:', error);
+                }
+            }
+
+            async function cargarIntereses() {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('intereses')
+                        .select('*');
+                    
+                    if (error) throw error;
+                    
+                    todosLosIntereses = data.map(interes => {
+                        if (!interes.categoria) {
+                            const nombre = interes.nombre.toLowerCase();
+                            if (['mascotas', 'cocina', 'hogar', 'familia', 'decoración', 'jardinería'].includes(nombre)) {
+                                interes.categoria = 'casa';
+                            } else if (['deportes', 'fútbol', 'baloncesto', 'tenis', 'natación', 'correr', 'ciclismo', 'playa'].includes(nombre)) {
+                                interes.categoria = 'porfuera';
+                            } else if (['música', 'baile', 'pintura', 'fotografía', 'lectura', 'videojuegos', 'cine'].includes(nombre)) {
+                                interes.categoria = 'pasatiempos';
+                            } else {
+                                interes.categoria = 'pasatiempos';
+                            }
+                        }
+                        return interes;
+                    });
+                } catch (error) {
+                    console.error('Error cargando intereses:', error);
+                }
+            }
+
+            // ============================================
+            // FUNCIONES PARA FOTOS
+            // ============================================
+            async function cargarTodasLasFotos() {
+                try {
+                    const { data: fotos, error } = await supabaseClient
+                        .from('fotos_usuario')
+                        .select('*')
+                        .eq('id_usuario', usuarioId)
+                        .order('id_foto', { ascending: true });
+
+                    if (error) throw error;
+
+                    resetearPhotosGrid();
+
+                    if (fotos && fotos.length > 0) {
+                        const fotoPrincipal = fotos.find(f => f.principal === true);
+                        if (fotoPrincipal) {
+                            fotoPrincipalId = fotoPrincipal.id_foto;
+                            fotoPrincipalUrl = fotoPrincipal.url_foto;
+                            cargarFotoPrincipal(fotoPrincipal.url_foto);
+                        } else if (fotoPrincipalUrl) {
+                            cargarFotoPrincipal(fotoPrincipalUrl);
+                        }
+
+                        const fotosAdicionales = fotos.filter(f => f.principal !== true);
+                        fotosAdicionales.forEach((foto, index) => {
+                            if (index < 3) {
+                                const photoItem = document.getElementById(`photo${index + 2}`);
+                                if (photoItem) {
+                                    cargarFotoEnItem(photoItem, foto);
+                                }
+                            }
+                        });
+                    } else if (fotoPrincipalUrl) {
+                        cargarFotoPrincipal(fotoPrincipalUrl);
+                    }
+
+                    asignarEventosFotos();
+                    await actualizarNivelEnBD();
+
+                } catch (error) {
+                    console.error('Error cargando fotos:', error);
+                }
+            }
+
+            function resetearPhotosGrid() {
+                const photo1 = document.getElementById('photo1');
+                photo1.innerHTML = `
+                    <img src="" alt="Foto perfil" style="width: 100%; height: 100%; object-fit: cover; display: none;" id="fotoPerfilImg">
+                    <i class="fas fa-user-circle" id="fotoPlaceholder"></i>
+                    <div class="principal-badge" id="principalBadge" style="display: none;">
+                        <i class="fas fa-star"></i> Principal
+                    </div>
+                    <div class="remove-photo" style="display: none;">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div class="upload-progress" style="display: none;">
+                        <div class="upload-progress-bar"></div>
+                    </div>
+                `;
+                photo1.classList.remove('has-image');
+
+                for (let i = 2; i <= 4; i++) {
+                    const photoItem = document.getElementById(`photo${i}`);
+                    photoItem.innerHTML = `
+                        <i class="fas fa-plus"></i>
+                        <div class="make-primary" title="Hacer principal">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="upload-progress" style="display: none;">
+                            <div class="upload-progress-bar"></div>
+                        </div>
+                    `;
+                    photoItem.classList.remove('has-image');
+                }
+            }
+
+            function cargarFotoPrincipal(url) {
+                const photoItem = document.getElementById('photo1');
+                const fotoImg = document.getElementById('fotoPerfilImg');
+                const fotoPlaceholder = document.getElementById('fotoPlaceholder');
+                const principalBadge = document.getElementById('principalBadge');
+                
+                fotoImg.src = url;
+                fotoImg.style.display = 'block';
+                fotoPlaceholder.style.display = 'none';
+                principalBadge.style.display = 'flex';
+                photoItem.classList.add('has-image');
+            }
+
+            function cargarFotoEnItem(photoItem, foto) {
+                photoItem.innerHTML = `
+                    <img src="${foto.url_foto}" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;">
+                    <div class="remove-photo" data-foto-id="${foto.id_foto}">
+                        <i class="fas fa-times"></i>
+                    </div>
+                    <div class="make-primary" data-foto-id="${foto.id_foto}" title="Hacer principal">
+                        <i class="fas fa-star"></i>
+                    </div>
+                    <div class="upload-progress" style="display: none;">
+                        <div class="upload-progress-bar"></div>
+                    </div>
+                `;
+                photoItem.classList.add('has-image');
+            }
+
+            function asignarEventosFotos() {
+                const photoPrincipal = document.getElementById('photo1');
+                photoPrincipal.removeEventListener('click', manejarClickFotoPrincipal);
+                photoPrincipal.addEventListener('click', manejarClickFotoPrincipal);
+
+                document.querySelectorAll('#photo2, #photo3, #photo4').forEach(item => {
+                    item.removeEventListener('click', manejarClickFotoAdicional);
+                    item.addEventListener('click', manejarClickFotoAdicional);
+                });
+
+                document.querySelectorAll('.remove-photo[data-foto-id]').forEach(btn => {
+                    btn.removeEventListener('click', manejarEliminar);
+                    btn.addEventListener('click', manejarEliminar);
+                });
+
+                document.querySelectorAll('.make-primary[data-foto-id]').forEach(btn => {
+                    btn.removeEventListener('click', manejarHacerPrincipal);
+                    btn.addEventListener('click', manejarHacerPrincipal);
+                });
+            }
+
+            async function manejarClickFotoPrincipal(e) {
+                if (editando) return;
+                e.stopPropagation();
+                if (e.target.closest('.remove-photo') || e.target.closest('.make-primary')) return;
+
+                const photoItem = this;
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/jpeg,image/png,image/jpg,image/gif,image/webp';
+                
+                input.onchange = async function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    
+                    if (file.size > 5 * 1024 * 1024) {
+                        showNotification('fas fa-exclamation-triangle', 'La imagen no debe superar 5MB', '#ff6b6b', 'white');
+                        return;
+                    }
+                    
+                    if (!file.type.startsWith('image/')) {
+                        showNotification('fas fa-exclamation-triangle', 'Solo se permiten imágenes', '#ff6b6b', 'white');
+                        return;
+                    }
+
+                    photoItem.style.pointerEvents = 'none';
+                    await subirFotoPrincipal(file, photoItem);
+                    photoItem.style.pointerEvents = 'auto';
+                };
+                
+                input.click();
+            }
+
+            async function manejarClickFotoAdicional(e) {
+                if (editando) return;
+                e.stopPropagation();
+                if (e.target.closest('.remove-photo') || e.target.closest('.make-primary')) return;
+
+                const photoItem = this;
+
+                const input = document.createElement('input');
+                input.type = 'file';
+                input.accept = 'image/jpeg,image/png,image/jpg,image/gif,image/webp';
+                
+                input.onchange = async function(e) {
+                    const file = e.target.files[0];
+                    if (!file) return;
+                    
+                    if (file.size > 5 * 1024 * 1024) {
+                        showNotification('fas fa-exclamation-triangle', 'La imagen no debe superar 5MB', '#ff6b6b', 'white');
+                        return;
+                    }
+                    
+                    if (!file.type.startsWith('image/')) {
+                        showNotification('fas fa-exclamation-triangle', 'Solo se permiten imágenes', '#ff6b6b', 'white');
+                        return;
+                    }
+
+                    photoItem.style.pointerEvents = 'none';
+                    await subirFotoAdicional(file, photoItem);
+                    photoItem.style.pointerEvents = 'auto';
+                };
+                
+                input.click();
+            }
+
+            async function subirFotoPrincipal(file, photoItem) {
+                try {
+                    const progressDiv = photoItem.querySelector('.upload-progress');
+                    const progressBar = photoItem.querySelector('.upload-progress-bar');
+                    
+                    if (progressDiv) progressDiv.style.display = 'block';
+
+                    let progress = 0;
+                    const interval = setInterval(() => {
+                        progress += 10;
+                        if (progressBar) progressBar.style.width = progress + '%';
+                        if (progress >= 90) clearInterval(interval);
+                    }, 100);
+
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+                    const filePath = `usuario_${usuarioId}/principales/${fileName}`;
+
+                    const { error: uploadError } = await supabaseClient.storage
+                        .from('fotos-perfil')
+                        .upload(filePath, file, {
+                            cacheControl: '3600',
+                            upsert: false,
+                            contentType: file.type
+                        });
+
+                    if (uploadError) throw uploadError;
+
+                    const { data: urlData } = supabaseClient.storage
+                        .from('fotos-perfil')
+                        .getPublicUrl(filePath);
+
+                    clearInterval(interval);
+                    if (progressBar) progressBar.style.width = '100%';
+
+                    if (fotoPrincipalId) {
+                        await supabaseClient
+                            .from('fotos_usuario')
+                            .update({ 
+                                url_foto: urlData.publicUrl,
+                                fecha: new Date().toISOString()
+                            })
+                            .eq('id_foto', fotoPrincipalId);
+                    } else {
+                        const { data: fotoGuardada, error: dbError } = await supabaseClient
+                            .from('fotos_usuario')
+                            .insert([{
+                                id_usuario: usuarioId,
+                                url_foto: urlData.publicUrl,
+                                principal: true,
+                                fecha: new Date().toISOString()
+                            }])
+                            .select();
+
+                        if (dbError) throw dbError;
+                        fotoPrincipalId = fotoGuardada[0].id_foto;
+                    }
+
+                    await supabaseClient
+                        .from('usuarios')
+                        .update({ foto_url: urlData.publicUrl })
+                        .eq('id_usuario', usuarioId);
+
+                    setTimeout(() => {
+                        if (progressDiv) progressDiv.style.display = 'none';
+                        
+                        const fotoImg = document.getElementById('fotoPerfilImg');
+                        const fotoPlaceholder = document.getElementById('fotoPlaceholder');
+                        
+                        fotoImg.src = urlData.publicUrl;
+                        fotoImg.style.display = 'block';
+                        fotoPlaceholder.style.display = 'none';
+                        
+                        showNotification('fas fa-camera', '📸 Foto principal actualizada', '#4a90e2', 'white');
+                    }, 500);
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    showNotification('fas fa-exclamation-triangle', 'Error al subir foto', '#ff6b6b', 'white');
+                }
+            }
+
+            async function subirFotoAdicional(file, photoItem) {
+                try {
+                    const progressDiv = photoItem.querySelector('.upload-progress');
+                    const progressBar = photoItem.querySelector('.upload-progress-bar');
+                    
+                    if (progressDiv) progressDiv.style.display = 'block';
+
+                    let progress = 0;
+                    const interval = setInterval(() => {
+                        progress += 10;
+                        if (progressBar) progressBar.style.width = progress + '%';
+                        if (progress >= 90) clearInterval(interval);
+                    }, 100);
+
+                    const fileExt = file.name.split('.').pop();
+                    const fileName = `${Date.now()}_${Math.random().toString(36).substring(2)}.${fileExt}`;
+                    const filePath = `usuario_${usuarioId}/adicionales/${fileName}`;
+
+                    const { error: uploadError } = await supabaseClient.storage
+                        .from('fotos-perfil')
+                        .upload(filePath, file, {
+                            cacheControl: '3600',
+                            upsert: false,
+                            contentType: file.type
+                        });
+
+                    if (uploadError) throw uploadError;
+
+                    const { data: urlData } = supabaseClient.storage
+                        .from('fotos-perfil')
+                        .getPublicUrl(filePath);
+
+                    clearInterval(interval);
+                    if (progressBar) progressBar.style.width = '100%';
+
+                    const { data: fotoGuardada, error: dbError } = await supabaseClient
+                        .from('fotos_usuario')
+                        .insert([{
+                            id_usuario: usuarioId,
+                            url_foto: urlData.publicUrl,
+                            principal: false,
+                            fecha: new Date().toISOString()
+                        }])
+                        .select();
+
+                    if (dbError) throw dbError;
+
+                    setTimeout(() => {
+                        if (progressDiv) progressDiv.style.display = 'none';
+                        
+                        photoItem.innerHTML = `
+                            <img src="${urlData.publicUrl}" alt="Foto" style="width: 100%; height: 100%; object-fit: cover;">
+                            <div class="remove-photo" data-foto-id="${fotoGuardada[0].id_foto}">
+                                <i class="fas fa-times"></i>
+                            </div>
+                            <div class="make-primary" data-foto-id="${fotoGuardada[0].id_foto}" title="Hacer principal">
+                                <i class="fas fa-star"></i>
+                            </div>
+                            <div class="upload-progress" style="display: none;">
+                                <div class="upload-progress-bar"></div>
+                            </div>
+                        `;
+                        photoItem.classList.add('has-image');
+
+                        const removeBtn = photoItem.querySelector('.remove-photo');
+                        if (removeBtn) {
+                            removeBtn.addEventListener('click', manejarEliminar);
+                        }
+                        const makePrimaryBtn = photoItem.querySelector('.make-primary');
+                        if (makePrimaryBtn) {
+                            makePrimaryBtn.addEventListener('click', manejarHacerPrincipal);
+                        }
+
+                        showNotification('fas fa-camera', '📸 Foto subida correctamente', '#4a90e2', 'white');
+                        actualizarNivelEnBD();
+                    }, 500);
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    showNotification('fas fa-exclamation-triangle', 'Error al subir foto', '#ff6b6b', 'white');
+                }
+            }
+
+            async function manejarEliminar(e) {
+                if (editando) return;
+                e.stopPropagation();
+                const btn = e.currentTarget;
+                const fotoId = btn.getAttribute('data-foto-id');
+                const photoItem = btn.closest('.photo-item');
+
+                const result = await Swal.fire({
+                    title: '¿Eliminar foto?',
+                    text: 'Esta acción no se puede deshacer',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#ff6b6b',
+                    cancelButtonColor: '#888',
+                    confirmButtonText: 'Eliminar',
+                    cancelButtonText: 'Cancelar',
+                    background: 'white'
+                });
+
+                if (!result.isConfirmed) return;
+
+                try {
+                    const { error } = await supabaseClient
+                        .from('fotos_usuario')
+                        .delete()
+                        .eq('id_foto', fotoId);
+
+                    if (error) throw error;
+
+                    const orden = photoItem.id === 'photo2' ? '2' : (photoItem.id === 'photo3' ? '3' : '4');
+                    photoItem.innerHTML = `
+                        <i class="fas fa-plus"></i>
+                        <div class="make-primary" title="Hacer principal">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="upload-progress" style="display: none;">
+                            <div class="upload-progress-bar"></div>
+                        </div>
+                    `;
+                    photoItem.classList.remove('has-image');
+                    
+                    photoItem.removeEventListener('click', manejarClickFotoAdicional);
+                    photoItem.addEventListener('click', manejarClickFotoAdicional);
+
+                    showNotification('fas fa-trash', '🗑️ Foto eliminada', '#ff6b6b', 'white');
+                    actualizarNivelEnBD();
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    showNotification('fas fa-exclamation-triangle', 'Error al eliminar foto', '#ff6b6b', 'white');
+                }
+            }
+
+            async function manejarHacerPrincipal(e) {
+                if (editando) return;
+                e.stopPropagation();
+                const btn = e.currentTarget;
+                const fotoId = btn.getAttribute('data-foto-id');
+                const photoItem = btn.closest('.photo-item');
+                const nuevaFotoUrl = photoItem.querySelector('img').src;
+
+                const result = await Swal.fire({
+                    title: '¿Hacer foto principal?',
+                    text: 'Esta foto se establecerá como tu foto de perfil',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonColor: '#4a90e2',
+                    cancelButtonColor: '#888',
+                    confirmButtonText: 'Sí, hacer principal',
+                    cancelButtonText: 'Cancelar',
+                    background: 'white'
+                });
+
+                if (!result.isConfirmed) return;
+
+                try {
+                    if (fotoPrincipalId) {
+                        await supabaseClient
+                            .from('fotos_usuario')
+                            .update({ principal: false })
+                            .eq('id_foto', fotoPrincipalId);
+                    }
+
+                    await supabaseClient
+                        .from('fotos_usuario')
+                        .update({ principal: true })
+                        .eq('id_foto', fotoId);
+
+                    await supabaseClient
+                        .from('usuarios')
+                        .update({ foto_url: nuevaFotoUrl })
+                        .eq('id_usuario', usuarioId);
+
+                    fotoPrincipalId = fotoId;
+                    fotoPrincipalUrl = nuevaFotoUrl;
+                    
+                    cargarFotoPrincipal(nuevaFotoUrl);
+
+                    photoItem.innerHTML = `
+                        <i class="fas fa-plus"></i>
+                        <div class="make-primary" title="Hacer principal">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <div class="upload-progress" style="display: none;">
+                            <div class="upload-progress-bar"></div>
+                        </div>
+                    `;
+                    photoItem.classList.remove('has-image');
+                    
+                    photoItem.removeEventListener('click', manejarClickFotoAdicional);
+                    photoItem.addEventListener('click', manejarClickFotoAdicional);
+
+                    showNotification('fas fa-star', '✨ Foto principal actualizada', '#ffd700', '#1e2b3a');
+
+                } catch (error) {
+                    console.error('Error:', error);
+                    showNotification('fas fa-exclamation-triangle', 'Error al actualizar foto principal', '#ff6b6b', 'white');
+                }
+            }
+
+            // ============================================
+            // FUNCIÓN PARA MOSTRAR NOTIFICACIONES
+            // ============================================
             function showNotification(icon, text, bgColor = '#ffffff', iconColor = '#6c5ce7') {
                 const container = document.getElementById('notificationContainer');
                 const notification = document.createElement('div');
@@ -1068,140 +2663,73 @@
                 setTimeout(() => {
                     notification.style.animation = 'fadeOut 0.3s ease';
                     setTimeout(() => {
-                        container.removeChild(notification);
+                        if (container.contains(notification)) {
+                            container.removeChild(notification);
+                        }
                     }, 300);
                 }, 2500);
             }
 
-            // Toggle del contenedor de opciones
+            // ============================================
+            // EVENT LISTENERS
+            // ============================================
             optionsHeader.addEventListener('click', function() {
                 this.classList.toggle('open');
                 optionsContent.classList.toggle('open');
             });
 
-            // Botón Boost
             btnBoost.addEventListener('click', function() {
-                btnBoost.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    btnBoost.style.transform = 'scale(1)';
-                }, 200);
-                
-            
+                if (editando) return;
+                this.style.transform = 'scale(1.1)';
+                setTimeout(() => this.style.transform = 'scale(1)', 200);
+                showNotification('fas fa-rocket', '🚀 Boost activado', '#ff6b6b', 'white');
             });
 
-            // Botón Inicio
-            btnInicio.addEventListener('click', function() {
+            btnInicio.addEventListener('click', () => {
+                if (editando) return;
                 window.location.href = 'principal.html';
             });
-
-            // Botón Mensaje
-            btnMessage.addEventListener('click', function() {
+            
+            btnMessage.addEventListener('click', () => {
+                if (editando) return;
                 window.location.href = 'mensajes.html';
             });
-
-            // Botón Likes en footer
+            
+            btnCuenta.addEventListener('click', () => {
+                if (editando) return;
+                window.location.href = 'cuenta.html';
+            });
+            
             btnLikesFooter.addEventListener('click', function() {
-                btnLikesFooter.style.transform = 'scale(1.1)';
-                setTimeout(() => {
-                    btnLikesFooter.style.transform = 'scale(1)';
-                }, 200);
+                if (editando) return;
+                this.style.transform = 'scale(1.1)';
+                setTimeout(() => this.style.transform = 'scale(1)', 200);
                 showNotification('fas fa-heart', '❤️ Tus likes', '#ff4757', 'white');
             });
 
-            // Botón Cuenta (ya está activo)
-            btnCuenta.addEventListener('click', function() {
-                window.location.href = 'cuenta.html';
-            });
-
-            // Botón Editar
-            btnEditar.addEventListener('click', function() {
-                showNotification('fas fa-edit', '✏️ Modo edición activado', '#4a90e2', 'white');
-            });
-
-            // Botón Guardar
-            btnGuardar.addEventListener('click', function() {
-                showNotification('fas fa-save', '💾 Cambios guardados', '#2ecc71', 'white');
-            });
-
-            // Botones de opciones
-            btnPrivacidad.addEventListener('click', function() {
+            btnPrivacidad.addEventListener('click', () => {
+                if (editando) return;
                 window.location.href = 'privacidad.html';
             });
-
-            btnFaq.addEventListener('click', function() {
+            
+            btnFaq.addEventListener('click', () => {
+                if (editando) return;
                 window.location.href = 'preguntas.html';
             });
-
-            btnSoporte.addEventListener('click', function() {
-                window.location.href = 'soporte.html'
-            });
-
-            btnTest.addEventListener('click', function() {
-                window.location.href = 'test.html'
-            });
-
-            // Agregar fotos
-            photoItems.forEach((item, index) => {
-                if (index > 0) { // La primera foto ya tiene imagen
-                    item.addEventListener('click', function() {
-                        this.innerHTML = '<i class="fas fa-user-circle"></i><div class="remove-photo"><i class="fas fa-times"></i></div>';
-                        this.classList.add('has-image');
-                        showNotification('fas fa-camera', '📸 Foto agregada', '#4a90e2', 'white');
-                        
-                        // Reactivar el botón de eliminar para la nueva foto
-                        const newRemoveBtn = this.querySelector('.remove-photo');
-                        if (newRemoveBtn) {
-                            newRemoveBtn.addEventListener('click', function(e) {
-                                e.stopPropagation();
-                                const photoItem = this.closest('.photo-item');
-                                photoItem.innerHTML = '<i class="fas fa-plus"></i>';
-                                photoItem.classList.remove('has-image');
-                                showNotification('fas fa-trash', '🗑️ Foto eliminada', '#ff6b6b', 'white');
-                            });
-                        }
-                    });
-                }
-            });
-
-            // Eliminar fotos (para las existentes)
-            removeButtons.forEach(btn => {
-                btn.addEventListener('click', function(e) {
-                    e.stopPropagation();
-                    const photoItem = this.closest('.photo-item');
-                    photoItem.innerHTML = '<i class="fas fa-plus"></i>';
-                    photoItem.classList.remove('has-image');
-                    showNotification('fas fa-trash', '🗑️ Foto eliminada', '#ff6b6b', 'white');
-                });
-            });
-        });
-
-           // ============================================
-// ACTIVAR BOTÓN BOOST
-// ============================================
-document.addEventListener('DOMContentLoaded', function() {
-    const btnBoost = document.getElementById('btnBoost');
-    
-    if (btnBoost) {
-        btnBoost.addEventListener('click', function() {
-            // Animación del botón
-            this.style.transform = 'scale(1.1)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 200);
             
-            // Verificar si el modal de Boost está disponible
-            if (typeof mostrarModalBoost === 'function') {
-                mostrarModalBoost();
-            } else {
-                console.warn('Modal de Boost no disponible');
-                // Fallback: mostrar notificación si existe
-                if (typeof showNotification === 'function') {
-                    showNotification('fas fa-rocket', '🚀 Función de Boost próximamente', '#ff6b6b', 'white');
-                }
-            }
+            btnSoporte.addEventListener('click', () => {
+                if (editando) return;
+                window.location.href = 'soporte.html';
+            });
+            
+            btnTest.addEventListener('click', () => {
+                if (editando) return;
+                window.location.href = 'test.html';
+            });
+
+            // Iniciar
+            await cargarDatosUsuario();
         });
-    }
-});
     </script>
 </body>
 </html>
