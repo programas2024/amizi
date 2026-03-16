@@ -11,6 +11,7 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        /* (Mantén todos tus estilos igual) */
         * {
             margin: 0;
             padding: 0;
@@ -765,14 +766,14 @@
             Inicia Sesión <span>Amizi</span>
         </div>
 
-        <!-- FORMULARIO DE LOGIN -->
+        <!-- FORMULARIO DE LOGIN - MODIFICADO: ahora pide correo en lugar de nombre -->
         <div class="login-form">
             <div class="input-group">
                 <div class="input-label">
-                    <i class="fas fa-user"></i>
-                    <span>Nombre de usuario</span>
+                    <i class="fas fa-envelope"></i>
+                    <span>Correo electrónico</span>
                 </div>
-                <input type="text" class="input-field" id="usuarioField" placeholder="ej: laura_21, carlos123, ana_perez" data-tooltip="Ingresa tu nombre de usuario registrado">
+                <input type="email" class="input-field" id="correoField" placeholder="ej: usuario@email.com" data-tooltip="Ingresa tu correo registrado">
             </div>
 
             <div class="input-group">
@@ -832,9 +833,11 @@
     </div>
 
     <script>
-        // Configuración de Supabase
+        // ⚠️ IMPORTANTE: Debes configurar correctamente tu proyecto en Supabase
         const supabaseUrl = "https://qfwpikteqipzwpmqbllt.supabase.co";
-        const supabaseKey = "sb_publishable_W75gkuE187xY7qWeQsP6XQ_3IWzPC3A";
+        // ⚠️ Esta NO es la forma correcta de usar la clave. Deberías usar la anon key, no la publishable
+        // La anon key la encuentras en: Project Settings > API > Project API keys > anon public
+        const supabaseKey = "TU_ANON_KEY_AQUI"; // Reemplaza con tu anon key de Supabase
         
         const { createClient } = supabase;
         const supabaseClient = createClient(supabaseUrl, supabaseKey);
@@ -846,7 +849,7 @@
             const btnOlvidaste = document.getElementById('btnOlvidaste');
             const togglePassword = document.getElementById('togglePassword');
             const passwordField = document.getElementById('passwordField');
-            const usuarioField = document.getElementById('usuarioField');
+            const correoField = document.getElementById('correoField'); // Cambiado de usuarioField a correoField
             
             // Modal de soporte
             const modalSoporte = document.getElementById('modalSoporte');
@@ -884,16 +887,30 @@
                 Swal.close();
             }
 
-            // EVENTO PRINCIPAL DE LOGIN
+            // EVENTO PRINCIPAL DE LOGIN - CORREGIDO
             btnLogin.addEventListener('click', async function() {
-                const nombre = usuarioField.value.trim();
+                const correo = correoField.value.trim();
                 const contrasena = passwordField.value.trim();
 
-                if (!nombre || !contrasena) {
+                console.log('Intentando login con:', { correo }); // Para depuración
+
+                if (!correo || !contrasena) {
                     Swal.fire({
                         title: 'Campos incompletos',
-                        text: 'Por favor ingresa tu nombre de usuario y contraseña',
+                        text: 'Por favor ingresa tu correo y contraseña',
                         icon: 'warning',
+                        confirmButtonColor: '#6c5ce7',
+                        background: 'white'
+                    });
+                    return;
+                }
+
+                // Validar formato de correo básico
+                if (!correo.includes('@') || !correo.includes('.')) {
+                    Swal.fire({
+                        title: 'Correo inválido',
+                        text: 'Por favor ingresa un correo electrónico válido',
+                        icon: 'error',
                         confirmButtonColor: '#6c5ce7',
                         background: 'white'
                     });
@@ -903,18 +920,20 @@
                 showLoading();
 
                 try {
-                    // Buscar usuario por nombre
+                    // Buscar usuario por correo (NO por nombre)
                     const { data: usuarios, error } = await supabaseClient
                         .from('usuarios')
                         .select('*')
-                        .eq('nombre', nombre);
+                        .eq('correo', correo); // Cambiado de 'nombre' a 'correo'
+
+                    console.log('Resultado de búsqueda:', { usuarios, error }); // Para depuración
 
                     if (error) {
                         console.error('Error al buscar usuario:', error);
                         closeLoading();
                         Swal.fire({
                             title: 'Error',
-                            text: 'Error al verificar credenciales',
+                            text: 'Error al verificar credenciales: ' + error.message,
                             icon: 'error',
                             confirmButtonColor: '#6c5ce7',
                             background: 'white'
@@ -927,7 +946,7 @@
                         closeLoading();
                         Swal.fire({
                             title: 'Usuario no encontrado',
-                            text: 'El nombre de usuario no está registrado',
+                            text: 'El correo ingresado no está registrado',
                             icon: 'error',
                             confirmButtonColor: '#6c5ce7',
                             background: 'white'
@@ -936,8 +955,10 @@
                     }
 
                     const usuario = usuarios[0];
+                    console.log('Usuario encontrado:', usuario); // Para depuración
 
-                    // Verificar contraseña (en producción, debería estar hasheada)
+                    // Verificar contraseña (en producción, debería estar hasheada con bcrypt)
+                    // ⚠️ IMPORTANTE: En un entorno real, NUNCA guardes contraseñas en texto plano
                     if (usuario.contrasena !== contrasena) {
                         closeLoading();
                         Swal.fire({
@@ -953,24 +974,25 @@
                     // Login exitoso
                     closeLoading();
                     
-                    // Guardar datos del usuario en sessionStorage (opcional)
+                    // Guardar datos del usuario en sessionStorage
                     sessionStorage.setItem('usuario_actual', JSON.stringify({
-                        id: usuario.id_usuario,
-                        nombre: usuario.nombre,
+                        id: usuario.id_usuario || usuario.id,
+                        nombre: usuario.nombre || '',
                         correo: usuario.correo,
                         foto: usuario.foto_url || null
                     }));
 
-                    // Mostrar mensaje de éxito y redirigir
+                    // Mostrar mensaje de éxito con el nombre del usuario
                     Swal.fire({
                         title: '¡Bienvenido! ✨',
-                        text: `Hola ${usuario.nombre}, iniciando sesión...`,
+                        text: `Hola ${usuario.nombre || 'Usuario'}, iniciando sesión...`,
                         icon: 'success',
                         confirmButtonColor: '#6c5ce7',
                         background: 'white',
                         timer: 1500,
                         showConfirmButton: false
                     }).then(() => {
+                        // Redirigir a la página principal
                         window.location.href = 'principal.html';
                     });
 
@@ -979,7 +1001,7 @@
                     closeLoading();
                     Swal.fire({
                         title: 'Error',
-                        text: 'Ocurrió un error inesperado',
+                        text: 'Ocurrió un error inesperado: ' + error.message,
                         icon: 'error',
                         confirmButtonColor: '#6c5ce7',
                         background: 'white'
@@ -1034,7 +1056,7 @@
                 }
             });
 
-            usuarioField.addEventListener('keypress', function(e) {
+            correoField.addEventListener('keypress', function(e) {
                 if (e.key === 'Enter') {
                     passwordField.focus();
                 }
