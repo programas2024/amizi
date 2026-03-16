@@ -6,8 +6,10 @@
     <title>Amizi · Soporte</title>
     <!-- Font Awesome para iconos más lindos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="modulos/correo.js" ></script>
-    <script src="modulos/boots.js"></script>
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         * {
             margin: 0;
@@ -767,7 +769,7 @@
             <div class="header-right">
                 <div class="carisma-badge">
                     <i class="fas fa-bolt"></i>
-                    Nivel <span class="carisma-num">72</span>
+                    Nivel <span class="carisma-num" id="nivelValor">1</span>
                 </div>
                 
                 <button class="boost-btn" id="btnBoost">
@@ -869,41 +871,18 @@
 
                 <div class="form-group">
                     <div class="form-label">
-                        <i class="fas fa-user"></i>
-                        <span>Nombre (opcional)</span>
+                        <i class="fas fa-tag"></i>
+                        <span>Título de tu sugerencia</span>
                     </div>
-                    <input type="text" class="form-input" placeholder="Cómo quieres que te llamemos" id="suggestionName">
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <div class="form-label">
-                            <i class="fas fa-envelope"></i>
-                            <span>Email</span>
-                        </div>
-                        <input type="email" class="form-input" placeholder="tucorreo@ejemplo.com" id="suggestionEmail">
-                    </div>
-                    <div class="form-group">
-                        <div class="form-label">
-                            <i class="fas fa-tag"></i>
-                            <span>Tipo</span>
-                        </div>
-                        <select class="form-input" id="suggestionType">
-                            <option value="sugerencia">💡 Sugerencia</option>
-                            <option value="problema">⚠️ Reportar problema</option>
-                            <option value="funcion">✨ Nueva función</option>
-                            <option value="mejora">📈 Mejora</option>
-                            <option value="otro">🔄 Otro</option>
-                        </select>
-                    </div>
+                    <input type="text" class="form-input" placeholder="Ej: Me gustaría poder agregar más fotos" id="suggestionTitle">
                 </div>
 
                 <div class="form-group">
                     <div class="form-label">
                         <i class="fas fa-comment"></i>
-                        <span>Tu mensaje</span>
+                        <span>Descripción</span>
                     </div>
-                    <textarea class="form-textarea" placeholder="Cuéntanos tu idea, sugerencia o problema..." id="suggestionMessage"></textarea>
+                    <textarea class="form-textarea" placeholder="Cuéntanos tu idea, sugerencia o problema en detalle..." id="suggestionDescription"></textarea>
                 </div>
 
                 <div class="form-actions">
@@ -980,13 +959,21 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        // Configuración de Supabase
+        const supabaseUrl = "https://qfwpikteqipzwpmqbllt.supabase.co";
+        const supabaseKey = "sb_publishable_W75gkuE187xY7qWeQsP6XQ_3IWzPC3A";
+        
+        const { createClient } = supabase;
+        const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+        document.addEventListener('DOMContentLoaded', async function() {
             // Elementos de botones
             const btnBoost = document.getElementById('btnBoost');
             const btnInicio = document.getElementById('btnInicio');
             const btnMessage = document.getElementById('btnMessage');
             const btnLikesFooter = document.getElementById('btnLikesFooter');
             const btnCuenta = document.getElementById('btnCuenta');
+            const nivelValor = document.getElementById('nivelValor');
             
             // Elementos de contacto
             const contactGmail = document.getElementById('contactGmail');
@@ -996,9 +983,8 @@
             // Elementos del formulario
             const sendSuggestion = document.getElementById('sendSuggestion');
             const cancelSuggestion = document.getElementById('cancelSuggestion');
-            const suggestionName = document.getElementById('suggestionName');
-            const suggestionEmail = document.getElementById('suggestionEmail');
-            const suggestionMessage = document.getElementById('suggestionMessage');
+            const suggestionTitle = document.getElementById('suggestionTitle');
+            const suggestionDescription = document.getElementById('suggestionDescription');
             
             // FAQs
             const faq1 = document.getElementById('faq1');
@@ -1006,7 +992,118 @@
             const faq3 = document.getElementById('faq3');
             const faq4 = document.getElementById('faq4');
 
-            // Función para mostrar notificaciones elegantes
+            // Variable para guardar el ID del usuario actual
+            let usuarioActual = null;
+            let usuarioId = null;
+
+            // ============================================
+            // CARGAR NIVEL DEL USUARIO
+            // ============================================
+            async function cargarNivelUsuario() {
+                try {
+                    const usuarioGuardado = sessionStorage.getItem('usuario_actual');
+                    
+                    if (!usuarioGuardado) {
+                        // Si no hay usuario, mostrar nivel por defecto
+                        nivelValor.textContent = '1';
+                        return false;
+                    }
+
+                    usuarioActual = JSON.parse(usuarioGuardado);
+                    usuarioId = usuarioActual.id;
+
+                    // Obtener el nivel del usuario desde la base de datos
+                    const { data: usuarioData, error } = await supabaseClient
+                        .from('usuarios')
+                        .select('nivel')
+                        .eq('id_usuario', usuarioId)
+                        .single();
+
+                    if (error) {
+                        console.error('Error al cargar nivel:', error);
+                        nivelValor.textContent = '1';
+                    } else {
+                        // Mostrar el nivel (si es null, mostrar 1)
+                        nivelValor.textContent = usuarioData.nivel || '1';
+                    }
+                    
+                    return true;
+                } catch (error) {
+                    console.error('Error al cargar nivel:', error);
+                    nivelValor.textContent = '1';
+                    return false;
+                }
+            }
+
+            // ============================================
+            // FUNCIÓN PARA ENVIAR SUGERENCIA
+            // ============================================
+            async function enviarSugerencia() {
+                // Verificar que hay usuario
+                if (!usuarioId) {
+                    const usuarioValido = await cargarNivelUsuario();
+                    if (!usuarioValido) {
+                        showNotification('fas fa-exclamation-circle', '❓ Debes iniciar sesión para enviar sugerencias', '#ff6b6b', 'white');
+                        return;
+                    }
+                }
+
+                const titulo = suggestionTitle.value.trim();
+                const descripcion = suggestionDescription.value.trim();
+
+                if (!titulo) {
+                    showNotification('fas fa-exclamation-circle', '❓ Por favor escribe un título para tu sugerencia', '#ff6b6b', 'white');
+                    return;
+                }
+
+                if (!descripcion) {
+                    showNotification('fas fa-exclamation-circle', '❓ Por favor escribe la descripción', '#ff6b6b', 'white');
+                    return;
+                }
+
+                // Mostrar loading
+                Swal.fire({
+                    title: 'Enviando...',
+                    text: 'Por favor espera',
+                    allowOutsideClick: false,
+                    background: 'white',
+                    didOpen: () => {
+                        Swal.showLoading();
+                    }
+                });
+
+                try {
+                    // Insertar en la tabla sugerencias
+                    const { data, error } = await supabaseClient
+                        .from('sugerencias')
+                        .insert([{
+                            id_usuario: usuarioId,
+                            titulo: titulo,
+                            descripcion: descripcion
+                        }]);
+
+                    if (error) throw error;
+
+                    // Cerrar loading
+                    Swal.close();
+
+                    // Mostrar éxito
+                    showNotification('fas fa-paper-plane', '✨ ¡Gracias por tu sugerencia! La revisaremos pronto', '#ff6b6b', 'white');
+                    
+                    // Limpiar formulario
+                    suggestionTitle.value = '';
+                    suggestionDescription.value = '';
+
+                } catch (error) {
+                    console.error('Error al enviar sugerencia:', error);
+                    Swal.close();
+                    showNotification('fas fa-exclamation-triangle', '❌ Error al enviar. Intenta de nuevo', '#ff6b6b', 'white');
+                }
+            }
+
+            // ============================================
+            // FUNCIÓN PARA MOSTRAR NOTIFICACIONES
+            // ============================================
             function showNotification(icon, text, bgColor = '#ffffff', iconColor = '#6c5ce7') {
                 const container = document.getElementById('notificationContainer');
                 const notification = document.createElement('div');
@@ -1019,10 +1116,19 @@
                 setTimeout(() => {
                     notification.style.animation = 'fadeOut 0.3s ease';
                     setTimeout(() => {
-                        container.removeChild(notification);
+                        if (container.contains(notification)) {
+                            container.removeChild(notification);
+                        }
                     }, 300);
                 }, 2500);
             }
+
+            // ============================================
+            // EVENT LISTENERS
+            // ============================================
+
+            // Cargar nivel del usuario al iniciar
+            await cargarNivelUsuario();
 
             // Botón Boost
             btnBoost.addEventListener('click', function() {
@@ -1030,7 +1136,12 @@
                 setTimeout(() => {
                     btnBoost.style.transform = 'scale(1)';
                 }, 200);
-                showNotification('fas fa-rocket', '🚀 Boost activado! +50 visibilidad', '#6c5ce7', 'white');
+                
+                if (typeof mostrarModalBoost === 'function') {
+                    mostrarModalBoost();
+                } else {
+                    showNotification('fas fa-rocket', '🚀 Función de Boost próximamente', '#ff6b6b', 'white');
+                }
             });
 
             // Botón Inicio
@@ -1057,52 +1168,36 @@
                 window.location.href = 'cuenta.html';
             });
 
-            // Contacto Gmail - MODIFICADO para llamar al modal
-contactGmail.addEventListener('click', function() {
-    // Llamar al modal de correo del archivo externo
-    if (typeof mostrarModalCorreo === 'function') {
-        mostrarModalCorreo();
-    } else {
-        // Fallback por si el script no cargó
-        console.warn('Modal de correo no disponible, usando fallback');
-        showNotification('fas fa-envelope', '📧 soporte.amizi@gmail.com - Te responderemos pronto', '#ea4335', 'white');
-        window.open('mailto:soporte.amizi@gmail.com?subject=Consulta desde Amizi');
-    }
-});
+            // Contacto Gmail
+            contactGmail.addEventListener('click', function() {
+                if (typeof mostrarModalCorreo === 'function') {
+                    mostrarModalCorreo();
+                } else {
+                    showNotification('fas fa-envelope', '📧 soporte.amizi@gmail.com', '#ea4335', 'white');
+                    window.open('mailto:soporte.amizi@gmail.com?subject=Consulta desde Amizi');
+                }
+            });
 
             // Contacto WhatsApp
             contactWhatsapp.addEventListener('click', function() {
-                showNotification('fab fa-whatsapp', '📱 +57 300 123 4567 - Abriendo WhatsApp', '#25d366', 'white');
+                showNotification('fab fa-whatsapp', '📱 Abriendo WhatsApp', '#25d366', 'white');
                 window.open('https://wa.me/573001234567?text=Hola%20necesito%20ayuda%20en%20Amizi');
             });
 
             // Contacto App
             contactApp.addEventListener('click', function() {
-                window.location.href = 'chat.html'
+                window.location.href = 'chat.html';
             });
 
             // Enviar sugerencia
-            sendSuggestion.addEventListener('click', function() {
-                if (!suggestionMessage.value.trim()) {
-                    showNotification('fas fa-exclamation-circle', '❓ Por favor escribe tu mensaje', '#ff6b6b', 'white');
-                    return;
-                }
-
-                showNotification('fas fa-paper-plane', '✨ ¡Gracias por tu sugerencia! La revisaremos pronto', '#ff6b6b', 'white');
-                
-                // Limpiar formulario
-                suggestionName.value = '';
-                suggestionEmail.value = '';
-                suggestionMessage.value = '';
-            });
+            sendSuggestion.addEventListener('click', enviarSugerencia);
 
             // Cancelar sugerencia
             cancelSuggestion.addEventListener('click', function() {
-                suggestionName.value = '';
-                suggestionEmail.value = '';
-                suggestionMessage.value = '';
-                showNotification('fas fa-times', '🗑️ Formulario limpiado', '#2d3a4a', 'white');
-            window.location.href = 'cuenta.html'
+                suggestionTitle.value = '';
+                suggestionDescription.value = '';
+                window.location.href = 'cuenta.html';
+                
             });
 
             // FAQs
@@ -1121,35 +1216,15 @@ contactGmail.addEventListener('click', function() {
             faq4.addEventListener('click', function() {
                 showNotification('fas fa-crown', '👑 Mantén buen comportamiento y carisma alto', '#ffd700', 'white');
             });
-        });
 
-           // ============================================
-// ACTIVAR BOTÓN BOOST
-// ============================================
-document.addEventListener('DOMContentLoaded', function() {
-    const btnBoost = document.getElementById('btnBoost');
-    
-    if (btnBoost) {
-        btnBoost.addEventListener('click', function() {
-            // Animación del botón
-            this.style.transform = 'scale(1.1)';
-            setTimeout(() => {
-                this.style.transform = 'scale(1)';
-            }, 200);
-            
-            // Verificar si el modal de Boost está disponible
-            if (typeof mostrarModalBoost === 'function') {
-                mostrarModalBoost();
-            } else {
-                console.warn('Modal de Boost no disponible');
-                // Fallback: mostrar notificación si existe
-                if (typeof showNotification === 'function') {
-                    showNotification('fas fa-rocket', '🚀 Función de Boost próximamente', '#ff6b6b', 'white');
+            // Permitir enviar con Enter en el título
+            suggestionTitle.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    suggestionDescription.focus();
                 }
-            }
+            });
         });
-    }
-});
     </script>
 </body>
 </html>

@@ -1304,51 +1304,56 @@
             // ============================================
             // FUNCIÓN PARA ACTUALIZAR NIVEL EN BD
             // ============================================
-            async function actualizarNivelEnBD() {
-                // Contar cuántas fotos tienen imagen
-                let fotosConImagen = 0;
-                
-                for (let i = 1; i <= 4; i++) {
-                    const photoItem = document.getElementById(`photo${i}`);
-                    if (photoItem && photoItem.classList.contains('has-image')) {
-                        fotosConImagen++;
-                    }
-                }
-                
-                const nuevoNivel = fotosConImagen >= 4 ? 2 : 1;
-                
-                // Si el nivel cambió
-                if (nuevoNivel !== nivelActual) {
-                    nivelActual = nuevoNivel;
-                    
-                    // Actualizar en BD
-                    const { error } = await supabaseClient
-                        .from('usuarios')
-                        .update({ nivel: nivelActual })
-                        .eq('id_usuario', usuarioId);
-                    
-                    if (error) {
-                        console.error('Error al actualizar nivel:', error);
-                    } else {
-                        // Actualizar UI
-                        nivelValor.textContent = nivelActual;
-                        
-                        // Animación si es la primera vez que llega a nivel 2
-                        if (nivelActual === 2 && nivelInicialCargado) {
-                            nivelBadge.classList.add('badge-animation');
-                            setTimeout(() => {
-                                nivelBadge.classList.remove('badge-animation');
-                            }, 500);
-                            
-                            showNotification('fas fa-star', '✨ ¡Felicidades! Has alcanzado el Nivel 2 (4 fotos)', '#ffd700', '#1e2b3a');
-                        }
-                    }
-                } else if (!nivelInicialCargado) {
-                    nivelValor.textContent = nivelActual;
-                    nivelInicialCargado = true;
-                }
-            }
-
+            // ============================================
+// FUNCIÓN PARA ACTUALIZAR NIVEL EN BD (CORREGIDA)
+// ============================================
+async function actualizarNivelEnBD() {
+    // Contar cuántas fotos tienen imagen actualmente
+    let fotosConImagen = 0;
+    
+    for (let i = 1; i <= 4; i++) {
+        const photoItem = document.getElementById(`photo${i}`);
+        if (photoItem && photoItem.classList.contains('has-image')) {
+            fotosConImagen++;
+        }
+    }
+    
+    // Determinar el nivel potencial basado en fotos actuales
+    const nivelPotencial = fotosConImagen >= 4 ? 2 : 1;
+    
+    // El nivel solo puede aumentar, nunca disminuir
+    // Si el nivel potencial es mayor que el actual, actualizamos
+    if (nivelPotencial > nivelActual) {
+        nivelActual = nivelPotencial; // Ahora es 2
+        
+        // Actualizar en BD - el campo se llama 'nivel' en la tabla
+        const { error } = await supabaseClient
+            .from('usuarios')
+            .update({ nivel: nivelActual }) // Aquí usamos 'nivel' que es el nombre del campo
+            .eq('id_usuario', usuarioId);
+        
+        if (error) {
+            console.error('Error al actualizar nivel:', error);
+        } else {
+            // Actualizar UI
+            nivelValor.textContent = nivelActual;
+            
+            // Animación de subida de nivel (solo la primera vez)
+            nivelBadge.classList.add('badge-animation');
+            setTimeout(() => {
+                nivelBadge.classList.remove('badge-animation');
+            }, 500);
+            
+            showNotification('fas fa-star', '✨ ¡Felicidades! Has alcanzado el Nivel 2 (4 fotos)', '#ffd700', '#1e2b3a');
+        }
+    } else if (!nivelInicialCargado) {
+        // Solo mostrar el nivel inicial sin animación
+        nivelValor.textContent = nivelActual;
+        nivelInicialCargado = true;
+    }
+    
+    // Si nivelPotencial es 1 pero nivelActual ya es 2, no hacemos nada (se mantiene en 2)
+}
             // ============================================
             // CARGAR DATOS DEL USUARIO
             // ============================================

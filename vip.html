@@ -2405,13 +2405,14 @@
             if (btnCuenta) {
                 btnCuenta.addEventListener('click', (e) => {
                     e.preventDefault();
+                    
                     showNotification('👤 Mi perfil', '#2d3a4a', 'fa-user');
                     setTimeout(() => {
                         window.location.href = 'cuenta.html';
                     }, 300);
                 });
             }
-            
+
         });
     </script>
 </body>

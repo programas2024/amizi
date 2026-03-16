@@ -11,6 +11,7 @@
     <!-- SweetAlert2 -->
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
+        /* (Los estilos se mantienen igual que en la versión anterior) */
         * {
             margin: 0;
             padding: 0;
@@ -283,7 +284,12 @@
             gap: 5px;
         }
 
-        .chat-options {
+        .chat-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .chat-info-btn {
             width: 45px;
             height: 45px;
             border-radius: 50%;
@@ -293,19 +299,29 @@
             justify-content: center;
             cursor: pointer;
             transition: all 0.2s;
+            color: #6c5ce7;
         }
 
-        .chat-options:hover {
-            background: #6c5ce7;
+        .chat-info-btn:hover {
+            background: #4a90e2;
             color: white;
         }
 
-        .chat-options i {
-            font-size: 20px;
+        .chat-options-btn {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: #f0f3fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s;
             color: #2d3a4a;
         }
 
-        .chat-options:hover i {
+        .chat-options-btn:hover {
+            background: #6c5ce7;
             color: white;
         }
 
@@ -838,6 +854,97 @@
             font-size: 16px;
         }
 
+        /* Estilos personalizados para SweetAlert2 */
+        .swal-custom-popup {
+            border-radius: 50px !important;
+            padding: 30px !important;
+        }
+
+        .swal-custom-title {
+            font-size: 28px !important;
+            font-weight: 700 !important;
+            color: #1e2b3a !important;
+            display: flex !important;
+            align-items: center !important;
+            justify-content: center !important;
+            gap: 10px !important;
+            margin-bottom: 20px !important;
+        }
+
+        .swal-custom-content {
+            max-height: 400px !important;
+            overflow-y: auto !important;
+            padding-right: 5px !important;
+            scrollbar-width: none !important;
+            -ms-overflow-style: none !important;
+        }
+
+        .swal-custom-content::-webkit-scrollbar {
+            display: none !important;
+        }
+
+        .consejo-section {
+            background: #f8f9ff;
+            border-radius: 30px;
+            padding: 20px;
+            margin-bottom: 15px;
+        }
+
+        .consejo-section h4 {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 18px;
+            margin-bottom: 15px;
+        }
+
+        .consejo-section ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .consejo-section li {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 10px;
+            font-size: 14px;
+            color: #2d3a4a;
+        }
+
+        .consejo-section li i {
+            width: 20px;
+            text-align: center;
+        }
+
+        .section-do {
+            background: #e8f7f0;
+        }
+
+        .section-dont {
+            background: #ffe8e8;
+        }
+
+        .section-tips {
+            background: #e8f0fe;
+        }
+
+        .swal-custom-confirm {
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7) !important;
+            border-radius: 60px !important;
+            padding: 12px 40px !important;
+            font-size: 16px !important;
+            font-weight: 600 !important;
+            border: none !important;
+            box-shadow: 0 10px 20px rgba(108, 92, 231, 0.3) !important;
+            transition: all 0.2s !important;
+        }
+
+        .swal-custom-confirm:hover {
+            transform: translateY(-2px) !important;
+            box-shadow: 0 15px 25px rgba(108, 92, 231, 0.4) !important;
+        }
+
         /* RESPONSIVE */
         @media (max-width: 700px) {
             .app-container {
@@ -887,7 +994,7 @@
                     <div class="option-icon vaciar">
                         <i class="fas fa-trash"></i>
                     </div>
-                    <span class="option-text">Vaciar chat</span>
+                    <span class="option-text">Ocultar chat</span>
                 </div>
             </div>
         </div>
@@ -945,8 +1052,13 @@
                         Conectado
                     </div>
                 </div>
-                <div class="chat-options" id="chatOptionsBtn">
-                    <i class="fas fa-ellipsis-v"></i>
+                <div class="chat-actions">
+                    <div class="chat-info-btn" id="chatInfoBtn" title="Consejos de conversación">
+                        <i class="fas fa-info"></i>
+                    </div>
+                    <div class="chat-options-btn" id="chatOptionsBtn">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </div>
                 </div>
             </div>
 
@@ -1028,6 +1140,7 @@
             const sendBtn = document.getElementById('sendMessageBtn');
             const backButton = document.getElementById('backButton');
             const chatBackButton = document.getElementById('chatBackButton');
+            const chatInfoBtn = document.getElementById('chatInfoBtn');
             const chatOptionsBtn = document.getElementById('chatOptionsBtn');
             const modalOverlay = document.getElementById('chatOptionsModal');
             const closeModal = document.getElementById('closeOptionsModal');
@@ -1056,7 +1169,7 @@
             let ultimoMensajeId = 0;
             let typingTimeout = null;
             let enviandoMensaje = false;
-            let mensajesIds = new Set(); // Para tracking de mensajes ya vistos
+            let mensajesIds = new Set();
 
             // ============================================
             // FUNCIÓN DE NOTIFICACIONES
@@ -1078,6 +1191,78 @@
                         }
                     }, 300);
                 }, 2500);
+            }
+
+            // ============================================
+            // FUNCIÓN PARA MOSTRAR CONSEJOS DEL CHAT
+            // ============================================
+            function mostrarConsejosChat() {
+                Swal.fire({
+                    title: `
+                        <div class="swal-custom-title">
+                            <i class="fas fa-info-circle" style="color: #4a90e2;"></i>
+                            Consejos para el Chat
+                        </div>
+                    `,
+                    html: `
+                        <div class="swal-custom-content">
+                            <div class="consejo-section section-do">
+                                <h4>
+                                    <i class="fas fa-check-circle" style="color: #2ecc71;"></i>
+                                    <span style="color: #2ecc71;">Lo que SÍ debes hacer</span>
+                                </h4>
+                                <ul>
+                                    <li><i class="fas fa-smile" style="color: #2ecc71;"></i> Ser respetuoso y amable</li>
+                                    <li><i class="fas fa-comments" style="color: #2ecc71;"></i> Usar un lenguaje apropiado</li>
+                                    <li><i class="fas fa-heart" style="color: #2ecc71;"></i> Compartir intereses comunes</li>
+                                    <li><i class="fas fa-sun" style="color: #2ecc71;"></i> Mantener conversaciones positivas</li>
+                                    <li><i class="fas fa-flag" style="color: #2ecc71;"></i> Reportar comportamientos inapropiados</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="consejo-section section-dont">
+                                <h4>
+                                    <i class="fas fa-times-circle" style="color: #ff6b6b;"></i>
+                                    <span style="color: #ff6b6b;">Lo que NO debes hacer</span>
+                                </h4>
+                                <ul>
+                                    <li><i class="fas fa-lock" style="color: #ff6b6b;"></i> No compartas información personal</li>
+                                    <li><i class="fas fa-ban" style="color: #ff6b6b;"></i> Evita lenguaje ofensivo</li>
+                                    <li><i class="fas fa-envelope" style="color: #ff6b6b;"></i> No hagas spam</li>
+                                    <li><i class="fas fa-exclamation-triangle" style="color: #ff6b6b;"></i> No acoses ni intimides</li>
+                                    <li><i class="fas fa-image" style="color: #ff6b6b;"></i> No compartas contenido inapropiado</li>
+                                </ul>
+                            </div>
+                            
+                            <div class="consejo-section section-tips">
+                                <h4>
+                                    <i class="fas fa-lightbulb" style="color: #f39c12;"></i>
+                                    <span style="color: #f39c12;">Consejos adicionales</span>
+                                </h4>
+                                <ul>
+                                    <li><i class="fas fa-user" style="color: #f39c12;"></i> Sé tú mismo, auténtico</li>
+                                    <li><i class="fas fa-ear-listen" style="color: #f39c12;"></i> Escucha y muestra interés</li>
+                                    <li><i class="fas fa-shield-alt" style="color: #f39c12;"></i> Si algo te incomoda, reporta</li>
+                                    <li><i class="fas fa-heart" style="color: #f39c12;"></i> Disfruta conocer nuevas personas</li>
+                                </ul>
+                            </div>
+                            
+                            <div style="margin-top: 20px; text-align: center; color: #8a9bb0; font-size: 12px;">
+                                <i class="fas fa-star" style="color: #ffd700;"></i> Amizi, un lugar para conectar
+                            </div>
+                        </div>
+                    `,
+                    confirmButtonText: 'Entendido',
+                    confirmButtonColor: '#6c5ce7',
+                    background: 'white',
+                    width: '500px',
+                    customClass: {
+                        popup: 'swal-custom-popup',
+                        confirmButton: 'swal-custom-confirm'
+                    },
+                    showCloseButton: true,
+                    closeButtonHtml: '<i class="fas fa-times"></i>'
+                });
             }
 
             // ============================================
@@ -1191,6 +1376,27 @@
             }
 
             // ============================================
+            // VERIFICAR SI EL CHAT ESTÁ OCULTO PARA EL USUARIO
+            // ============================================
+            async function verificarChatOculto() {
+                try {
+                    const { data: oculto, error } = await supabaseClient
+                        .from('chats_ocultos')
+                        .select('*')
+                        .eq('id_usuario', usuarioId)
+                        .eq('id_chat', chatId)
+                        .maybeSingle();
+
+                    if (error) throw error;
+                    
+                    return !!oculto;
+                } catch (error) {
+                    console.error('Error al verificar chat oculto:', error);
+                    return false;
+                }
+            }
+
+            // ============================================
             // RENDERIZAR UN MENSAJE
             // ============================================
             function renderizarMensaje(msg, esNuevo = true, visto = false) {
@@ -1267,14 +1473,12 @@
             // ============================================
             async function marcarMensajesComoVistos() {
                 try {
-                    // Buscar mensajes recibidos no vistos
                     const mensajesNoVistos = Array.from(document.querySelectorAll('.message.received[data-mensaje-id]'))
                         .map(el => el.dataset.mensajeId)
                         .filter(id => !window.mensajesVistos?.has(parseInt(id)));
 
                     if (mensajesNoVistos.length === 0) return;
 
-                    // Marcar en BD
                     const { error } = await supabaseClient
                         .from('mensajes')
                         .update({ visto: true })
@@ -1282,12 +1486,10 @@
 
                     if (error) throw error;
 
-                    // Actualizar UI para mensajes enviados del otro usuario
                     for (const id of mensajesNoVistos) {
                         actualizarEstadoVisto(parseInt(id));
                     }
 
-                    // Guardar en Set local
                     if (!window.mensajesVistos) window.mensajesVistos = new Set();
                     mensajesNoVistos.forEach(id => window.mensajesVistos.add(parseInt(id)));
 
@@ -1297,10 +1499,24 @@
             }
 
             // ============================================
-            // CARGAR MENSAJES INICIALES
+            // CARGAR MENSAJES INICIALES (EXCLUYENDO OCULTOS)
             // ============================================
             async function cargarMensajesIniciales() {
                 try {
+                    // Verificar si el chat está oculto
+                    const oculto = await verificarChatOculto();
+                    
+                    if (oculto) {
+                        chatMessages.innerHTML = `
+                            <div class="empty-chat">
+                                <i class="fas fa-eye-slash"></i>
+                                <p>Has ocultado este chat</p>
+                                <p style="font-size: 14px; margin-top: 10px;">Los mensajes se muestran cuando vuelvas a hablar</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
                     const { data: mensajes, error } = await supabaseClient
                         .from('mensajes')
                         .select('*')
@@ -1320,22 +1536,17 @@
                         return;
                     }
 
-                    // Limpiar contenedor
                     chatMessages.innerHTML = '';
                     
-                    // Inicializar Set de mensajes vistos
                     window.mensajesVistos = new Set();
                     
-                    // Renderizar todos los mensajes
                     mensajes.forEach(msg => {
                         renderizarMensaje(msg, false, msg.visto || false);
                         
-                        // Actualizar último ID
                         if (msg.id_mensaje > ultimoMensajeId) {
                             ultimoMensajeId = msg.id_mensaje;
                         }
                         
-                        // Si es un mensaje recibido y está visto, agregarlo al Set
                         if (msg.id_usuario !== usuarioId && msg.visto) {
                             window.mensajesVistos.add(msg.id_mensaje);
                         }
@@ -1343,7 +1554,6 @@
                     
                     chatMessages.scrollTop = chatMessages.scrollHeight;
                     
-                    // Marcar mensajes recibidos como vistos
                     await marcarMensajesComoVistos();
                     
                 } catch (error) {
@@ -1352,13 +1562,16 @@
             }
 
             // ============================================
-            // VERIFICAR NUEVOS MENSAJES Y ACTUALIZAR VISTOS
+            // VERIFICAR NUEVOS MENSAJES (EXCLUYENDO OCULTOS)
             // ============================================
             async function verificarNuevosMensajes() {
                 if (!chatId) return;
                 
                 try {
-                    // 1. Verificar nuevos mensajes
+                    // Verificar si el chat está oculto
+                    const oculto = await verificarChatOculto();
+                    if (oculto) return;
+                    
                     const { data: nuevosMensajes, error } = await supabaseClient
                         .from('mensajes')
                         .select('*')
@@ -1369,13 +1582,11 @@
                     if (error) throw error;
 
                     if (nuevosMensajes && nuevosMensajes.length > 0) {
-                        // Remover empty state si existe
                         const emptyChat = chatMessages.querySelector('.empty-chat');
                         if (emptyChat) {
                             chatMessages.innerHTML = '';
                         }
                         
-                        // Renderizar nuevos mensajes (solo si no existen ya)
                         nuevosMensajes.forEach(msg => {
                             if (!document.querySelector(`[data-mensaje-id="${msg.id_mensaje}"]`)) {
                                 renderizarMensaje(msg, true, msg.visto || false);
@@ -1383,7 +1594,6 @@
                         });
                     }
                     
-                    // 2. Verificar cambios en estado visto de mensajes enviados
                     const mensajesEnviadosIds = Array.from(document.querySelectorAll('.message.sent[data-mensaje-id]'))
                         .map(el => parseInt(el.dataset.mensajeId));
                     
@@ -1412,7 +1622,7 @@
             }
 
             // ============================================
-            // INICIAR POLLING CADA 1 SEGUNDO
+            // INICIAR POLLING
             // ============================================
             function iniciarPolling() {
                 if (pollingInterval) clearInterval(pollingInterval);
@@ -1424,7 +1634,47 @@
             }
 
             // ============================================
-            // ENVIAR MENSAJE (CON PREVENCIÓN DE DUPLICADOS)
+            // OCULTAR CHAT PARA EL USUARIO ACTUAL
+            // ============================================
+            async function ocultarChat() {
+                try {
+                    // Verificar si ya está oculto
+                    const yaOculto = await verificarChatOculto();
+                    
+                    if (yaOculto) {
+                        showNotification('Este chat ya estaba oculto', '#8a9bb0', 'fa-eye-slash');
+                        modalOverlay.classList.remove('active');
+                        return;
+                    }
+                    
+                    const { error } = await supabaseClient
+                        .from('chats_ocultos')
+                        .insert([{
+                            id_usuario: usuarioId,
+                            id_chat: chatId
+                        }]);
+
+                    if (error) throw error;
+
+                    chatMessages.innerHTML = `
+                        <div class="empty-chat">
+                            <i class="fas fa-eye-slash"></i>
+                            <p>Has ocultado este chat</p>
+                            <p style="font-size: 14px; margin-top: 10px;">Los mensajes se muestran cuando vuelvas a hablar</p>
+                        </div>
+                    `;
+                    
+                    showNotification('🗑️ Chat ocultado', '#8a9bb0', 'fa-eye-slash');
+                    modalOverlay.classList.remove('active');
+                    
+                } catch (error) {
+                    console.error('Error al ocultar chat:', error);
+                    showNotification('Error al ocultar chat', '#ff6b6b', 'fa-exclamation-circle');
+                }
+            }
+
+            // ============================================
+            // ENVIAR MENSAJE (DESOCULTA EL CHAT AUTOMÁTICAMENTE)
             // ============================================
             async function enviarMensaje() {
                 const texto = chatInput.value.trim();
@@ -1434,6 +1684,16 @@
                 actualizarEstadoBoton();
 
                 try {
+                    // Verificar si el chat estaba oculto y desocultarlo
+                    const oculto = await verificarChatOculto();
+                    if (oculto) {
+                        await supabaseClient
+                            .from('chats_ocultos')
+                            .delete()
+                            .eq('id_usuario', usuarioId)
+                            .eq('id_chat', chatId);
+                    }
+
                     const { data, error } = await supabaseClient
                         .from('mensajes')
                         .insert([{
@@ -1449,7 +1709,6 @@
 
                     chatInput.value = '';
                     
-                    // Renderizar instantáneamente (solo si no existe ya)
                     if (data && data[0] && !document.querySelector(`[data-mensaje-id="${data[0].id_mensaje}"]`)) {
                         const emptyChat = chatMessages.querySelector('.empty-chat');
                         if (emptyChat) {
@@ -1473,10 +1732,8 @@
             function mostrarEscribiendo() {
                 if (!typingContainer) return;
                 
-                // Mostrar indicador
                 typingContainer.style.display = 'block';
                 
-                // Ocultar después de 2 segundos sin escribir
                 if (typingTimeout) clearTimeout(typingTimeout);
                 typingTimeout = setTimeout(() => {
                     typingContainer.style.display = 'none';
@@ -1484,7 +1741,7 @@
             }
 
             // ============================================
-            // ACTUALIZAR HEADER CON DATOS DEL OTRO USUARIO
+            // ACTUALIZAR HEADER
             // ============================================
             function actualizarHeader(otroUsuario) {
                 if (chatUserName) {
@@ -1499,7 +1756,6 @@
                     }
                 }
                 
-                // Estado online (simulado)
                 if (chatUserStatus) {
                     chatUserStatus.innerHTML = '<i class="fas fa-circle" style="color: #2ecc71; font-size: 8px;"></i> En línea';
                 }
@@ -1508,7 +1764,7 @@
             }
 
             // ============================================
-            // LIMPIAR RECURSOS AL SALIR
+            // LIMPIAR RECURSOS
             // ============================================
             function limpiarRecursos() {
                 if (pollingInterval) clearInterval(pollingInterval);
@@ -1520,7 +1776,6 @@
             // EVENT LISTENERS
             // ============================================
             
-            // Evento input para habilitar/deshabilitar botón
             if (chatInput) {
                 chatInput.addEventListener('input', () => {
                     actualizarEstadoBoton();
@@ -1528,12 +1783,10 @@
                 });
             }
 
-            // Enviar mensaje con botón
             if (sendBtn) {
                 sendBtn.addEventListener('click', enviarMensaje);
             }
 
-            // Enviar mensaje con Enter (con prevención de duplicados)
             if (chatInput) {
                 chatInput.addEventListener('keydown', function(e) {
                     if (e.key === 'Enter' && !e.shiftKey) {
@@ -1545,7 +1798,10 @@
                 });
             }
 
-            // Botones de volver
+            if (chatInfoBtn) {
+                chatInfoBtn.addEventListener('click', mostrarConsejosChat);
+            }
+
             const volverAMensajes = () => {
                 limpiarRecursos();
                 showNotification('Volviendo a mensajes...', '#6c5ce7', 'fa-arrow-left');
@@ -1562,14 +1818,12 @@
                 chatBackButton.addEventListener('click', volverAMensajes);
             }
 
-            // Botón de opciones del chat
             if (chatOptionsBtn) {
                 chatOptionsBtn.addEventListener('click', () => {
                     modalOverlay.classList.add('active');
                 });
             }
 
-            // Cerrar modal
             if (closeModal) {
                 closeModal.addEventListener('click', () => {
                     modalOverlay.classList.remove('active');
@@ -1584,7 +1838,6 @@
                 });
             }
 
-            // Opciones del modal
             if (optionReportar) {
                 optionReportar.addEventListener('click', () => {
                     showNotification('📢 Conversación reportada', '#ff6b6b', 'fa-flag');
@@ -1599,35 +1852,11 @@
                 });
             }
 
+            // Cambiamos "Vaciar" por "Ocultar"
             if (optionVaciar) {
-                optionVaciar.addEventListener('click', async () => {
-                    try {
-                        const { error } = await supabaseClient
-                            .from('mensajes')
-                            .delete()
-                            .eq('id_chat', chatId);
-
-                        if (error) throw error;
-
-                        chatMessages.innerHTML = `
-                            <div class="empty-chat">
-                                <i class="fas fa-comment-dots"></i>
-                                <p>Chat vaciado</p>
-                            </div>
-                        `;
-                        ultimoMensajeId = 0;
-                        mensajesIds.clear();
-                        window.mensajesVistos = new Set();
-                        showNotification('🗑️ Chat vaciado', '#8a9bb0', 'fa-trash');
-                        modalOverlay.classList.remove('active');
-                    } catch (error) {
-                        console.error('Error al vaciar chat:', error);
-                        showNotification('Error al vaciar chat', '#ff6b6b', 'fa-exclamation-circle');
-                    }
-                });
+                optionVaciar.addEventListener('click', ocultarChat);
             }
 
-            // Botones del footer
             if (btnBoost) {
                 btnBoost.addEventListener('click', function() {
                     this.style.transform = 'scale(1.1)';
@@ -1692,7 +1921,6 @@
                 return;
             }
 
-            // Obtener información del otro usuario
             const otroUsuario = await obtenerOtroUsuario();
             if (!otroUsuario) {
                 showNotification('Usuario no encontrado', '#ff6b6b', 'fa-exclamation-circle');
@@ -1704,24 +1932,19 @@
 
             actualizarHeader(otroUsuario);
 
-            // Obtener ID del chat
             const chat = await obtenerOCrearChatId();
             if (!chat) return;
 
-            // Cargar mensajes iniciales
+            
             await cargarMensajesIniciales();
-
-            // Iniciar polling cada 1 segundo
             iniciarPolling();
 
-            // Obtener total de likes para el footer
             const { count } = await supabaseClient
                 .from('likes')
                 .select('*', { count: 'exact', head: true })
                 .eq('id_usuario_destino', usuarioId);
             footerLikesCount.textContent = count || 0;
 
-            // Limpiar recursos al cerrar la página
             window.addEventListener('beforeunload', limpiarRecursos);
         });
     </script>
