@@ -6,7 +6,10 @@
     <title>Amizi · Chat</title>
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-     <script src="modulos/boots.js"></script>
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         * {
             margin: 0;
@@ -140,6 +143,12 @@
             border-radius: 60px;
             border: 1px solid #eeeff5;
             cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .popular-row:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .popular-tag {
@@ -226,10 +235,17 @@
             width: 55px;
             height: 55px;
             border-radius: 50%;
+            overflow: hidden;
             background: linear-gradient(145deg, #4a90e2, #6c5ce7);
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .chat-user-avatar-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .chat-user-avatar-img i {
@@ -322,6 +338,13 @@
             align-items: flex-start;
             gap: 10px;
             max-width: 80%;
+            animation: fadeIn 0.3s ease;
+            position: relative;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .message.received {
@@ -337,11 +360,18 @@
             width: 35px;
             height: 35px;
             border-radius: 50%;
+            overflow: hidden;
             background: linear-gradient(145deg, #4a90e2, #6c5ce7);
             display: flex;
             align-items: center;
             justify-content: center;
             flex-shrink: 0;
+        }
+
+        .message-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .message-avatar i {
@@ -359,6 +389,7 @@
             border-radius: 25px;
             box-shadow: 0 3px 10px rgba(0, 0, 0, 0.03);
             position: relative;
+            transition: all 0.2s ease;
         }
 
         .message.received .message-content {
@@ -371,21 +402,54 @@
             color: white;
         }
 
+        /* Mensaje visto - cambio de color */
+        .message.sent.visto .message-content {
+            background: linear-gradient(145deg, #2ecc71, #27ae60);
+        }
+
         .message-content p {
             font-size: 15px;
             line-height: 1.5;
             margin-bottom: 5px;
+            word-wrap: break-word;
+        }
+
+        .message-footer {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 5px;
+            margin-top: 2px;
         }
 
         .message-time {
             font-size: 11px;
             color: #8a9bb0;
-            display: block;
-            text-align: right;
         }
 
         .message.sent .message-time {
             color: rgba(255, 255, 255, 0.7);
+        }
+
+        .visto-icon {
+            font-size: 12px;
+            color: #ffd700;
+            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+            animation: starPulse 1.5s infinite;
+        }
+
+        @keyframes starPulse {
+            0%, 100% { opacity: 0.7; transform: scale(1); }
+            50% { opacity: 1; transform: scale(1.2); }
+        }
+
+        .double-check {
+            font-size: 12px;
+            color: #4a90e2;
+        }
+
+        .message.sent .double-check {
+            color: rgba(255, 255, 255, 0.9);
         }
 
         /* ÁREA DE ESCRITURA */
@@ -438,9 +502,67 @@
             justify-content: center;
         }
 
-        .send-btn:hover {
+        .send-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .send-btn:hover:not(:disabled) {
             transform: scale(1.1);
             box-shadow: 0 10px 25px rgba(74, 144, 226, 0.3);
+        }
+
+        /* INDICADOR DE ESCRITURA */
+        .typing-container {
+            padding: 5px 20px 0 20px;
+            background: #f8f9ff;
+        }
+
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 15px;
+            background: white;
+            border-radius: 30px;
+            width: fit-content;
+            margin-left: 45px;
+            margin-bottom: 5px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+            border: 1px solid #e4e4f0;
+        }
+
+        .typing-text {
+            font-size: 13px;
+            color: #5a6b7c;
+            font-weight: 500;
+        }
+
+        .typing-dots {
+            display: flex;
+            gap: 4px;
+        }
+
+        .typing-dots span {
+            width: 6px;
+            height: 6px;
+            background: #8a9bb0;
+            border-radius: 50%;
+            animation: typing 1.4s infinite;
+        }
+
+        .typing-dots span:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+
+        .typing-dots span:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+
+        @keyframes typing {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-6px); }
         }
 
         /* FOOTER */
@@ -699,6 +821,23 @@
             to { opacity: 0; transform: translateY(-30px); }
         }
 
+        /* ESTADO VACÍO */
+        .empty-chat {
+            text-align: center;
+            padding: 40px;
+            color: #5a6b7c;
+        }
+
+        .empty-chat i {
+            font-size: 60px;
+            color: #8a9bb0;
+            margin-bottom: 20px;
+        }
+
+        .empty-chat p {
+            font-size: 16px;
+        }
+
         /* RESPONSIVE */
         @media (max-width: 700px) {
             .app-container {
@@ -765,7 +904,7 @@
             <div class="header-right">
                 <div class="carisma-badge">
                     <i class="fas fa-bolt"></i>
-                    Nivel <span class="carisma-num">72</span>
+                    Nivel <span class="carisma-num" id="nivelValor">1</span>
                 </div>
                 
                 <button class="boost-btn" id="btnBoost">
@@ -788,16 +927,16 @@
 
         <!-- TARJETA DE CHAT -->
         <div class="chat-card">
-            <!-- HEADER DEL CHAT (se actualizará con JS) -->
+            <!-- HEADER DEL CHAT -->
             <div class="chat-header">
                 <div class="chat-back" id="chatBackButton">
                     <i class="fas fa-arrow-left"></i>
                 </div>
                 <div class="chat-user-avatar">
-                    <div class="chat-user-avatar-img">
+                    <div class="chat-user-avatar-img" id="chatUserAvatar">
                         <i class="fas fa-user"></i>
                     </div>
-                    <div class="chat-user-status"></div>
+                    <div class="chat-user-status" id="chatUserStatusDot"></div>
                 </div>
                 <div class="chat-user-info">
                     <div class="chat-user-name" id="chatUserName">Cargando...</div>
@@ -816,12 +955,24 @@
                 <!-- Los mensajes se cargarán aquí -->
             </div>
 
+            <!-- INDICADOR DE ESCRITURA -->
+            <div id="typingContainer" class="typing-container" style="display: none;">
+                <div class="typing-indicator">
+                    <span class="typing-text">está escribiendo</span>
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                </div>
+            </div>
+
             <!-- ÁREA DE ESCRITURA -->
             <div class="chat-input-area">
                 <div class="input-wrapper">
                     <input type="text" class="chat-input" id="chatInput" placeholder="Escribe un mensaje..." autocomplete="off">
                 </div>
-                <button class="send-btn" id="sendMessageBtn">
+                <button class="send-btn" id="sendMessageBtn" disabled>
                     <i class="fas fa-paper-plane"></i>
                 </button>
             </div>
@@ -841,7 +992,7 @@
             
             <div class="footer-item likes" id="btnLikesFooter" data-tooltip="Mis likes">
                 <i class="fas fa-heart"></i>
-                <span>156</span>
+                <span id="footerLikesCount">0</span>
             </div>
             
             <div class="footer-item cuenta" id="btnCuenta" data-tooltip="Mi perfil">
@@ -852,20 +1003,26 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
+        const supabaseUrl = "https://qfwpikteqipzwpmqbllt.supabase.co";
+        const supabaseKey = "sb_publishable_W75gkuE187xY7qWeQsP6XQ_3IWzPC3A";
+        
+        const { createClient } = supabase;
+        const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+        document.addEventListener('DOMContentLoaded', async function() {
             // ============================================
             // OBTENER PARÁMETROS DE LA URL
             // ============================================
             const urlParams = new URLSearchParams(window.location.search);
-            const usuarioId = urlParams.get('id') || '1';
-            const usuarioNombre = urlParams.get('nombre') || 'Laura Gómez';
-            const usuarioOnline = urlParams.get('online') === 'true';
+            const otroUsuarioId = parseInt(urlParams.get('id')) || null;
+            const otroUsuarioNombre = urlParams.get('nombre') || 'Usuario';
 
             // ============================================
             // ELEMENTOS DEL DOM
             // ============================================
             const chatUserName = document.getElementById('chatUserName');
             const chatUserStatus = document.getElementById('chatUserStatus');
+            const chatUserAvatar = document.getElementById('chatUserAvatar');
             const chatMessages = document.getElementById('chatMessages');
             const chatInput = document.getElementById('chatInput');
             const sendBtn = document.getElementById('sendMessageBtn');
@@ -877,6 +1034,9 @@
             const optionReportar = document.getElementById('optionReportar');
             const optionBloquear = document.getElementById('optionBloquear');
             const optionVaciar = document.getElementById('optionVaciar');
+            const nivelValor = document.getElementById('nivelValor');
+            const footerLikesCount = document.getElementById('footerLikesCount');
+            const typingContainer = document.getElementById('typingContainer');
             
             // Botones del footer
             const btnBoost = document.getElementById('btnBoost');
@@ -886,173 +1046,520 @@
             const btnCuenta = document.getElementById('btnCuenta');
 
             // ============================================
-            // ACTUALIZAR HEADER CON DATOS DEL USUARIO
+            // VARIABLES GLOBALES
             // ============================================
-            if (chatUserName) {
-                chatUserName.textContent = usuarioNombre;
-            }
-            
-            if (chatUserStatus) {
-                chatUserStatus.innerHTML = usuarioOnline ? 
-                    '<i class="fas fa-circle" style="color: #2ecc71; font-size: 8px;"></i> En línea' : 
-                    '<i class="fas fa-circle" style="color: #8a9bb0; font-size: 8px;"></i> Desconectado';
-            }
-
-            // ============================================
-            // CARGAR MENSAJES DE EJEMPLO
-            // ============================================
-            function cargarMensajesEjemplo() {
-                if (!chatMessages) return;
-                
-                chatMessages.innerHTML = `
-                    <!-- Mensaje recibido -->
-                    <div class="message received">
-                        <div class="message-avatar">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div class="message-content">
-                            <p>¡Hola! ¿Cómo estás?</p>
-                            <span class="message-time">10:30</span>
-                        </div>
-                    </div>
-
-                    <!-- Mensaje enviado -->
-                    <div class="message sent">
-                        <div class="message-avatar">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div class="message-content">
-                            <p>¡Hola! Bien ¿y tú?</p>
-                            <span class="message-time">10:32</span>
-                        </div>
-                    </div>
-
-                    <!-- Mensaje recibido -->
-                    <div class="message received">
-                        <div class="message-avatar">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div class="message-content">
-                            <p>Todo bien! ¿Qué haces?</p>
-                            <span class="message-time">10:33</span>
-                        </div>
-                    </div>
-                `;
-                
-                // Scroll al último mensaje
-                chatMessages.scrollTop = chatMessages.scrollHeight;
-            }
+            let usuarioActual = null;
+            let usuarioId = null;
+            let chatId = null;
+            let subscription = null;
+            let pollingInterval = null;
+            let ultimoMensajeId = 0;
+            let typingTimeout = null;
+            let enviandoMensaje = false;
+            let mensajesIds = new Set(); // Para tracking de mensajes ya vistos
 
             // ============================================
             // FUNCIÓN DE NOTIFICACIONES
             // ============================================
-            function showNotification(text, color = '#4a90e2', icon = 'fa-info-circle') {
+            function showNotification(text, bgColor = '#4a90e2', icon = 'fa-info-circle') {
                 const container = document.getElementById('notificationContainer');
                 const notification = document.createElement('div');
                 notification.className = 'notification';
-                notification.innerHTML = `<i class="fas ${icon}" style="color: ${color}"></i> ${text}`;
+                notification.innerHTML = `<i class="fas ${icon}" style="color: white"></i> ${text}`;
+                notification.style.background = bgColor;
+                notification.style.color = 'white';
                 container.appendChild(notification);
 
                 setTimeout(() => {
                     notification.style.animation = 'fadeOut 0.3s ease';
                     setTimeout(() => {
-                        container.removeChild(notification);
+                        if (container.contains(notification)) {
+                            container.removeChild(notification);
+                        }
                     }, 300);
                 }, 2500);
             }
 
             // ============================================
-            // FUNCIÓN PARA ENVIAR MENSAJE
+            // HABILITAR/DESHABILITAR BOTÓN DE ENVÍO
             // ============================================
-            function sendMessage() {
-                const text = chatInput.value.trim();
-                if (!text) return;
+            function actualizarEstadoBoton() {
+                if (sendBtn) {
+                    sendBtn.disabled = !chatInput.value.trim() || enviandoMensaje;
+                }
+            }
 
-                // Crear mensaje enviado
+            // ============================================
+            // OBTENER USUARIO ACTUAL
+            // ============================================
+            async function obtenerUsuarioActual() {
+                try {
+                    const usuarioGuardado = sessionStorage.getItem('usuario_actual');
+                    
+                    if (!usuarioGuardado) {
+                        window.location.href = 'login.html';
+                        return null;
+                    }
+
+                    usuarioActual = JSON.parse(usuarioGuardado);
+                    usuarioId = usuarioActual.id;
+
+                    const { data: usuario, error } = await supabaseClient
+                        .from('usuarios')
+                        .select('*')
+                        .eq('id_usuario', usuarioId)
+                        .single();
+
+                    if (error) throw error;
+
+                    nivelValor.textContent = usuario.nivel || 1;
+                    
+                    // Cargar avatar del usuario actual
+                    const { data: fotos } = await supabaseClient
+                        .from('fotos_usuario')
+                        .select('url_foto')
+                        .eq('id_usuario', usuarioId)
+                        .eq('principal', true)
+                        .maybeSingle();
+                        
+                    usuarioActual.foto_principal = fotos?.url_foto || usuario.foto_url;
+                    
+                    return usuario;
+                } catch (error) {
+                    console.error('Error al obtener usuario:', error);
+                    return null;
+                }
+            }
+
+            // ============================================
+            // OBTENER INFO DEL OTRO USUARIO
+            // ============================================
+            async function obtenerOtroUsuario() {
+                try {
+                    const { data: usuario, error } = await supabaseClient
+                        .from('usuarios')
+                        .select('*')
+                        .eq('id_usuario', otroUsuarioId)
+                        .single();
+
+                    if (error) throw error;
+
+                    // Obtener foto principal
+                    const { data: fotos } = await supabaseClient
+                        .from('fotos_usuario')
+                        .select('url_foto')
+                        .eq('id_usuario', otroUsuarioId)
+                        .eq('principal', true)
+                        .maybeSingle();
+                        
+                    usuario.foto_principal = fotos?.url_foto || usuario.foto_url;
+                    
+                    return usuario;
+                } catch (error) {
+                    console.error('Error al obtener otro usuario:', error);
+                    return null;
+                }
+            }
+
+            // ============================================
+            // OBTENER O CREAR ID DEL CHAT
+            // ============================================
+            async function obtenerOCrearChatId() {
+                try {
+                    const { data: matches, error: matchError } = await supabaseClient
+                        .from('matches')
+                        .select('id_match')
+                        .or(`and(usuario1.eq.${usuarioId},usuario2.eq.${otroUsuarioId}),and(usuario1.eq.${otroUsuarioId},usuario2.eq.${usuarioId})`)
+                        .maybeSingle();
+
+                    if (matchError) throw matchError;
+
+                    if (!matches) {
+                        showNotification('No hay match con este usuario', '#ff6b6b', 'fa-exclamation-circle');
+                        setTimeout(() => {
+                            window.location.href = 'mensajes.html';
+                        }, 2000);
+                        return null;
+                    }
+
+                    chatId = matches.id_match;
+                    return chatId;
+                } catch (error) {
+                    console.error('Error al obtener chat:', error);
+                    return null;
+                }
+            }
+
+            // ============================================
+            // RENDERIZAR UN MENSAJE
+            // ============================================
+            function renderizarMensaje(msg, esNuevo = true, visto = false) {
+                const esMio = msg.id_usuario === usuarioId;
+                const fecha = new Date(msg.fecha);
+                const hora = `${fecha.getHours()}:${String(fecha.getMinutes()).padStart(2, '0')}`;
+                
+                // Guardar ID en el Set
+                mensajesIds.add(msg.id_mensaje);
+                
+                // Verificar si ya existe este mensaje en el DOM
+                if (document.querySelector(`[data-mensaje-id="${msg.id_mensaje}"]`)) {
+                    return; // Ya está renderizado, no duplicar
+                }
+                
                 const messageDiv = document.createElement('div');
-                messageDiv.className = 'message sent';
+                messageDiv.className = `message ${esMio ? 'sent' : 'received'} ${visto ? 'visto' : ''}`;
+                messageDiv.dataset.mensajeId = msg.id_mensaje;
+                
+                const messageFooter = esMio ? `
+                    <div class="message-footer">
+                        <span class="message-time">${hora}</span>
+                        ${visto ? '<i class="fas fa-star visto-icon" title="Visto"></i>' : '<i class="fas fa-check double-check" title="Entregado"></i>'}
+                    </div>
+                ` : `
+                    <div class="message-footer">
+                        <span class="message-time">${hora}</span>
+                    </div>
+                `;
+                
                 messageDiv.innerHTML = `
                     <div class="message-avatar">
-                        <i class="fas fa-user"></i>
+                        ${esMio 
+                            ? (usuarioActual.foto_principal ? `<img src="${usuarioActual.foto_principal}" alt="Yo">` : '<i class="fas fa-user"></i>')
+                            : (window.otroUsuario?.foto_principal ? `<img src="${window.otroUsuario.foto_principal}" alt="${window.otroUsuario.nombre}">` : '<i class="fas fa-user"></i>')
+                        }
                     </div>
                     <div class="message-content">
-                        <p>${text}</p>
-                        <span class="message-time">${new Date().getHours()}:${String(new Date().getMinutes()).padStart(2, '0')}</span>
+                        <p>${msg.mensaje}</p>
+                        ${messageFooter}
                     </div>
                 `;
                 
                 chatMessages.appendChild(messageDiv);
-                chatInput.value = '';
                 chatMessages.scrollTop = chatMessages.scrollHeight;
+                
+                // Actualizar último ID
+                if (msg.id_mensaje > ultimoMensajeId) {
+                    ultimoMensajeId = msg.id_mensaje;
+                }
+            }
 
-                // Simular respuesta después de 1.5 segundos
-                setTimeout(() => {
-                    const respuestas = [
-                        '¡Qué bien!',
-                        'Interesante...',
-                        'Sí, totalmente',
-                        'Jaja me encanta',
-                        'No sabía eso'
-                    ];
-                    const respuesta = respuestas[Math.floor(Math.random() * respuestas.length)];
+            // ============================================
+            // ACTUALIZAR ESTADO DE VISTO EN LA UI
+            // ============================================
+            function actualizarEstadoVisto(idMensaje) {
+                const mensajeDiv = document.querySelector(`[data-mensaje-id="${idMensaje}"]`);
+                if (mensajeDiv && mensajeDiv.classList.contains('sent') && !mensajeDiv.classList.contains('visto')) {
+                    mensajeDiv.classList.add('visto');
+                    const footer = mensajeDiv.querySelector('.message-footer');
+                    if (footer) {
+                        const timeSpan = footer.querySelector('.message-time');
+                        const hora = timeSpan ? timeSpan.textContent : '';
+                        footer.innerHTML = `
+                            <span class="message-time">${hora}</span>
+                            <i class="fas fa-star visto-icon" title="Visto"></i>
+                        `;
+                    }
+                }
+            }
+
+            // ============================================
+            // MARCAR MENSAJES COMO VISTOS
+            // ============================================
+            async function marcarMensajesComoVistos() {
+                try {
+                    // Buscar mensajes recibidos no vistos
+                    const mensajesNoVistos = Array.from(document.querySelectorAll('.message.received[data-mensaje-id]'))
+                        .map(el => el.dataset.mensajeId)
+                        .filter(id => !window.mensajesVistos?.has(parseInt(id)));
+
+                    if (mensajesNoVistos.length === 0) return;
+
+                    // Marcar en BD
+                    const { error } = await supabaseClient
+                        .from('mensajes')
+                        .update({ visto: true })
+                        .in('id_mensaje', mensajesNoVistos);
+
+                    if (error) throw error;
+
+                    // Actualizar UI para mensajes enviados del otro usuario
+                    for (const id of mensajesNoVistos) {
+                        actualizarEstadoVisto(parseInt(id));
+                    }
+
+                    // Guardar en Set local
+                    if (!window.mensajesVistos) window.mensajesVistos = new Set();
+                    mensajesNoVistos.forEach(id => window.mensajesVistos.add(parseInt(id)));
+
+                } catch (error) {
+                    console.error('Error al marcar mensajes como vistos:', error);
+                }
+            }
+
+            // ============================================
+            // CARGAR MENSAJES INICIALES
+            // ============================================
+            async function cargarMensajesIniciales() {
+                try {
+                    const { data: mensajes, error } = await supabaseClient
+                        .from('mensajes')
+                        .select('*')
+                        .eq('id_chat', chatId)
+                        .order('fecha', { ascending: true });
+
+                    if (error) throw error;
+
+                    if (!mensajes || mensajes.length === 0) {
+                        chatMessages.innerHTML = `
+                            <div class="empty-chat">
+                                <i class="fas fa-comment-dots"></i>
+                                <p>No hay mensajes aún</p>
+                                <p style="font-size: 14px; margin-top: 10px;">Envía el primer mensaje para iniciar la conversación</p>
+                            </div>
+                        `;
+                        return;
+                    }
+
+                    // Limpiar contenedor
+                    chatMessages.innerHTML = '';
                     
-                    const replyDiv = document.createElement('div');
-                    replyDiv.className = 'message received';
-                    replyDiv.innerHTML = `
-                        <div class="message-avatar">
-                            <i class="fas fa-user"></i>
-                        </div>
-                        <div class="message-content">
-                            <p>${respuesta}</p>
-                            <span class="message-time">${new Date().getHours()}:${String(new Date().getMinutes()).padStart(2, '0')}</span>
-                        </div>
-                    `;
-                    chatMessages.appendChild(replyDiv);
+                    // Inicializar Set de mensajes vistos
+                    window.mensajesVistos = new Set();
+                    
+                    // Renderizar todos los mensajes
+                    mensajes.forEach(msg => {
+                        renderizarMensaje(msg, false, msg.visto || false);
+                        
+                        // Actualizar último ID
+                        if (msg.id_mensaje > ultimoMensajeId) {
+                            ultimoMensajeId = msg.id_mensaje;
+                        }
+                        
+                        // Si es un mensaje recibido y está visto, agregarlo al Set
+                        if (msg.id_usuario !== usuarioId && msg.visto) {
+                            window.mensajesVistos.add(msg.id_mensaje);
+                        }
+                    });
+                    
                     chatMessages.scrollTop = chatMessages.scrollHeight;
-                }, 1500);
+                    
+                    // Marcar mensajes recibidos como vistos
+                    await marcarMensajesComoVistos();
+                    
+                } catch (error) {
+                    console.error('Error al cargar mensajes:', error);
+                }
+            }
+
+            // ============================================
+            // VERIFICAR NUEVOS MENSAJES Y ACTUALIZAR VISTOS
+            // ============================================
+            async function verificarNuevosMensajes() {
+                if (!chatId) return;
+                
+                try {
+                    // 1. Verificar nuevos mensajes
+                    const { data: nuevosMensajes, error } = await supabaseClient
+                        .from('mensajes')
+                        .select('*')
+                        .eq('id_chat', chatId)
+                        .gt('id_mensaje', ultimoMensajeId)
+                        .order('fecha', { ascending: true });
+
+                    if (error) throw error;
+
+                    if (nuevosMensajes && nuevosMensajes.length > 0) {
+                        // Remover empty state si existe
+                        const emptyChat = chatMessages.querySelector('.empty-chat');
+                        if (emptyChat) {
+                            chatMessages.innerHTML = '';
+                        }
+                        
+                        // Renderizar nuevos mensajes (solo si no existen ya)
+                        nuevosMensajes.forEach(msg => {
+                            if (!document.querySelector(`[data-mensaje-id="${msg.id_mensaje}"]`)) {
+                                renderizarMensaje(msg, true, msg.visto || false);
+                            }
+                        });
+                    }
+                    
+                    // 2. Verificar cambios en estado visto de mensajes enviados
+                    const mensajesEnviadosIds = Array.from(document.querySelectorAll('.message.sent[data-mensaje-id]'))
+                        .map(el => parseInt(el.dataset.mensajeId));
+                    
+                    if (mensajesEnviadosIds.length > 0) {
+                        const { data: mensajesEnviados, error: errorVistos } = await supabaseClient
+                            .from('mensajes')
+                            .select('id_mensaje, visto')
+                            .eq('id_chat', chatId)
+                            .eq('id_usuario', usuarioId)
+                            .in('id_mensaje', mensajesEnviadosIds);
+
+                        if (errorVistos) throw errorVistos;
+
+                        if (mensajesEnviados) {
+                            mensajesEnviados.forEach(msg => {
+                                if (msg.visto) {
+                                    actualizarEstadoVisto(msg.id_mensaje);
+                                }
+                            });
+                        }
+                    }
+                    
+                } catch (error) {
+                    console.error('Error en polling:', error);
+                }
+            }
+
+            // ============================================
+            // INICIAR POLLING CADA 1 SEGUNDO
+            // ============================================
+            function iniciarPolling() {
+                if (pollingInterval) clearInterval(pollingInterval);
+                
+                pollingInterval = setInterval(async () => {
+                    await verificarNuevosMensajes();
+                    await marcarMensajesComoVistos();
+                }, 1000);
+            }
+
+            // ============================================
+            // ENVIAR MENSAJE (CON PREVENCIÓN DE DUPLICADOS)
+            // ============================================
+            async function enviarMensaje() {
+                const texto = chatInput.value.trim();
+                if (!texto || enviandoMensaje) return;
+
+                enviandoMensaje = true;
+                actualizarEstadoBoton();
+
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('mensajes')
+                        .insert([{
+                            id_chat: chatId,
+                            id_usuario: usuarioId,
+                            mensaje: texto,
+                            fecha: new Date().toISOString(),
+                            visto: false
+                        }])
+                        .select();
+
+                    if (error) throw error;
+
+                    chatInput.value = '';
+                    
+                    // Renderizar instantáneamente (solo si no existe ya)
+                    if (data && data[0] && !document.querySelector(`[data-mensaje-id="${data[0].id_mensaje}"]`)) {
+                        const emptyChat = chatMessages.querySelector('.empty-chat');
+                        if (emptyChat) {
+                            chatMessages.innerHTML = '';
+                        }
+                        renderizarMensaje(data[0], true, false);
+                    }
+                } catch (error) {
+                    console.error('Error al enviar mensaje:', error);
+                    showNotification('Error al enviar mensaje', '#ff6b6b', 'fa-exclamation-circle');
+                } finally {
+                    enviandoMensaje = false;
+                    actualizarEstadoBoton();
+                    chatInput.focus();
+                }
+            }
+
+            // ============================================
+            // INDICADOR DE ESCRITURA
+            // ============================================
+            function mostrarEscribiendo() {
+                if (!typingContainer) return;
+                
+                // Mostrar indicador
+                typingContainer.style.display = 'block';
+                
+                // Ocultar después de 2 segundos sin escribir
+                if (typingTimeout) clearTimeout(typingTimeout);
+                typingTimeout = setTimeout(() => {
+                    typingContainer.style.display = 'none';
+                }, 2000);
+            }
+
+            // ============================================
+            // ACTUALIZAR HEADER CON DATOS DEL OTRO USUARIO
+            // ============================================
+            function actualizarHeader(otroUsuario) {
+                if (chatUserName) {
+                    chatUserName.textContent = otroUsuario.nombre || 'Usuario';
+                }
+                
+                if (chatUserAvatar) {
+                    if (otroUsuario.foto_principal) {
+                        chatUserAvatar.innerHTML = `<img src="${otroUsuario.foto_principal}" alt="${otroUsuario.nombre}">`;
+                    } else {
+                        chatUserAvatar.innerHTML = '<i class="fas fa-user"></i>';
+                    }
+                }
+                
+                // Estado online (simulado)
+                if (chatUserStatus) {
+                    chatUserStatus.innerHTML = '<i class="fas fa-circle" style="color: #2ecc71; font-size: 8px;"></i> En línea';
+                }
+                
+                window.otroUsuario = otroUsuario;
+            }
+
+            // ============================================
+            // LIMPIAR RECURSOS AL SALIR
+            // ============================================
+            function limpiarRecursos() {
+                if (pollingInterval) clearInterval(pollingInterval);
+                if (subscription) subscription.unsubscribe();
+                if (typingTimeout) clearTimeout(typingTimeout);
             }
 
             // ============================================
             // EVENT LISTENERS
             // ============================================
             
-            // Cargar mensajes al iniciar
-            cargarMensajesEjemplo();
+            // Evento input para habilitar/deshabilitar botón
+            if (chatInput) {
+                chatInput.addEventListener('input', () => {
+                    actualizarEstadoBoton();
+                    mostrarEscribiendo();
+                });
+            }
 
             // Enviar mensaje con botón
             if (sendBtn) {
-                sendBtn.addEventListener('click', sendMessage);
+                sendBtn.addEventListener('click', enviarMensaje);
             }
 
-            // Enviar mensaje con Enter
+            // Enviar mensaje con Enter (con prevención de duplicados)
             if (chatInput) {
-                chatInput.addEventListener('keypress', function(e) {
-                    if (e.key === 'Enter') {
+                chatInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Enter' && !e.shiftKey) {
                         e.preventDefault();
-                        sendMessage();
+                        if (!enviandoMensaje && chatInput.value.trim()) {
+                            enviarMensaje();
+                        }
                     }
                 });
             }
 
             // Botones de volver
+            const volverAMensajes = () => {
+                limpiarRecursos();
+                showNotification('Volviendo a mensajes...', '#6c5ce7', 'fa-arrow-left');
+                setTimeout(() => {
+                    window.location.href = 'mensajes.html';
+                }, 300);
+            };
+
             if (backButton) {
-                backButton.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    showNotification('Volviendo a mensajes...', '#6c5ce7', 'fa-arrow-left');
-                    setTimeout(() => {
-                        window.location.href = 'mensajes.html';
-                    }, 300);
-                });
+                backButton.addEventListener('click', volverAMensajes);
             }
 
             if (chatBackButton) {
-                chatBackButton.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    showNotification('Volviendo a mensajes...', '#6c5ce7', 'fa-arrow-left');
-                    setTimeout(() => {
-                        window.location.href = 'mensajes.html';
-                    }, 300);
-                });
+                chatBackButton.addEventListener('click', volverAMensajes);
             }
 
             // Botón de opciones del chat
@@ -1093,20 +1600,30 @@
             }
 
             if (optionVaciar) {
-                optionVaciar.addEventListener('click', () => {
-                    chatMessages.innerHTML = `
-                        <div class="message received">
-                            <div class="message-avatar">
-                                <i class="fas fa-user"></i>
-                            </div>
-                            <div class="message-content">
+                optionVaciar.addEventListener('click', async () => {
+                    try {
+                        const { error } = await supabaseClient
+                            .from('mensajes')
+                            .delete()
+                            .eq('id_chat', chatId);
+
+                        if (error) throw error;
+
+                        chatMessages.innerHTML = `
+                            <div class="empty-chat">
+                                <i class="fas fa-comment-dots"></i>
                                 <p>Chat vaciado</p>
-                                <span class="message-time">${new Date().getHours()}:${String(new Date().getMinutes()).padStart(2, '0')}</span>
                             </div>
-                        </div>
-                    `;
-                    showNotification('🗑️ Chat vaciado', '#8a9bb0', 'fa-trash');
-                    modalOverlay.classList.remove('active');
+                        `;
+                        ultimoMensajeId = 0;
+                        mensajesIds.clear();
+                        window.mensajesVistos = new Set();
+                        showNotification('🗑️ Chat vaciado', '#8a9bb0', 'fa-trash');
+                        modalOverlay.classList.remove('active');
+                    } catch (error) {
+                        console.error('Error al vaciar chat:', error);
+                        showNotification('Error al vaciar chat', '#ff6b6b', 'fa-exclamation-circle');
+                    }
                 });
             }
 
@@ -1116,13 +1633,18 @@
                     this.style.transform = 'scale(1.1)';
                     setTimeout(() => this.style.transform = 'scale(1)', 200);
                     
+                    if (typeof mostrarModalBoost === 'function') {
+                        mostrarModalBoost();
+                    } else {
+                        showNotification('🚀 Función de Boost próximamente', '#ff6b6b', 'fa-rocket');
+                    }
                 });
-               
             }
 
             if (btnInicio) {
                 btnInicio.addEventListener('click', (e) => {
                     e.preventDefault();
+                    limpiarRecursos();
                     showNotification('🏠 Página de inicio', '#6c5ce7', 'fa-home');
                     setTimeout(() => {
                         window.location.href = 'principal.html';
@@ -1131,32 +1653,76 @@
             }
 
             if (btnMessage) {
-                btnMessage.addEventListener('click', (e) => {
-                    e.preventDefault();
-                    showNotification('📬 Volviendo a mensajes...', '#6c5ce7', 'fa-comment-dots');
-                    setTimeout(() => {
-                        window.location.href = 'mensajes.html';
-                    }, 300);
-                });
+                btnMessage.addEventListener('click', volverAMensajes);
             }
 
             if (btnLikesFooter) {
                 btnLikesFooter.addEventListener('click', function() {
                     this.style.transform = 'scale(1.1)';
                     setTimeout(() => this.style.transform = 'scale(1)', 200);
-                    showNotification('❤️ Tus likes: 156', '#ff4757', 'fa-heart');
+                    limpiarRecursos();
+                    setTimeout(() => {
+                        window.location.href = 'like.html';
+                    }, 300);
                 });
             }
 
             if (btnCuenta) {
                 btnCuenta.addEventListener('click', (e) => {
                     e.preventDefault();
+                    limpiarRecursos();
                     showNotification('👤 Mi perfil', '#2d3a4a', 'fa-user');
                     setTimeout(() => {
                         window.location.href = 'cuenta.html';
                     }, 300);
                 });
             }
+
+            // ============================================
+            // INICIALIZACIÓN
+            // ============================================
+            const usuario = await obtenerUsuarioActual();
+            if (!usuario) return;
+
+            if (!otroUsuarioId) {
+                showNotification('ID de usuario no válido', '#ff6b6b', 'fa-exclamation-circle');
+                setTimeout(() => {
+                    window.location.href = 'mensajes.html';
+                }, 2000);
+                return;
+            }
+
+            // Obtener información del otro usuario
+            const otroUsuario = await obtenerOtroUsuario();
+            if (!otroUsuario) {
+                showNotification('Usuario no encontrado', '#ff6b6b', 'fa-exclamation-circle');
+                setTimeout(() => {
+                    window.location.href = 'mensajes.html';
+                }, 2000);
+                return;
+            }
+
+            actualizarHeader(otroUsuario);
+
+            // Obtener ID del chat
+            const chat = await obtenerOCrearChatId();
+            if (!chat) return;
+
+            // Cargar mensajes iniciales
+            await cargarMensajesIniciales();
+
+            // Iniciar polling cada 1 segundo
+            iniciarPolling();
+
+            // Obtener total de likes para el footer
+            const { count } = await supabaseClient
+                .from('likes')
+                .select('*', { count: 'exact', head: true })
+                .eq('id_usuario_destino', usuarioId);
+            footerLikesCount.textContent = count || 0;
+
+            // Limpiar recursos al cerrar la página
+            window.addEventListener('beforeunload', limpiarRecursos);
         });
     </script>
 </body>

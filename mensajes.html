@@ -6,7 +6,10 @@
     <title>Amizi · Mensajes</title>
     <!-- Font Awesome para iconos más lindos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-     <script src="modulos/boots.js"></script>
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         /* Tus estilos existentes se mantienen IGUAL */
         * {
@@ -140,6 +143,13 @@
             padding: 12px 25px;
             border-radius: 60px;
             border: 1px solid #eeeff5;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .popular-row:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
         .popular-tag {
@@ -339,6 +349,7 @@
             width: 60px;
             height: 60px;
             border-radius: 50%;
+            overflow: hidden;
             background: linear-gradient(145deg, #4a90e2, #6c5ce7);
             display: flex;
             align-items: center;
@@ -350,6 +361,12 @@
 
         .avatar-online:hover {
             transform: scale(1.05);
+        }
+
+        .avatar-online img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .avatar-online i {
@@ -418,10 +435,17 @@
             width: 55px;
             height: 55px;
             border-radius: 50%;
+            overflow: hidden;
             background: linear-gradient(145deg, #4a90e2, #6c5ce7);
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .chat-avatar-img img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .chat-avatar-img i {
@@ -618,10 +642,17 @@
             width: 50px;
             height: 50px;
             border-radius: 50%;
+            overflow: hidden;
             background: linear-gradient(145deg, #4a90e2, #6c5ce7);
             display: flex;
             align-items: center;
             justify-content: center;
+        }
+
+        .modal-avatar img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
         }
 
         .modal-avatar i {
@@ -814,6 +845,32 @@
         .footer-item.mensaje {
             background: linear-gradient(145deg, #6c5ce7, #8e6ce7);
             color: white;
+            position: relative;
+        }
+
+        /* Badge de mensajes no leídos en el footer */
+        .mensajes-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+            border: 2px solid white;
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
         }
 
         .footer-item.likes {
@@ -963,11 +1020,11 @@
                 <i class="fas fa-times"></i>
             </div>
             <div class="modal-header">
-                <div class="modal-avatar">
+                <div class="modal-avatar" id="modalAvatar">
                     <i class="fas fa-user"></i>
                 </div>
                 <div class="modal-user-info">
-                    <h4 id="modalUserName">Laura Gómez</h4>
+                    <h4 id="modalUserName">Usuario</h4>
                     <p id="modalUserStatus">🟢 En línea</p>
                 </div>
             </div>
@@ -1005,7 +1062,7 @@
             <div class="header-right">
                 <div class="carisma-badge">
                     <i class="fas fa-bolt"></i>
-                    Nivel <span class="carisma-num">72</span>
+                    Nivel <span class="carisma-num" id="nivelValor">1</span>
                 </div>
                 
                 <button class="boost-btn" id="btnBoost">
@@ -1031,7 +1088,7 @@
             <!-- TÍTULO -->
             <div class="mensajes-title">
                 <i class="fas fa-comment-dots"></i>
-                <h2>Buzón de Mensajes <span>4</span></h2>
+                <h2>Buzón de Mensajes <span id="totalMatches">0</span></h2>
             </div>
 
             <!-- BARRA DE BÚSQUEDA -->
@@ -1050,7 +1107,7 @@
                 <div class="section-subtitle">
                     <i class="fas fa-circle"></i>
                     <span>En línea ahora</span>
-                    <span>5</span>
+                    <span id="onlineCount">0</span>
                 </div>
                 <div class="avatares-grid" id="avataresOnline"></div>
             </div>
@@ -1069,11 +1126,12 @@
             <div class="footer-item mensaje active" id="btnMessage" data-tooltip="Ver mensajes">
                 <i class="fas fa-comment-dots"></i>
                 <span>Mensaje</span>
+                <span class="mensajes-badge" id="totalNoLeidos">0</span>
             </div>
             
             <div class="footer-item likes" id="btnLikesFooter" data-tooltip="Mis likes">
                 <i class="fas fa-heart"></i>
-                <span>156</span>
+                <span id="footerLikesCount">0</span>
             </div>
             
             <div class="footer-item cuenta" id="btnCuenta" data-tooltip="Mi perfil">
@@ -1084,21 +1142,13 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // ============================================
-            // DATOS DE EJEMPLO
-            // ============================================
-            const CHATS = [
-                { id: 1, nombre: 'Laura Gómez', ultimoMensaje: '¡Hola! ¿Cómo estás?', hora: '10:30', leido: false, mensajesNoLeidos: 2, online: true },
-                { id: 2, nombre: 'Carlos Ruiz', ultimoMensaje: 'Te envié un regalo 🎁', hora: '09:15', leido: true, mensajesNoLeidos: 0, online: false },
-                { id: 3, nombre: 'Ana Martínez', ultimoMensaje: '¿Viste la nueva función?', hora: 'Ayer', leido: true, mensajesNoLeidos: 0, online: true },
-                { id: 4, nombre: 'Miguel Torres', ultimoMensaje: 'Gracias por el boost', hora: 'Ayer', leido: false, mensajesNoLeidos: 1, online: false }
-            ];
+        const supabaseUrl = "https://qfwpikteqipzwpmqbllt.supabase.co";
+        const supabaseKey = "sb_publishable_W75gkuE187xY7qWeQsP6XQ_3IWzPC3A";
+        
+        const { createClient } = supabase;
+        const supabaseClient = createClient(supabaseUrl, supabaseKey);
 
-            const USUARIOS_ONLINE = [
-                { nombre: 'Laura' }, { nombre: 'Ana' }, { nombre: 'Carlos' }, { nombre: 'Miguel' }, { nombre: 'Sofia' }
-            ];
-
+        document.addEventListener('DOMContentLoaded', async function() {
             // ============================================
             // ELEMENTOS DEL DOM
             // ============================================
@@ -1112,6 +1162,11 @@
             const optionBloquear = document.getElementById('optionBloquear');
             const optionVaciar = document.getElementById('optionVaciar');
             const backToPrincipal = document.getElementById('backToPrincipal');
+            const nivelValor = document.getElementById('nivelValor');
+            const totalMatches = document.getElementById('totalMatches');
+            const onlineCount = document.getElementById('onlineCount');
+            const footerLikesCount = document.getElementById('footerLikesCount');
+            const totalNoLeidos = document.getElementById('totalNoLeidos');
             
             // Botones del footer
             const btnBoost = document.getElementById('btnBoost');
@@ -1121,21 +1176,211 @@
             const btnCuenta = document.getElementById('btnCuenta');
 
             // ============================================
+            // VARIABLES GLOBALES
+            // ============================================
+            let usuarioActual = null;
+            let usuarioId = null;
+            let matches = [];
+            let usuariosOnline = new Set();
+
+            // ============================================
             // FUNCIÓN DE NOTIFICACIONES
             // ============================================
-            function showNotification(text, color = '#4a90e2', icon = 'fa-info-circle') {
+            function showNotification(text, bgColor = '#4a90e2', icon = 'fa-info-circle') {
                 const container = document.getElementById('notificationContainer');
                 const notification = document.createElement('div');
                 notification.className = 'notification';
-                notification.innerHTML = `<i class="fas ${icon}" style="color: ${color}"></i> ${text}`;
+                notification.innerHTML = `<i class="fas ${icon}" style="color: white"></i> ${text}`;
+                notification.style.background = bgColor;
+                notification.style.color = 'white';
                 container.appendChild(notification);
 
                 setTimeout(() => {
                     notification.style.animation = 'fadeOut 0.3s ease';
                     setTimeout(() => {
-                        container.removeChild(notification);
+                        if (container.contains(notification)) {
+                            container.removeChild(notification);
+                        }
                     }, 300);
                 }, 2500);
+            }
+
+            // ============================================
+            // OBTENER USUARIO ACTUAL
+            // ============================================
+            async function obtenerUsuarioActual() {
+                try {
+                    const usuarioGuardado = sessionStorage.getItem('usuario_actual');
+                    
+                    if (!usuarioGuardado) {
+                        window.location.href = 'login.html';
+                        return null;
+                    }
+
+                    usuarioActual = JSON.parse(usuarioGuardado);
+                    usuarioId = usuarioActual.id;
+
+                    const { data: usuario, error } = await supabaseClient
+                        .from('usuarios')
+                        .select(`
+                            *,
+                            pais: id_pais (nombre),
+                            ciudad: id_ciudad (nombre)
+                        `)
+                        .eq('id_usuario', usuarioId)
+                        .single();
+
+                    if (error) throw error;
+
+                    nivelValor.textContent = usuario.nivel || 1;
+                    return usuario;
+                } catch (error) {
+                    console.error('Error al obtener usuario:', error);
+                    return null;
+                }
+            }
+
+            // ============================================
+            // OBTENER FOTOS DEL USUARIO
+            // ============================================
+            async function obtenerFotoUsuario(usuarioId) {
+                try {
+                    const { data: fotos, error } = await supabaseClient
+                        .from('fotos_usuario')
+                        .select('url_foto')
+                        .eq('id_usuario', usuarioId)
+                        .eq('principal', true)
+                        .maybeSingle();
+
+                    if (error) throw error;
+                    
+                    return fotos?.url_foto || null;
+                } catch (error) {
+                    console.error('Error al obtener foto:', error);
+                    return null;
+                }
+            }
+
+            // ============================================
+            // OBTENER MATCHES DEL USUARIO
+            // ============================================
+            async function obtenerMatches() {
+                try {
+                    const { data: matchesData, error } = await supabaseClient
+                        .from('matches')
+                        .select('*')
+                        .or(`usuario1.eq.${usuarioId},usuario2.eq.${usuarioId}`)
+                        .order('fecha', { ascending: false });
+
+                    if (error) throw error;
+
+                    // Obtener información de cada usuario del match
+                    const matchesConInfo = await Promise.all(
+                        matchesData.map(async (match) => {
+                            const otroUsuarioId = match.usuario1 === usuarioId ? match.usuario2 : match.usuario1;
+                            
+                            const { data: usuario, error: userError } = await supabaseClient
+                                .from('usuarios')
+                                .select('id_usuario, nombre, edad, foto_url')
+                                .eq('id_usuario', otroUsuarioId)
+                                .single();
+
+                            if (userError) return null;
+
+                            // Obtener foto principal si existe
+                            const fotoPrincipal = await obtenerFotoUsuario(otroUsuarioId);
+
+                            // Obtener último mensaje de este chat
+                            const { data: mensajes, error: msgError } = await supabaseClient
+                                .from('mensajes')
+                                .select('*')
+                                .eq('id_chat', match.id_match)
+                                .order('fecha', { ascending: false })
+                                .limit(1);
+
+                            if (msgError) console.error('Error al obtener mensajes:', msgError);
+
+                            // Obtener mensajes no leídos
+                            const { count: noLeidos, error: countError } = await supabaseClient
+                                .from('mensajes')
+                                .select('*', { count: 'exact', head: true })
+                                .eq('id_chat', match.id_match)
+                                .eq('visto', false)
+                                .neq('id_usuario', usuarioId);
+
+                            if (countError) console.error('Error al contar no leídos:', countError);
+
+                            const ultimoMensaje = mensajes && mensajes.length > 0 ? mensajes[0] : null;
+                            
+                            return {
+                                match_id: match.id_match,
+                                usuario: {
+                                    ...usuario,
+                                    foto_principal: fotoPrincipal || usuario.foto_url
+                                },
+                                ultimo_mensaje: ultimoMensaje,
+                                no_leidos: noLeidos || 0,
+                                fecha: match.fecha
+                            };
+                        })
+                    );
+
+                    // Filtrar nulos y ordenar por fecha del último mensaje o match
+                    matches = matchesConInfo.filter(m => m !== null)
+                        .sort((a, b) => {
+                            const fechaA = a.ultimo_mensaje ? new Date(a.ultimo_mensaje.fecha) : new Date(a.fecha);
+                            const fechaB = b.ultimo_mensaje ? new Date(b.ultimo_mensaje.fecha) : new Date(b.fecha);
+                            return fechaB - fechaA;
+                        });
+                    
+                    // Actualizar contador
+                    totalMatches.textContent = matches.length;
+                    
+                    // Calcular total de mensajes no leídos
+                    const totalNoLeidosCount = matches.reduce((acc, m) => acc + m.no_leidos, 0);
+                    if (totalNoLeidos) {
+                        totalNoLeidos.textContent = totalNoLeidosCount;
+                        totalNoLeidos.style.display = totalNoLeidosCount > 0 ? 'flex' : 'none';
+                    }
+                    
+                    return matches;
+                } catch (error) {
+                    console.error('Error al obtener matches:', error);
+                    return [];
+                }
+            }
+
+            // ============================================
+            // FORMATEAR FECHA DEL MENSAJE
+            // ============================================
+            function formatearFecha(fecha) {
+                if (!fecha) return '';
+                
+                const ahora = new Date();
+                const mensajeFecha = new Date(fecha);
+                const diffMs = ahora - mensajeFecha;
+                const diffMin = Math.floor(diffMs / (1000 * 60));
+                const diffHoras = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffDias = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+
+                if (diffMin < 1) return 'Ahora';
+                if (diffMin < 60) return `${diffMin} min`;
+                if (diffHoras < 24) return `${diffHoras} h`;
+                if (diffDias === 1) return 'Ayer';
+                if (diffDias < 7) return `${diffDias} d`;
+                
+                return mensajeFecha.toLocaleDateString('es-ES', { day: '2-digit', month: '2-digit' });
+            }
+
+            // ============================================
+            // OBTENER USUARIOS EN LÍNEA (simulado)
+            // ============================================
+            function obtenerUsuariosOnline() {
+                // Por ahora, simulamos que algunos usuarios están en línea
+                const online = matches.filter(() => Math.random() > 0.5).map(m => m.usuario.id_usuario);
+                usuariosOnline = new Set(online);
+                onlineCount.textContent = usuariosOnline.size;
+                return online;
             }
 
             // ============================================
@@ -1144,15 +1389,27 @@
             function renderizarAvataresOnline() {
                 if (!avataresOnline) return;
                 
+                const onlineIds = obtenerUsuariosOnline();
+                const usuariosEnLinea = matches.filter(m => onlineIds.includes(m.usuario.id_usuario));
+                
+                if (usuariosEnLinea.length === 0) {
+                    avataresOnline.innerHTML = '<div style="padding: 10px; color: #8a9bb0;">No hay usuarios en línea</div>';
+                    return;
+                }
+                
                 let html = '';
-                USUARIOS_ONLINE.forEach(usuario => {
+                usuariosEnLinea.slice(0, 8).forEach(match => {
+                    const usuario = match.usuario;
                     html += `
-                        <div class="avatar-online-item">
+                        <div class="avatar-online-item" data-user-id="${usuario.id_usuario}">
                             <div class="avatar-online">
-                                <i class="fas fa-user"></i>
+                                ${usuario.foto_principal ? 
+                                    `<img src="${usuario.foto_principal}" alt="${usuario.nombre}">` : 
+                                    `<i class="fas fa-user"></i>`
+                                }
                                 <div class="online-indicator"></div>
                             </div>
-                            <span class="avatar-name">${usuario.nombre}</span>
+                            <span class="avatar-name">${usuario.nombre || 'Usuario'}</span>
                         </div>
                     `;
                 });
@@ -1162,42 +1419,81 @@
             // ============================================
             // RENDERIZAR LISTA DE CHATS
             // ============================================
-            function renderizarChats() {
+            async function renderizarChats() {
                 if (!chatsList) return;
                 
+                if (matches.length === 0) {
+                    chatsList.innerHTML = `
+                        <div class="empty-state">
+                            <i class="fas fa-comment-slash"></i>
+                            <h3>No tienes conversaciones</h3>
+                            <p>Cuando hagas match con alguien, aparecerán aquí</p>
+                        </div>
+                    `;
+                    return;
+                }
+                
                 let html = '';
-                CHATS.forEach(chat => {
-                    const unreadClass = !chat.leido ? 'unread' : '';
-                    const statusClass = chat.online ? 'online' : 'offline';
+                for (const match of matches) {
+                    const usuario = match.usuario;
+                    const online = usuariosOnline.has(usuario.id_usuario);
+                    const ultimoMensaje = match.ultimo_mensaje;
+                    const noLeidos = match.no_leidos;
+                    
+                    const unreadClass = noLeidos > 0 ? 'unread' : '';
+                    const statusClass = online ? 'online' : 'offline';
+                    
+                    // Determinar texto del último mensaje
+                    let mensajeTexto = 'Sin mensajes aún';
+                    let mensajeIcono = 'fa-check';
+                    let mensajeColor = '#8a9bb0';
+                    
+                    if (ultimoMensaje) {
+                        const esMio = ultimoMensaje.id_usuario === usuarioId;
+                        mensajeTexto = ultimoMensaje.mensaje;
+                        mensajeIcono = esMio ? 'fa-check-double' : 'fa-check';
+                        mensajeColor = esMio ? '#4a90e2' : '#8a9bb0';
+                        
+                        if (esMio && ultimoMensaje.visto) {
+                            mensajeIcono = 'fa-star';
+                            mensajeColor = '#ffd700';
+                        }
+                    }
+                    
+                    // Formatear hora
+                    const horaTexto = ultimoMensaje ? formatearFecha(ultimoMensaje.fecha) : '';
                     
                     html += `
-                        <div class="chat-item ${unreadClass}" data-chat-id="${chat.id}" data-chat-name="${chat.nombre}" data-chat-online="${chat.online}">
+                        <div class="chat-item ${unreadClass}" data-user-id="${usuario.id_usuario}" data-user-name="${usuario.nombre}" data-match-id="${match.match_id}">
                             <div class="chat-avatar">
                                 <div class="chat-avatar-img">
-                                    <i class="fas fa-user"></i>
+                                    ${usuario.foto_principal ? 
+                                        `<img src="${usuario.foto_principal}" alt="${usuario.nombre}">` : 
+                                        `<i class="fas fa-user"></i>`
+                                    }
                                 </div>
                                 <div class="chat-status ${statusClass}"></div>
                             </div>
                             
                             <div class="chat-info">
                                 <div class="chat-header-info">
-                                    <span class="chat-name">${chat.nombre}</span>
-                                    <span class="chat-time">${chat.hora}</span>
+                                    <span class="chat-name">${usuario.nombre || 'Usuario'}</span>
+                                    <span class="chat-time">${horaTexto}</span>
                                 </div>
                                 
-                                <div class="chat-last-message ${!chat.leido ? 'unread' : ''}">
-                                    <i class="fas fa-check${chat.leido ? '-double' : ''}" style="color: ${chat.leido ? '#4a90e2' : '#8a9bb0'}"></i>
-                                    <span>${chat.ultimoMensaje}</span>
-                                    ${chat.mensajesNoLeidos > 0 ? `<span class="unread-badge">${chat.mensajesNoLeidos}</span>` : ''}
+                                <div class="chat-last-message ${noLeidos > 0 ? 'unread' : ''}">
+                                    <i class="fas ${mensajeIcono}" style="color: ${mensajeColor}"></i>
+                                    <span>${mensajeTexto}</span>
+                                    ${noLeidos > 0 ? `<span class="unread-badge">${noLeidos}</span>` : ''}
                                 </div>
                             </div>
                             
-                            <div class="chat-options-btn" onclick="event.stopPropagation(); abrirOpcionesChat('${chat.nombre}', ${chat.online})">
+                            <div class="chat-options-btn" data-user-id="${usuario.id_usuario}" data-user-name="${usuario.nombre}" data-user-online="${online}">
                                 <i class="fas fa-ellipsis-v"></i>
                             </div>
                         </div>
                     `;
-                });
+                }
                 chatsList.innerHTML = html;
             }
 
@@ -1216,7 +1512,7 @@
                     
                     const chatItems = document.querySelectorAll('.chat-item');
                     chatItems.forEach(item => {
-                        const nombre = item.querySelector('.chat-name')?.textContent.toLowerCase() || '';
+                        const nombre = item.dataset.userName?.toLowerCase() || '';
                         if (nombre.includes(termino) || termino === '') {
                             item.style.display = 'flex';
                         } else {
@@ -1241,11 +1537,38 @@
             // ============================================
             // MODAL DE OPCIONES DE CHAT
             // ============================================
-            window.abrirOpcionesChat = function(nombre, online) {
-                document.getElementById('modalUserName').textContent = nombre;
+            function abrirOpcionesChat(userId, userName, online, foto) {
+                document.getElementById('modalUserName').textContent = userName;
                 document.getElementById('modalUserStatus').textContent = online ? '🟢 En línea' : '⚪ Desconectado';
+                
+                const modalAvatar = document.getElementById('modalAvatar');
+                if (foto) {
+                    modalAvatar.innerHTML = `<img src="${foto}" alt="${userName}">`;
+                } else {
+                    modalAvatar.innerHTML = '<i class="fas fa-user"></i>';
+                }
+                
+                // Guardar ID del usuario en el modal para las acciones
+                modalOverlay.dataset.userId = userId;
                 modalOverlay.classList.add('active');
-            };
+            }
+
+            // Evento para botones de opciones (delegación)
+            document.addEventListener('click', async (e) => {
+                const optionsBtn = e.target.closest('.chat-options-btn');
+                if (optionsBtn) {
+                    e.stopPropagation();
+                    const userId = optionsBtn.dataset.userId;
+                    const userName = optionsBtn.dataset.userName;
+                    const online = optionsBtn.dataset.userOnline === 'true';
+                    
+                    // Obtener foto del usuario
+                    const match = matches.find(m => m.usuario.id_usuario == userId);
+                    const foto = match?.usuario.foto_principal;
+                    
+                    abrirOpcionesChat(userId, userName, online, foto);
+                }
+            });
 
             if (closeModal) {
                 closeModal.addEventListener('click', () => {
@@ -1284,25 +1607,41 @@
             }
 
             // ============================================
-            // CLICK EN CHATS - REDIRECCIÓN CORREGIDA
+            // CLICK EN CHATS - REDIRECCIÓN
             // ============================================
-           // CLICK EN CHATS - REDIRECCIÓN CORREGIDA
-// ============================================
-document.addEventListener('click', function(e) {
-    const chatItem = e.target.closest('.chat-item');
-    if (chatItem && !e.target.closest('.chat-options-btn')) {
-        const chatName = chatItem.dataset.chatName;
-        const chatId = chatItem.dataset.chatId;
-        showNotification(`💬 Abriendo chat con ${chatName}`, '#4a90e2', 'fa-comment');
-        
-        // Redirigir a la página de chat individual
-        setTimeout(() => {
-            window.location.href = 'chat-individual.html?id=' + chatId + '&nombre=' + encodeURIComponent(chatName);
-        }, 500);
-    }
-});
+            document.addEventListener('click', function(e) {
+                const chatItem = e.target.closest('.chat-item');
+                if (chatItem && !e.target.closest('.chat-options-btn')) {
+                    const userId = chatItem.dataset.userId;
+                    const userName = chatItem.dataset.userName;
+                    const matchId = chatItem.dataset.matchId;
+                    
+                    showNotification(`💬 Abriendo chat con ${userName}`, '#4a90e2', 'fa-comment');
+                    
+                    // Redirigir a la página de chat individual
+                    setTimeout(() => {
+                        window.location.href = `chat-individual.html?id=${userId}&nombre=${encodeURIComponent(userName)}&match=${matchId}`;
+                    }, 500);
+                }
+            });
+
+            // Click en avatares online
+            document.addEventListener('click', function(e) {
+                const avatarItem = e.target.closest('.avatar-online-item');
+                if (avatarItem) {
+                    const userId = avatarItem.dataset.userId;
+                    const match = matches.find(m => m.usuario.id_usuario == userId);
+                    if (match) {
+                        showNotification(`💬 Abriendo chat con ${match.usuario.nombre}`, '#4a90e2', 'fa-comment');
+                        setTimeout(() => {
+                            window.location.href = `chat-individual.html?id=${userId}&nombre=${encodeURIComponent(match.usuario.nombre)}&match=${match.match_id}`;
+                        }, 500);
+                    }
+                }
+            });
+
             // ============================================
-            // BOTÓN PARA VOLVER AL PRINCIPAL - CORREGIDO
+            // BOTÓN PARA VOLVER AL PRINCIPAL
             // ============================================
             if (backToPrincipal) {
                 backToPrincipal.addEventListener('click', function() {
@@ -1314,7 +1653,7 @@ document.addEventListener('click', function(e) {
             }
 
             // ============================================
-            // BOTONES DEL FOOTER - CORREGIDOS
+            // BOTONES DEL FOOTER
             // ============================================
             if (btnBoost) {
                 btnBoost.addEventListener('click', function() {
@@ -1322,7 +1661,6 @@ document.addEventListener('click', function(e) {
                     setTimeout(() => this.style.transform = 'scale(1)', 200);
                     showNotification('🚀 Boost de visibilidad', '#ff6b6b', 'fa-rocket');
                     
-                    // Aquí puedes llamar al modal de Boost si existe
                     if (typeof mostrarModalBoost === 'function') {
                         mostrarModalBoost();
                     }
@@ -1350,7 +1688,10 @@ document.addEventListener('click', function(e) {
                 btnLikesFooter.addEventListener('click', function() {
                     this.style.transform = 'scale(1.1)';
                     setTimeout(() => this.style.transform = 'scale(1)', 200);
-                    showNotification('❤️ Tus likes: 156', '#ff4757', 'fa-heart');
+                    showNotification('❤️ Tus likes', '#ff4757', 'fa-heart');
+                    setTimeout(() => {
+                        window.location.href = 'like.html';
+                    }, 300);
                 });
             }
 
@@ -1367,11 +1708,31 @@ document.addEventListener('click', function(e) {
             // ============================================
             // INICIALIZAR
             // ============================================
-            renderizarAvataresOnline();
-            renderizarChats();
+            const usuario = await obtenerUsuarioActual();
+            if (!usuario) return;
+
+            // Obtener matches
+            await obtenerMatches();
             
-            // Actualizar contador en título
-            document.querySelector('.mensajes-title span').textContent = CHATS.length;
+            // Obtener usuarios online y renderizar
+            obtenerUsuariosOnline();
+            renderizarAvataresOnline();
+            await renderizarChats();
+
+            // Actualizar contador de likes en footer
+            const { count } = await supabaseClient
+                .from('likes')
+                .select('*', { count: 'exact', head: true })
+                .eq('id_usuario_destino', usuarioId);
+            footerLikesCount.textContent = count || 0;
+
+            // Configurar actualización periódica (cada 5 segundos para mejor respuesta)
+            setInterval(async () => {
+                await obtenerMatches();
+                obtenerUsuariosOnline();
+                renderizarAvataresOnline();
+                await renderizarChats();
+            }, 5000);
         });
     </script>
 </body>

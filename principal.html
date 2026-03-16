@@ -6,10 +6,11 @@
     <title>Amizi · Conoce amigos</title>
     <!-- Font Awesome para iconos más lindos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-   <script src="modulos/boots.js"></script>
-   <script src="modulos/regalos.js"></script>
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
-        /* Tus estilos existentes se mantienen IGUAL */
         * {
             margin: 0;
             padding: 0;
@@ -26,7 +27,6 @@
             padding: 20px;
         }
 
-        /* CONTENEDOR PRINCIPAL */
         .app-container {
             max-width: 800px;
             width: 100%;
@@ -38,7 +38,6 @@
             border: 1px solid rgba(255, 255, 255, 0.8);
         }
 
-        /* HEADER CON DEGRADADO AZUL */
         .header {
             display: flex;
             align-items: center;
@@ -131,7 +130,70 @@
             color: #ff6b6b;
         }
 
-        /* POPULAR ROW */
+        /* Contenedor de monedas y VIP */
+        .monedas-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            gap: 10px;
+            margin-bottom: 15px;
+            padding: 0 5px;
+        }
+
+        .monedas-badge {
+            background: linear-gradient(145deg, #f9e68c, #f1c40f);
+            border-radius: 40px;
+            padding: 8px 16px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+        }
+
+        .monedas-badge i {
+            color: #ffffff;
+            font-size: 18px;
+            filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.2));
+        }
+
+        .monedas-badge span {
+            font-weight: 700;
+            color: #1e2b3a;
+            font-size: 16px;
+        }
+
+        .vip-btn {
+            background: linear-gradient(145deg, #9b59b6, #8e44ad);
+            border: none;
+            border-radius: 40px;
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 5px 15px rgba(155, 89, 182, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .vip-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(155, 89, 182, 0.4);
+        }
+
+        .vip-btn i {
+            color: #ffd700;
+            font-size: 18px;
+            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
+        }
+
+        .vip-btn span {
+            font-weight: 600;
+            color: white;
+            font-size: 16px;
+        }
+
         .popular-row {
             display: flex;
             justify-content: space-between;
@@ -168,7 +230,6 @@
             cursor: pointer;
         }
 
-        /* TARJETA DE PERFIL CENTRADA Y AMPLIADA */
         .profile-card {
             background: white;
             border-radius: 70px;
@@ -179,31 +240,199 @@
             width: 100%;
         }
 
-        /* IMAGEN GRANDE Y PROTAGONISTA */
-        .avatar-container {
-            display: flex;
-            justify-content: center;
-            margin-bottom: 20px;
+        /* CARRUSEL DE FOTOS */
+        .avatar-carousel {
+            position: relative;
+            width: 100%;
+            max-width: 280px;
+            margin: 0 auto 20px;
         }
 
-        .avatar-large {
+        .carousel-container {
+            position: relative;
             width: 280px;
             height: 280px;
-            background: linear-gradient(145deg, #6c5ce7, #a363d9);
+            margin: 0 auto;
             border-radius: 50%;
+            overflow: hidden;
+            box-shadow: 0 25px 45px rgba(108, 92, 231, 0.35);
+            border: 8px solid white;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .carousel-container:hover {
+            transform: scale(1.02);
+        }
+
+        .carousel-slide {
+            display: flex;
+            transition: transform 0.3s ease;
+            height: 100%;
+        }
+
+        .carousel-item {
+            flex: 0 0 100%;
+            height: 100%;
+            background: linear-gradient(145deg, #6c5ce7, #a363d9);
             display: flex;
             align-items: center;
             justify-content: center;
-            border: 8px solid white;
-            box-shadow: 0 25px 45px rgba(108, 92, 231, 0.35);
         }
 
-        .avatar-large i {
+        .carousel-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .carousel-item i {
             font-size: 140px;
             color: white;
         }
 
-        /* INFORMACIÓN MÁS PEQUEÑA Y ABAJO */
+        .carousel-indicators {
+            position: absolute;
+            bottom: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 8px;
+            z-index: 10;
+        }
+
+        .indicator {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .indicator.active {
+            background: #ffd700;
+            transform: scale(1.2);
+        }
+
+        .carousel-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: white;
+            border: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: #6c5ce7;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .carousel-btn:hover {
+            transform: translateY(-50%) scale(1.1);
+            background: #6c5ce7;
+            color: white;
+        }
+
+        .carousel-btn.prev {
+            left: -15px;
+        }
+
+        .carousel-btn.next {
+            right: -15px;
+        }
+
+        /* MODAL DE IMAGEN AMPLIADA */
+        .image-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 10000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .image-modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            position: relative;
+            max-width: 90vw;
+            max-height: 90vh;
+        }
+
+        .modal-content img {
+            max-width: 100%;
+            max-height: 90vh;
+            border-radius: 20px;
+            box-shadow: 0 30px 60px rgba(0, 0, 0, 0.5);
+        }
+
+        .modal-close {
+            position: absolute;
+            top: -40px;
+            right: 0;
+            background: none;
+            border: none;
+            color: white;
+            font-size: 30px;
+            cursor: pointer;
+            transition: transform 0.2s ease;
+        }
+
+        .modal-close:hover {
+            transform: scale(1.1);
+        }
+
+        .modal-prev,
+        .modal-next {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .modal-prev:hover,
+        .modal-next:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: translateY(-50%) scale(1.1);
+        }
+
+        .modal-prev {
+            left: 20px;
+        }
+
+        .modal-next {
+            right: 20px;
+        }
+
         .profile-info {
             text-align: center;
             margin-top: 15px;
@@ -222,34 +451,81 @@
             font-size: 36px;
         }
 
-        .interests {
-            font-size: 20px;
-            color: #3a4b5e;
-            background: #f0f3fa;
-            padding: 12px 28px;
-            border-radius: 60px;
-            width: fit-content;
-            margin: 15px auto;
-            font-weight: 500;
-        }
-
-        .interests i {
-            color: #6c5ce7;
-            margin-right: 10px;
-        }
-
-        .location {
+        .interests-container {
             display: flex;
-            align-items: center;
+            flex-wrap: wrap;
             justify-content: center;
-            gap: 12px;
-            font-size: 20px;
-            color: #4a5b6e;
+            gap: 10px;
+            margin: 15px auto;
+            max-width: 100%;
+        }
+
+        .interest-tag {
+            background: #f0f3fa;
+            padding: 8px 16px;
+            border-radius: 40px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #2d3a4a;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .interest-tag i {
+            color: #6c5ce7;
+        }
+
+        .interest-tag.common {
+            background: #ffd700;
+            color: #1e2b3a;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        .interest-tag.common i {
+            color: #1e2b3a;
+        }
+
+        .description {
+            font-size: 16px;
+            color: #5a6b7c;
+            background: #f8f9ff;
+            padding: 15px 25px;
+            border-radius: 40px;
+            margin: 15px auto;
+            max-width: 90%;
+            line-height: 1.5;
+            border: 1px solid #e4e4f0;
+        }
+
+        .location-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
             margin: 10px 0 25px;
         }
 
-        .location i {
+        .location-main {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 20px;
+            color: #4a5b6e;
+        }
+
+        .location-main i {
             color: #6c5ce7;
+        }
+
+        .location-detail {
+            font-size: 16px;
+            color: #8a9bb0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
         }
 
         .location-dot {
@@ -259,7 +535,6 @@
             border-radius: 50%;
         }
 
-        /* BOTONES DE ACCIÓN - AHORA CON 5 BOTONES */
         .action-buttons {
             display: flex;
             justify-content: center;
@@ -289,7 +564,6 @@
             transform: scale(1.15);
         }
 
-        /* TOOLTIPS - Aparecen al hacer hover */
         .action-btn::after {
             content: attr(data-tooltip);
             position: absolute;
@@ -342,7 +616,6 @@
             color: white;
         }
 
-        /* NOTIFICACIÓN DE LIKES - CORAZÓN CON NÚMERO */
         .likes-notification {
             display: flex;
             justify-content: center;
@@ -377,7 +650,6 @@
             text-align: center;
         }
 
-        /* FOOTER - 4 BOTONES EN UNA SOLA FILA HORIZONTAL */
         .footer-nav {
             display: flex;
             align-items: center;
@@ -405,7 +677,6 @@
             position: relative;
         }
 
-        /* Tooltips para footer */
         .footer-item::after {
             content: attr(data-tooltip);
             position: absolute;
@@ -449,6 +720,7 @@
         .footer-item.mensaje {
             background: linear-gradient(145deg, #6c5ce7, #8e6ce7);
             color: white;
+            position: relative;
         }
 
         .footer-item.likes {
@@ -466,7 +738,27 @@
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
         }
 
-        /* NOTIFICACIONES ELEGANTES ARRIBA */
+        /* Badge para mensajes no leídos */
+        .mensaje-badge {
+            position: absolute;
+            top: -8px;
+            right: -8px;
+            background: #ff4757;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 22px;
+            height: 22px;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 6px;
+            border: 2px solid white;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+            z-index: 5;
+        }
+
         .notification-container {
             position: fixed;
             top: 20px;
@@ -525,7 +817,41 @@
             }
         }
 
-        /* RESPONSIVE MEJORADO */
+        .no-more-profiles {
+            text-align: center;
+            padding: 40px;
+            color: #5a6b7c;
+        }
+
+        .no-more-profiles i {
+            font-size: 60px;
+            color: #8a9bb0;
+            margin-bottom: 20px;
+        }
+
+        .no-more-profiles p {
+            font-size: 20px;
+            font-weight: 500;
+        }
+
+        .loading-spinner {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 300px;
+        }
+
+        .loading-spinner i {
+            font-size: 50px;
+            color: #6c5ce7;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
         @media (max-width: 900px) {
             .app-container {
                 padding: 20px;
@@ -535,12 +861,16 @@
                 padding: 30px 20px;
             }
 
-            .avatar-large {
+            .avatar-carousel {
+                max-width: 220px;
+            }
+
+            .carousel-container {
                 width: 220px;
                 height: 220px;
             }
 
-            .avatar-large i {
+            .carousel-item i {
                 font-size: 100px;
             }
         }
@@ -566,6 +896,11 @@
             .carisma-num {
                 padding: 3px 10px;
                 font-size: 14px;
+            }
+
+            .monedas-container {
+                justify-content: center;
+                margin-bottom: 20px;
             }
 
             .profile-name {
@@ -603,13 +938,23 @@
         }
 
         @media (max-width: 500px) {
-            .avatar-large {
+            .avatar-carousel {
+                max-width: 180px;
+            }
+
+            .carousel-container {
                 width: 180px;
                 height: 180px;
             }
 
-            .avatar-large i {
+            .carousel-item i {
                 font-size: 80px;
+            }
+
+            .carousel-btn {
+                width: 30px;
+                height: 30px;
+                font-size: 16px;
             }
 
             .profile-name {
@@ -620,9 +965,22 @@
                 font-size: 26px;
             }
 
-            .interests {
+            .interest-tag {
+                font-size: 14px;
+                padding: 6px 12px;
+            }
+
+            .description {
+                font-size: 14px;
+                padding: 12px 20px;
+            }
+
+            .location-main {
                 font-size: 18px;
-                padding: 10px 20px;
+            }
+
+            .location-detail {
+                font-size: 14px;
             }
 
             .action-buttons {
@@ -658,7 +1016,6 @@
             }
         }
 
-        /* Asegurar que Nivel y Boost siempre estén horizontales */
         @media (max-width: 400px) {
             .header-right {
                 flex-direction: row;
@@ -669,14 +1026,102 @@
                 white-space: nowrap;
             }
         }
+
+        .notificaciones-btn {
+            position: relative;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .notificaciones-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .notificaciones-btn i {
+            color: white;
+            font-size: 20px;
+        }
+
+        .notificaciones-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+            border: 2px solid white;
+        }
+
+
+        .notificaciones-lista {
+            max-height: 400px;
+            overflow-y: auto;
+            text-align: left;
+        }
+
+        .notificacion-item {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 15px;
+            border-bottom: 1px solid #f0f0f0;
+            transition: background 0.2s ease;
+        }
+
+        .notificacion-item:hover {
+            background: #f8f9ff;
+        }
+
+        .notificacion-icon {
+            font-size: 24px;
+            min-width: 40px;
+            text-align: center;
+        }
+
+        .notificacion-contenido p {
+            margin: 0;
+            font-size: 14px;
+            color: #1e2b3a;
+        }
+
+        .notificacion-contenido small {
+            font-size: 12px;
+            color: #8a9bb0;
+        }
     </style>
 </head>
 <body>
-    <!-- CONTENEDOR DE NOTIFICACIONES ELEGANTES -->
+    <!-- MODAL DE IMAGEN AMPLIADA -->
+    <div class="image-modal" id="imageModal">
+        <div class="modal-content">
+            <img src="" alt="Imagen ampliada" id="modalImage">
+            <button class="modal-close" id="modalClose"><i class="fas fa-times"></i></button>
+            <button class="modal-prev" id="modalPrev"><i class="fas fa-chevron-left"></i></button>
+            <button class="modal-next" id="modalNext"><i class="fas fa-chevron-right"></i></button>
+        </div>
+    </div>
+
     <div class="notification-container" id="notificationContainer"></div>
 
     <div class="app-container">
-        <!-- HEADER CON DEGRADADO AZUL -->
         <div class="header">
             <div class="logo-container">
                 <i class="fas fa-star star-icon"></i>
@@ -686,9 +1131,13 @@
             <div class="header-right">
                 <div class="carisma-badge">
                     <i class="fas fa-bolt"></i>
-                    Nivel <span class="carisma-num">72</span>
+                    Nivel <span class="carisma-num" id="nivelValor">1</span>
                 </div>
-                
+                <!-- Botón de notificaciones -->
+                <div class="notificaciones-btn" id="btnNotificaciones" data-tooltip="Notificaciones">
+                    <i class="fas fa-bell"></i>
+                    <span class="notificaciones-badge" id="notificacionesCount">0</span>
+                </div>
                 <button class="boost-btn" id="btnBoost">
                     <i class="fas fa-rocket"></i>
                     Boost
@@ -696,74 +1145,35 @@
             </div>
         </div>
 
-        <!-- POPULAR ROW -->
+        <!-- Contenedor de monedas y VIP con datos reales -->
+        <div class="monedas-container">
+            <div class="monedas-badge">
+                <i class="fas fa-coins"></i>
+                <span id="monedasValor">0</span>
+            </div>
+            <div class="vip-btn" id="btnVIP">
+                <i class="fas fa-star"></i>
+                <span>VIP</span>
+            </div>
+        </div>
+
         <div class="popular-row">
             <div class="popular-tag">
                 <i class="fas fa-fire"></i>
-                <span>Popular</span> esta semana
+                <span>Descubre</span> personas
             </div>
             <div class="menu-icon">
                 <i class="fas fa-ellipsis-h"></i>
             </div>
         </div>
 
-        <!-- TARJETA DE PERFIL CENTRADA Y AMPLIADA -->
-        <div class="profile-card">
-            <!-- IMAGEN GRANDE PROTAGONISTA -->
-            <div class="avatar-container">
-                <div class="avatar-large">
-                    <i class="fas fa-user-circle"></i>
-                </div>
-            </div>
-            
-            <!-- INFORMACIÓN MÁS PEQUEÑA ABAJO -->
-            <div class="profile-info">
-                <div class="profile-name">
-                    Laura, <span>21</span>
-                </div>
-                
-                <div class="interests">
-                    <i class="fas fa-futbol"></i>
-                    Me gusta el fútbol y los videojuegos
-                </div>
-                
-                <div class="location">
-                    <i class="fas fa-map-marker-alt"></i>
-                    Bogotá
-                    <span class="location-dot"></span>
-                    2 km
-                </div>
-            </div>
-
-            <!-- BOTONES DE ACCIÓN - AHORA CON 5 BOTONES Y TOOLTIPS -->
-            <div class="action-buttons">
-                <button class="action-btn x" id="btnX" data-tooltip="Descartar">
-                    <i class="fas fa-times"></i>
-                </button>
-                <button class="action-btn like" id="btnLike" data-tooltip="Like">
-                    <i class="fas fa-heart"></i>
-                </button>
-                <button class="action-btn super-like" id="btnSuperLike" data-tooltip="Super Like">
-                    <i class="fas fa-star"></i>
-                </button>
-                <button class="action-btn gift" id="btnGift" data-tooltip="Enviar regalo">
-                    <i class="fas fa-gift"></i>
-                </button>
-                <button class="action-btn message-reaction" id="btnReactionMessage" data-tooltip="Reaccionar con mensaje">
-                    <i class="fas fa-comment"></i>
-                </button>
-            </div>
-
-            <!-- NOTIFICACIÓN DE LIKES - CORAZÓN CON NÚMERO -->
-            <div class="likes-notification">
-                <div class="likes-badge">
-                    <i class="fas fa-heart"></i>
-                    <span class="likes-count" id="likesCount">156</span>
-                </div>
+        <!-- CONTENEDOR DE PERFIL -->
+        <div id="profileContainer">
+            <div class="loading-spinner">
+                <i class="fas fa-spinner fa-spin"></i>
             </div>
         </div>
 
-        <!-- FOOTER CON 4 BOTONES EN UNA SOLA FILA HORIZONTAL Y TOOLTIPS -->
         <div class="footer-nav">
             <div class="footer-item inicio" id="btnInicio" data-tooltip="Ir al inicio">
                 <i class="fas fa-home"></i>
@@ -773,11 +1183,12 @@
             <div class="footer-item mensaje" id="btnMessage" data-tooltip="Ver mensajes">
                 <i class="fas fa-comment-dots"></i>
                 <span>Mensaje</span>
+                <span class="mensaje-badge" id="mensajesNoLeidos" style="display: none;">0</span>
             </div>
             
-            <div class="footer-item likes" id="btnLikesFooter" data-tooltip="Dar like">
+            <div class="footer-item likes" id="btnLikesFooter" data-tooltip="Mis likes">
                 <i class="fas fa-heart"></i>
-                <span id="footerLikesCount">156</span>
+                <span id="footerLikesCount">0</span>
             </div>
             
             <div class="footer-item cuenta" id="btnCuenta" data-tooltip="Mi perfil">
@@ -788,31 +1199,44 @@
     </div>
 
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Elementos de botones
-            const btnLike = document.getElementById('btnLike');
-            const btnSuperLike = document.getElementById('btnSuperLike');
-            const btnX = document.getElementById('btnX');
-            const btnGift = document.getElementById('btnGift');
-            const btnReactionMessage = document.getElementById('btnReactionMessage');
-            const btnMessage = document.getElementById('btnMessage');
+        const supabaseUrl = "https://qfwpikteqipzwpmqbllt.supabase.co";
+        const supabaseKey = "sb_publishable_W75gkuE187xY7qWeQsP6XQ_3IWzPC3A";
+        
+        const { createClient } = supabase;
+        const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+        document.addEventListener('DOMContentLoaded', async function() {
             const btnBoost = document.getElementById('btnBoost');
             const btnInicio = document.getElementById('btnInicio');
-            const btnCuenta = document.getElementById('btnCuenta');
+            const btnMessage = document.getElementById('btnMessage');
             const btnLikesFooter = document.getElementById('btnLikesFooter');
+            const btnCuenta = document.getElementById('btnCuenta');
+            const btnNotificaciones = document.getElementById('btnNotificaciones');
+            const btnVIP = document.getElementById('btnVIP');
+            const nivelValor = document.getElementById('nivelValor');
+            const monedasValor = document.getElementById('monedasValor');
+            const profileContainer = document.getElementById('profileContainer');
+            const mensajesNoLeidos = document.getElementById('mensajesNoLeidos');
             
-            // Elementos de contador de likes
-            const likesCountSpan = document.getElementById('likesCount');
-            const footerLikesSpan = document.getElementById('footerLikesCount');
+            // Elementos del modal de imágenes
+            const imageModal = document.getElementById('imageModal');
+            const modalImage = document.getElementById('modalImage');
+            const modalClose = document.getElementById('modalClose');
+            const modalPrev = document.getElementById('modalPrev');
+            const modalNext = document.getElementById('modalNext');
             
-            let likesCount = 156;
+            let usuarioActual = null;
+            let usuarioId = null;
+            let usuariosVistos = [];
+            let perfilActual = null;
+            let fotosAdicionales = [];
+            let indiceFotoActual = 0;
+            let interesesUsuarioActual = [];
+            let intervalIds = [];
 
-            function updateLikes() {
-                likesCountSpan.textContent = likesCount;
-                footerLikesSpan.textContent = likesCount;
-            }
-
-            // Función para mostrar notificaciones elegantes arriba
+            // ============================================
+            // FUNCIÓN PARA MOSTRAR NOTIFICACIONES
+            // ============================================
             function showNotification(icon, text, bgColor = '#ffffff', iconColor = '#6c5ce7') {
                 const container = document.getElementById('notificationContainer');
                 const notification = document.createElement('div');
@@ -825,68 +1249,1131 @@
                 setTimeout(() => {
                     notification.style.animation = 'fadeOut 0.3s ease';
                     setTimeout(() => {
-                        container.removeChild(notification);
+                        if (container.contains(notification)) {
+                            container.removeChild(notification);
+                        }
                     }, 300);
                 }, 2500);
             }
 
-            // Botón Like
-            if (btnLike) {
-                btnLike.addEventListener('click', function() {
-                    likesCount++;
-                    updateLikes();
+            // ============================================
+            // FUNCIÓN PARA OBTENER MONEDAS DEL USUARIO
+            // ============================================
+            async function obtenerMonedasUsuario() {
+                try {
+                    const { data, error } = await supabaseClient
+                        .from('monedas_usuario')
+                        .select('monedas')
+                        .eq('id_usuario', usuarioId)
+                        .maybeSingle();
+
+                    if (error) throw error;
+
+                    if (data) {
+                        monedasValor.textContent = data.monedas.toLocaleString();
+                        return data.monedas;
+                    } else {
+                        // Si no existe registro, crear uno con 0 monedas
+                        const { error: insertError } = await supabaseClient
+                            .from('monedas_usuario')
+                            .insert([{ id_usuario: usuarioId, monedas: 0 }]);
+
+                        if (insertError) throw insertError;
+                        
+                        monedasValor.textContent = '0';
+                        return 0;
+                    }
+                } catch (error) {
+                    console.error('Error al obtener monedas:', error);
+                    monedasValor.textContent = '0';
+                    return 0;
+                }
+            }
+
+            // ============================================
+            // FUNCIÓN PARA OBTENER MENSAJES NO LEÍDOS (ACTUALIZADA)
+            // ============================================
+            // ============================================
+// FUNCIÓN PARA OBTENER MENSAJES NO LEÍDOS (ACTUALIZADA)
+// ============================================
+            // ============================================
+// FUNCIÓN PARA OBTENER MENSAJES NO LEÍDOS (CORREGIDA)
+// ============================================
+async function obtenerMensajesNoLeidos() {
+    try {
+        console.log('Obteniendo mensajes no leídos para usuario:', usuarioId);
+        
+        // Primero obtener los matches del usuario
+        const { data: matches, error: matchesError } = await supabaseClient
+            .from('matches')
+            .select('id_match')
+            .or(`usuario1.eq.${usuarioId},usuario2.eq.${usuarioId}`);
+
+        if (matchesError) {
+            console.error('Error al obtener matches:', matchesError);
+            throw matchesError;
+        }
+
+        console.log('Matches encontrados:', matches);
+
+        if (!matches || matches.length === 0) {
+            console.log('No hay matches');
+            mensajesNoLeidos.style.display = 'none';
+            return 0;
+        }
+
+        const matchIds = matches.map(m => m.id_match);
+        console.log('Match IDs:', matchIds);
+
+        // Obtener los chats relacionados con esos matches
+        const { data: chats, error: chatsError } = await supabaseClient
+            .from('chats')
+            .select('id_chat, id_match')
+            .in('id_match', matchIds);
+
+        if (chatsError) {
+            console.error('Error al obtener chats:', chatsError);
+            throw chatsError;
+        }
+
+        console.log('Chats encontrados:', chats);
+
+        if (!chats || chats.length === 0) {
+            console.log('No hay chats');
+            mensajesNoLeidos.style.display = 'none';
+            return 0;
+        }
+
+        const chatIds = chats.map(chat => chat.id_chat);
+        console.log('Chat IDs:', chatIds);
+
+        // Calcular total de mensajes no leídos sumando de cada chat
+        let totalNoLeidos = 0;
+        
+        for (const chatId of chatIds) {
+            console.log('Buscando mensajes no leídos para chat:', chatId);
+            
+            const { count, error: countError } = await supabaseClient
+                .from('mensajes')
+                .select('*', { count: 'exact', head: true })
+                .eq('id_chat', chatId)
+                .eq('visto', false)
+                .neq('id_usuario', usuarioId);
+
+            if (countError) {
+                console.error('Error al contar mensajes no leídos para chat', chatId, ':', countError);
+                continue;
+            }
+
+            console.log('Mensajes no leídos en chat', chatId, ':', count);
+            totalNoLeidos += count || 0;
+        }
+
+        console.log('Total mensajes no leídos:', totalNoLeidos);
+
+        // Actualizar el badge
+        if (totalNoLeidos > 0) {
+            mensajesNoLeidos.textContent = totalNoLeidos > 99 ? '99+' : totalNoLeidos;
+            mensajesNoLeidos.style.display = 'flex';
+        } else {
+            mensajesNoLeidos.style.display = 'none';
+        }
+
+        return totalNoLeidos;
+    } catch (error) {
+        console.error('Error al obtener mensajes no leídos:', error);
+        mensajesNoLeidos.style.display = 'none';
+        return 0;
+    }
+}        // ============================================
+            // FUNCIÓN PARA OBTENER MATCHES CON INFORMACIÓN
+            // ============================================
+          
+
+                  // ============================================
+// FUNCIÓN PARA OBTENER MATCHES CON INFORMACIÓN
+// ============================================
+// ============================================
+// FUNCIÓN PARA OBTENER MATCHES CON INFORMACIÓN (CORREGIDA)
+// ============================================
+async function obtenerMatchesConInfo() {
+    try {
+        console.log('Obteniendo matches con info para usuario:', usuarioId);
+        
+        // Obtener matches donde el usuario participa
+        const { data: matches, error: matchesError } = await supabaseClient
+            .from('matches')
+            .select('*')
+            .or(`usuario1.eq.${usuarioId},usuario2.eq.${usuarioId}`)
+            .order('fecha', { ascending: false });
+
+        if (matchesError) {
+            console.error('Error al obtener matches:', matchesError);
+            throw matchesError;
+        }
+
+        console.log('Matches encontrados:', matches);
+
+        if (!matches || matches.length === 0) {
+            document.getElementById('footerLikesCount').textContent = '0';
+            return [];
+        }
+
+        // Para cada match, obtener información del otro usuario y mensajes
+        const matchesConInfo = await Promise.all(
+            matches.map(async (match) => {
+                const otroUsuarioId = match.usuario1 === usuarioId ? match.usuario2 : match.usuario1;
+                console.log('Procesando match:', match.id_match, 'otro usuario:', otroUsuarioId);
+                
+                // Obtener información del otro usuario
+                const { data: usuario, error: usuarioError } = await supabaseClient
+                    .from('usuarios')
+                    .select(`
+                        id_usuario,
+                        nombre,
+                        edad,
+                        foto_url,
+                        pais: id_pais (nombre),
+                        ciudad: id_ciudad (nombre)
+                    `)
+                    .eq('id_usuario', otroUsuarioId)
+                    .single();
+
+                if (usuarioError) {
+                    console.error('Error al obtener usuario:', usuarioError);
+                    return null;
+                }
+
+                // Obtener fotos adicionales
+                const { data: fotos, error: fotosError } = await supabaseClient
+                    .from('fotos_usuario')
+                    .select('url_foto, principal')
+                    .eq('id_usuario', otroUsuarioId);
+
+                if (fotosError) {
+                    console.error('Error al obtener fotos:', fotosError);
+                }
+
+                const fotoPrincipal = fotos?.find(f => f.principal === true)?.url_foto;
+
+                // Obtener el chat asociado a este match
+                const { data: chat, error: chatError } = await supabaseClient
+                    .from('chats')
+                    .select('id_chat')
+                    .eq('id_match', match.id_match)
+                    .maybeSingle();
+
+                if (chatError) {
+                    console.error('Error al obtener chat:', chatError);
+                }
+
+                console.log('Chat encontrado para match', match.id_match, ':', chat);
+
+                let ultimoMensaje = null;
+                let noLeidos = 0;
+
+                if (chat) {
+                    // Obtener último mensaje del chat
+                    const { data: mensajes, error: mensajesError } = await supabaseClient
+                        .from('mensajes')
+                        .select('*')
+                        .eq('id_chat', chat.id_chat)
+                        .order('fecha', { ascending: false })
+                        .limit(1);
+
+                    if (mensajesError) {
+                        console.error('Error al obtener mensajes:', mensajesError);
+                    }
+
+                    // Obtener mensajes no leídos
+                    const { count, error: countError } = await supabaseClient
+                        .from('mensajes')
+                        .select('*', { count: 'exact', head: true })
+                        .eq('id_chat', chat.id_chat)
+                        .eq('visto', false)
+                        .neq('id_usuario', usuarioId);
+
+                    if (countError) console.error('Error al contar no leídos:', countError);
+
+                    ultimoMensaje = mensajes && mensajes.length > 0 ? mensajes[0] : null;
+                    noLeidos = count || 0;
                     
-                    this.style.transform = 'scale(1.2)';
-                    setTimeout(() => {
-                        this.style.transform = 'scale(1)';
-                    }, 200);
+                    console.log('Mensajes para chat', chat.id_chat, ':', { ultimoMensaje, noLeidos });
+                }
+                
+                return {
+                    match_id: match.id_match,
+                    usuario: {
+                        ...usuario,
+                        foto_principal: fotoPrincipal || usuario.foto_url
+                    },
+                    ultimo_mensaje: ultimoMensaje,
+                    no_leidos: noLeidos,
+                    fecha: match.fecha
+                };
+            })
+        );
 
-                    showNotification('fas fa-heart', '¡Like enviado! 💙', '#4a90e2', 'white');
-                });
+        // Filtrar nulos y ordenar por fecha del último mensaje o match
+        const matchesFiltrados = matchesConInfo.filter(m => m !== null)
+            .sort((a, b) => {
+                const fechaA = a.ultimo_mensaje ? new Date(a.ultimo_mensaje.fecha) : new Date(a.fecha);
+                const fechaB = b.ultimo_mensaje ? new Date(b.ultimo_mensaje.fecha) : new Date(b.fecha);
+                return fechaB - fechaA;
+            });
+        
+        console.log('Matches con info procesados:', matchesFiltrados);
+        
+        // Actualizar contador de matches en el footer
+        document.getElementById('footerLikesCount').textContent = matchesFiltrados.length;
+        
+        // Calcular total de mensajes no leídos
+        const totalNoLeidosCount = matchesFiltrados.reduce((acc, m) => acc + m.no_leidos, 0);
+        console.log('Total mensajes no leídos en matches:', totalNoLeidosCount);
+        
+        if (totalNoLeidosCount > 0) {
+            mensajesNoLeidos.textContent = totalNoLeidosCount > 99 ? '99+' : totalNoLeidosCount;
+            mensajesNoLeidos.style.display = 'flex';
+        } else {
+            mensajesNoLeidos.style.display = 'none';
+        }
+        
+        return matchesFiltrados;
+    } catch (error) {
+        console.error('Error al obtener matches:', error);
+        document.getElementById('footerLikesCount').textContent = '0';
+        return [];
+    }
+}
+            // ============================================
+            // FUNCIÓN PARA CALCULAR DISTANCIA ENTRE 2 PUNTOS
+            // ============================================
+            function calcularDistancia(lat1, lon1, lat2, lon2) {
+                if (!lat1 || !lon1 || !lat2 || !lon2) return null;
+                
+                const R = 6371;
+                const dLat = (lat2 - lat1) * Math.PI / 180;
+                const dLon = (lon2 - lon1) * Math.PI / 180;
+                const a = 
+                    Math.sin(dLat/2) * Math.sin(dLat/2) +
+                    Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * 
+                    Math.sin(dLon/2) * Math.sin(dLon/2);
+                const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+                const distancia = R * c;
+                return Math.round(distancia * 10) / 10;
             }
 
-            // Botón Super Like
-            if (btnSuperLike) {
-                btnSuperLike.addEventListener('click', function() {
-                    likesCount += 2;
-                    updateLikes();
+            // ============================================
+            // FUNCIÓN PARA OBTENER USUARIO ACTUAL
+            // ============================================
+            async function obtenerUsuarioActual() {
+                try {
+                    const usuarioGuardado = sessionStorage.getItem('usuario_actual');
                     
-                    this.style.transform = 'scale(1.2)';
-                    setTimeout(() => {
-                        this.style.transform = 'scale(1)';
-                    }, 200);
+                    if (!usuarioGuardado) {
+                        window.location.href = 'login.html';
+                        return null;
+                    }
 
-                    showNotification('fas fa-star', '¡Super Like! ⭐✨', '#2ecc71', 'white');
+                    usuarioActual = JSON.parse(usuarioGuardado);
+                    usuarioId = usuarioActual.id;
+
+                    const { data: usuario, error } = await supabaseClient
+                        .from('usuarios')
+                        .select(`
+                            *,
+                            pais: id_pais (nombre),
+                            ciudad: id_ciudad (nombre)
+                        `)
+                        .eq('id_usuario', usuarioId)
+                        .single();
+
+                    if (error) throw error;
+
+                    nivelValor.textContent = usuario.nivel || 1;
+                    
+                    // Guardar intereses del usuario actual
+                    if (usuario.intereses) {
+                        interesesUsuarioActual = usuario.intereses.split(',').map(i => i.trim());
+                    }
+
+                    return usuario;
+                } catch (error) {
+                    console.error('Error al obtener usuario:', error);
+                    return null;
+                }
+            }
+
+            // ============================================
+            // FUNCIÓN PARA OBTENER FOTOS ADICIONALES
+            // ============================================
+            async function obtenerFotosUsuario(usuarioId) {
+                try {
+                    const { data: fotos, error } = await supabaseClient
+                        .from('fotos_usuario')
+                        .select('*')
+                        .eq('id_usuario', usuarioId)
+                        .order('id_foto', { ascending: true });
+
+                    if (error) throw error;
+                    
+                    const principal = fotos?.find(f => f.principal === true);
+                    const adicionales = fotos?.filter(f => f.principal !== true) || [];
+                    
+                    return { principal, adicionales };
+                } catch (error) {
+                    console.error('Error al obtener fotos:', error);
+                    return { principal: null, adicionales: [] };
+                }
+            }
+
+            // ============================================
+            // FUNCIÓN PARA OBTENER TOTAL DE LIKES
+            // ============================================
+            async function obtenerTotalLikes(usuarioId) {
+                try {
+                    const { count, error } = await supabaseClient
+                        .from('likes')
+                        .select('*', { count: 'exact', head: true })
+                        .eq('id_usuario_destino', usuarioId);
+
+                    if (error) throw error;
+                    return count || 0;
+                } catch (error) {
+                    console.error('Error al obtener likes:', error);
+                    return 0;
+                }
+            }
+
+            // ============================================
+            // FUNCIÓN PARA OBTENER SIGUIENTE PERFIL
+            // ============================================
+            async function obtenerSiguientePerfil() {
+                try {
+                    // Obtener IDs de usuarios ya vistos (like, superlike o descartados)
+                    
+                    // 1. Obtener usuarios a los que ya diste like
+                    const { data: likesDados } = await supabaseClient
+                        .from('likes')
+                        .select('id_usuario_destino')
+                        .eq('id_usuario_origen', usuarioId);
+                        
+                    // 2. Obtener usuarios a los que ya diste super like
+                    const { data: superLikesDados } = await supabaseClient
+                        .from('superlikes')
+                        .select('id_usuario_destino')
+                        .eq('id_usuario_origen', usuarioId);
+                        
+                    // 3. Obtener usuarios con los que ya hay match (no mostrar)
+                    const { data: matches } = await supabaseClient
+                        .from('matches')
+                        .select('*')
+                        .or(`usuario1.eq.${usuarioId},usuario2.eq.${usuarioId}`);
+                    
+                    const usuariosConMatch = new Set();
+                    matches?.forEach(match => {
+                        if (match.usuario1 === usuarioId) {
+                            usuariosConMatch.add(match.usuario2);
+                        } else {
+                            usuariosConMatch.add(match.usuario1);
+                        }
+                    });
+                        
+                    // 4. Combinar todos los IDs excluidos
+                    const idsExcluidos = new Set();
+                    
+                    // Agregar IDs de likes dados
+                    likesDados?.forEach(like => idsExcluidos.add(like.id_usuario_destino));
+                    
+                    // Agregar IDs de super likes dados
+                    superLikesDados?.forEach(superlike => idsExcluidos.add(superlike.id_usuario_destino));
+                    
+                    // Agregar IDs de matches
+                    usuariosConMatch.forEach(id => idsExcluidos.add(id));
+                    
+                    // Agregar IDs de descartados (de la sesión actual)
+                    usuariosVistos.forEach(id => idsExcluidos.add(id));
+                    
+                    // Convertir Set a array para la consulta
+                    const idsExcluidosArray = Array.from(idsExcluidos);
+                    
+                    console.log('IDs excluidos:', idsExcluidosArray);
+                    
+                    // Construir consulta
+                    let query = supabaseClient
+                        .from('usuarios')
+                        .select(`
+                            *,
+                            pais: id_pais (nombre),
+                            ciudad: id_ciudad (nombre)
+                        `)
+                        .neq('id_usuario', usuarioId); // No mostrar al usuario actual
+                    
+                    // Excluir IDs si hay alguno
+                    if (idsExcluidosArray.length > 0) {
+                        query = query.not('id_usuario', 'in', `(${idsExcluidosArray.join(',')})`);
+                    }
+                    
+                    // Limitar a 1 resultado
+                    const { data: usuarios, error } = await query.limit(1);
+
+                    if (error) throw error;
+
+                    if (!usuarios || usuarios.length === 0) {
+                        return null;
+                    }
+
+                    const perfil = usuarios[0];
+                    
+                    const { principal, adicionales } = await obtenerFotosUsuario(perfil.id_usuario);
+                    
+                    // Obtener total de likes del perfil
+                    const totalLikes = await obtenerTotalLikes(perfil.id_usuario);
+                    
+                    return {
+                        ...perfil,
+                        foto_principal: principal?.url_foto || perfil.foto_url,
+                        fotos_adicionales: adicionales,
+                        total_likes: totalLikes
+                    };
+                } catch (error) {
+                    console.error('Error al obtener siguiente perfil:', error);
+                    return null;
+                }
+            }
+
+            // ============================================
+            // FUNCIÓN PARA CREAR NOTIFICACIÓN
+            // ============================================
+            async function crearNotificacion(idUsuario, idOrigen, tipo, mensaje) {
+                try {
+                    const { error } = await supabaseClient
+                        .from('notificaciones')
+                        .insert([{
+                            id_usuario: idUsuario,
+                            tipo: tipo,
+                            id_usuario_origen: idOrigen,
+                            mensaje: mensaje,
+                            leida: false,
+                            fecha: new Date().toISOString()
+                        }]);
+
+                    if (error) throw error;
+                    
+                    // Actualizar contador de notificaciones si estamos en la misma página
+                    if (idUsuario === usuarioId) {
+                        await cargarNotificaciones();
+                    }
+                    
+                    return true;
+                } catch (error) {
+                    console.error('Error al crear notificación:', error);
+                    return false;
+                }
+            }
+
+            // ============================================
+            // FUNCIÓN PARA VERIFICAR Y CREAR MATCH
+            // ============================================
+            // ============================================
+// FUNCIÓN PARA VERIFICAR Y CREAR MATCH (CORREGIDA)
+// ============================================
+async function verificarYCrearMatch(idDestino, tipo) {
+    try {
+        // Verificar si el otro usuario ya nos había dado like o super like
+        const { data: likeRecibido } = await supabaseClient
+            .from('likes')
+            .select('*')
+            .eq('id_usuario_origen', idDestino)
+            .eq('id_usuario_destino', usuarioId)
+            .maybeSingle();
+
+        const { data: superLikeRecibido } = await supabaseClient
+            .from('superlikes')
+            .select('*')
+            .eq('id_usuario_origen', idDestino)
+            .eq('id_usuario_destino', usuarioId)
+            .maybeSingle();
+
+        // Si hay reciprocidad (el otro ya nos había dado like o super like)
+        if (likeRecibido || superLikeRecibido) {
+            // Verificar si ya existe un match entre estos usuarios
+            const { data: matchExistente } = await supabaseClient
+                .from('matches')
+                .select('*')
+                .or(`and(usuario1.eq.${usuarioId},usuario2.eq.${idDestino}),and(usuario1.eq.${idDestino},usuario2.eq.${usuarioId})`)
+                .maybeSingle();
+
+            if (!matchExistente) {
+                // Crear el match (siempre guardar en orden para consistencia)
+                const usuarioMenor = Math.min(usuarioId, idDestino);
+                const usuarioMayor = Math.max(usuarioId, idDestino);
+                
+                const { data: nuevoMatch, error: matchError } = await supabaseClient
+                    .from('matches')
+                    .insert([{
+                        usuario1: usuarioMenor,
+                        usuario2: usuarioMayor,
+                        fecha: new Date().toISOString()
+                    }])
+                    .select()
+                    .single();
+
+                if (matchError) throw matchError;
+
+                // Crear chat para el match - IMPORTANTE: Guardar el id_match
+                const { data: nuevoChat, error: chatError } = await supabaseClient
+                    .from('chats')
+                    .insert([{
+                        id_match: nuevoMatch.id_match,
+                        fecha_creacion: new Date().toISOString()
+                    }])
+                    .select()
+                    .single();
+
+                if (chatError) throw chatError;
+
+                console.log('Match y chat creados:', { match: nuevoMatch, chat: nuevoChat });
+
+                // Obtener información del otro usuario para la notificación
+                const { data: otroUsuario } = await supabaseClient
+                    .from('usuarios')
+                    .select('nombre')
+                    .eq('id_usuario', idDestino)
+                    .single();
+
+                // Crear notificación para el usuario actual
+                await crearNotificacion(
+                    usuarioId,
+                    idDestino,
+                    'match',
+                    `💞 ¡Es un match con ${otroUsuario?.nombre || 'usuario'}! Ahora pueden chatear`
+                );
+
+                // Crear notificación para el otro usuario
+                await crearNotificacion(
+                    idDestino,
+                    usuarioId,
+                    'match',
+                    `💞 ¡Es un match con ${usuarioActual.nombre}! Ahora pueden chatear`
+                );
+
+                // Mostrar notificación especial de match
+                showNotification('fas fa-heart', `💞 ¡Es un match con ${otroUsuario?.nombre || 'usuario'}!`, '#ff6b6b', 'white');
+                
+                // Actualizar contadores
+                await obtenerMatchesConInfo();
+                await obtenerMensajesNoLeidos();
+                
+                return true;
+            }
+        } else {
+            // No hay match aún, pero podemos notificar que recibió un like/superlike
+            const { data: otroUsuario } = await supabaseClient
+                .from('usuarios')
+                .select('nombre')
+                .eq('id_usuario', idDestino)
+                .single();
+
+            // Crear notificación para el otro usuario de que recibió un like/superlike
+            const mensaje = tipo === 'like' 
+                ? `❤️ ${usuarioActual.nombre} te ha dado un like`
+                : `⭐ ${usuarioActual.nombre} te ha dado un super like`;
+
+            await crearNotificacion(
+                idDestino,
+                usuarioId,
+                tipo,
+                mensaje
+            );
+        }
+        return false;
+    } catch (error) {
+        console.error('Error al verificar/crear match:', error);
+        return false;
+    }
+}
+
+            // ============================================
+            // FUNCIÓN PARA ENVIAR LIKE
+            // ============================================
+            async function enviarLike(idDestino) {
+                try {
+                    const { error } = await supabaseClient
+                        .from('likes')
+                        .insert([{
+                            id_usuario_origen: usuarioId,
+                            id_usuario_destino: idDestino
+                        }]);
+
+                    if (error) {
+                        if (error.code === '23505') {
+                            return { success: false, message: 'Ya le diste like a esta persona' };
+                        }
+                        throw error;
+                    }
+
+                    // Verificar si hay match
+                    const huboMatch = await verificarYCrearMatch(idDestino, 'like');
+                    
+                    return { success: true, match: huboMatch };
+                } catch (error) {
+                    console.error('Error al enviar like:', error);
+                    return { success: false, message: 'Error al enviar like' };
+                }
+            }
+
+            // ============================================
+            // FUNCIÓN PARA ENVIAR SUPER LIKE
+            // ============================================
+            async function enviarSuperLike(idDestino) {
+                try {
+                    const { error } = await supabaseClient
+                        .from('superlikes')
+                        .insert([{
+                            id_usuario_origen: usuarioId,
+                            id_usuario_destino: idDestino
+                        }]);
+
+                    if (error) {
+                        if (error.code === '23505') {
+                            return { success: false, message: 'Ya le diste super like a esta persona' };
+                        }
+                        throw error;
+                    }
+
+                    // Verificar si hay match
+                    const huboMatch = await verificarYCrearMatch(idDestino, 'superlike');
+                    
+                    return { success: true, match: huboMatch };
+                } catch (error) {
+                    console.error('Error al enviar super like:', error);
+                    return { success: false, message: 'Error al enviar super like' };
+                }
+            }
+
+            // ============================================
+            // FUNCIÓN PARA ABRIR MODAL DE IMAGEN
+            // ============================================
+            function abrirModalImagen(indice) {
+                indiceFotoActual = indice;
+                modalImage.src = fotosAdicionales[indiceFotoActual];
+                imageModal.classList.add('active');
+            }
+
+            // ============================================
+            // FUNCIÓN PARA CERRAR MODAL
+            // ============================================
+            function cerrarModalImagen() {
+                imageModal.classList.remove('active');
+            }
+
+            // ============================================
+            // FUNCIÓN PARA NAVEGAR EN MODAL
+            // ============================================
+            function modalAnterior() {
+                indiceFotoActual = (indiceFotoActual - 1 + fotosAdicionales.length) % fotosAdicionales.length;
+                modalImage.src = fotosAdicionales[indiceFotoActual];
+            }
+
+            function modalSiguiente() {
+                indiceFotoActual = (indiceFotoActual + 1) % fotosAdicionales.length;
+                modalImage.src = fotosAdicionales[indiceFotoActual];
+            }
+
+            // ============================================
+            // FUNCIÓN PARA RENDERIZAR PERFIL
+            // ============================================
+            function renderizarPerfil(perfil, usuarioActual) {
+                if (!perfil) {
+                    profileContainer.innerHTML = `
+                        <div class="no-more-profiles">
+                            <i class="fas fa-users-slash"></i>
+                            <p>No hay más perfiles para mostrar</p>
+                            <p style="font-size: 16px; margin-top: 10px;">¡Vuelve más tarde!</p>
+                        </div>
+                    `;
+                    return;
+                }
+
+                perfilActual = perfil;
+                indiceFotoActual = 0;
+                
+                // Crear array de fotos
+                fotosAdicionales = [];
+                if (perfil.foto_principal) fotosAdicionales.push(perfil.foto_principal);
+                if (perfil.fotos_adicionales) {
+                    fotosAdicionales.push(...perfil.fotos_adicionales.map(f => f.url_foto));
+                }
+
+                // Procesar intereses del perfil
+                const interesesPerfil = perfil.intereses ? perfil.intereses.split(',').map(i => i.trim()) : [];
+                
+                // Encontrar intereses en común
+                const interesesComunes = interesesUsuarioActual.filter(i => 
+                    interesesPerfil.some(p => p.toLowerCase() === i.toLowerCase())
+                );
+
+                // Determinar ubicación a mostrar
+                const pais = perfil.pais?.nombre || 'País no especificado';
+                const ciudad = perfil.ciudad?.nombre || '';
+                
+                let ubicacionPrincipal = '';
+                let ubicacionDetalle = '';
+                
+                if (perfil.id_pais === usuarioActual.id_pais) {
+                    // Mismo país, mostrar ciudad + país
+                    ubicacionPrincipal = ciudad ? `${ciudad}, ${pais}` : pais;
+                    
+                    // Calcular distancia
+                    const distancia = calcularDistancia(
+                        usuarioActual.latitud, usuarioActual.longitud,
+                        perfil.latitud, perfil.longitud
+                    );
+                    
+                    if (distancia !== null) {
+                        ubicacionDetalle = `A ${distancia} km de ti`;
+                    }
+                } else {
+                    // Diferente país, mostrar país
+                    ubicacionPrincipal = pais;
+                    if (ciudad) {
+                        ubicacionDetalle = ciudad;
+                    }
+                }
+
+                const html = `
+                    <div class="profile-card">
+                        <div class="avatar-carousel" id="carousel">
+                            <div class="carousel-container" id="carouselContainer">
+                                <div class="carousel-slide" id="carouselSlide" style="transform: translateX(0px);">
+                                    ${fotosAdicionales.map((foto, index) => `
+                                        <div class="carousel-item">
+                                            ${foto ? 
+                                                `<img src="${foto}" alt="Foto ${index + 1}" data-index="${index}">` : 
+                                                `<i class="fas fa-user-circle"></i>`
+                                            }
+                                        </div>
+                                    `).join('')}
+                                </div>
+                                ${fotosAdicionales.length > 1 ? `
+                                <div class="carousel-indicators" id="carouselIndicators">
+                                    ${fotosAdicionales.map((_, index) => `
+                                        <div class="indicator ${index === 0 ? 'active' : ''}" data-index="${index}"></div>
+                                    `).join('')}
+                                </div>
+                                <button class="carousel-btn prev" id="carouselPrev"><i class="fas fa-chevron-left"></i></button>
+                                <button class="carousel-btn next" id="carouselNext"><i class="fas fa-chevron-right"></i></button>
+                                ` : ''}
+                            </div>
+                        </div>
+                        
+                        <div class="profile-info">
+                            <div class="profile-name">
+                                ${perfil.nombre || 'Usuario'}, <span>${perfil.edad || '?'}</span>
+                            </div>
+                            
+                            <div class="interests-container">
+                                ${interesesPerfil.map(interes => {
+                                    const esComun = interesesComunes.some(i => i.toLowerCase() === interes.toLowerCase());
+                                    return `
+                                        <span class="interest-tag ${esComun ? 'common' : ''}">
+                                            <i class="fas fa-${esComun ? 'star' : 'heart'}"></i>
+                                            ${interes}
+                                        </span>
+                                    `;
+                                }).join('')}
+                            </div>
+                            
+                            ${perfil.sobre_mi ? `
+                            <div class="description">
+                                <i class="fas fa-quote-left" style="color: #8a9bb0; margin-right: 8px;"></i>
+                                ${perfil.sobre_mi}
+                            </div>
+                            ` : ''}
+                            
+                            <div class="location-container">
+                                <div class="location-main">
+                                    <i class="fas fa-map-marker-alt"></i>
+                                    ${ubicacionPrincipal}
+                                </div>
+                                ${ubicacionDetalle ? `
+                                <div class="location-detail">
+                                    <i class="fas fa-location-dot"></i>
+                                    ${ubicacionDetalle}
+                                </div>
+                                ` : ''}
+                            </div>
+                        </div>
+
+                        <div class="action-buttons">
+                            <button class="action-btn x" id="btnX" data-tooltip="Descartar">
+                                <i class="fas fa-times"></i>
+                            </button>
+                            <button class="action-btn like" id="btnLike" data-tooltip="Like">
+                                <i class="fas fa-heart"></i>
+                            </button>
+                            <button class="action-btn super-like" id="btnSuperLike" data-tooltip="Super Like">
+                                <i class="fas fa-star"></i>
+                            </button>
+                            <button class="action-btn gift" id="btnGift" data-tooltip="Enviar regalo">
+                                <i class="fas fa-gift"></i>
+                            </button>
+                            <button class="action-btn message-reaction" id="btnReactionMessage" data-tooltip="Reaccionar con mensaje">
+                                <i class="fas fa-comment"></i>
+                            </button>
+                        </div>
+
+                        <div class="likes-notification">
+                            <div class="likes-badge">
+                                <i class="fas fa-heart"></i>
+                                <span class="likes-count" id="likesCount">${perfil.total_likes || 0}</span>
+                            </div>
+                        </div>
+                    </div>
+                `;
+
+                profileContainer.innerHTML = html;
+
+                // Configurar eventos del carrusel
+                if (fotosAdicionales.length > 0) {
+                    const slide = document.getElementById('carouselSlide');
+                    const prevBtn = document.getElementById('carouselPrev');
+                    const nextBtn = document.getElementById('carouselNext');
+                    const indicators = document.querySelectorAll('.indicator');
+                    const carouselContainer = document.getElementById('carouselContainer');
+
+                    function actualizarCarrusel() {
+                        if (slide) {
+                            slide.style.transform = `translateX(-${indiceFotoActual * 100}%)`;
+                        }
+                        indicators.forEach((ind, idx) => {
+                            if (idx === indiceFotoActual) {
+                                ind.classList.add('active');
+                            } else {
+                                ind.classList.remove('active');
+                            }
+                        });
+                    }
+
+                    // Click en el carrusel para abrir modal
+                    if (carouselContainer) {
+                        carouselContainer.addEventListener('click', () => {
+                            abrirModalImagen(indiceFotoActual);
+                        });
+                    }
+
+                    if (prevBtn) {
+                        prevBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            indiceFotoActual = (indiceFotoActual - 1 + fotosAdicionales.length) % fotosAdicionales.length;
+                            actualizarCarrusel();
+                        });
+                    }
+
+                    if (nextBtn) {
+                        nextBtn.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            indiceFotoActual = (indiceFotoActual + 1) % fotosAdicionales.length;
+                            actualizarCarrusel();
+                        });
+                    }
+
+                    indicators.forEach(ind => {
+                        ind.addEventListener('click', (e) => {
+                            e.stopPropagation();
+                            const index = parseInt(ind.dataset.index);
+                            indiceFotoActual = index;
+                            actualizarCarrusel();
+                        });
+                    });
+                }
+
+               // Botón Like
+document.getElementById('btnLike').addEventListener('click', async () => {
+    const result = await enviarLike(perfil.id_usuario);
+    if (result.success) {
+        if (!result.match) {
+            // Solo mostrar notificación normal si no hubo match
+            // (si hubo match, ya se mostró la notificación especial)
+            showNotification('fas fa-heart', '❤️ Like enviado', '#4a90e2', 'white');
+        }
+        usuariosVistos.push(perfil.id_usuario);
+        
+        const nuevoTotal = await obtenerTotalLikes(perfil.id_usuario);
+        document.getElementById('likesCount').textContent = nuevoTotal;
+        
+        const siguientePerfil = await obtenerSiguientePerfil();
+        renderizarPerfil(siguientePerfil, usuarioActual);
+    } else {
+        showNotification('fas fa-exclamation-circle', result.message, '#ff6b6b', 'white');
+    }
+});
+
+// Botón Super Like
+document.getElementById('btnSuperLike').addEventListener('click', async () => {
+    const result = await enviarSuperLike(perfil.id_usuario);
+    if (result.success) {
+        if (!result.match) {
+            showNotification('fas fa-star', '⭐ Super Like enviado', '#2ecc71', 'white');
+        }
+        usuariosVistos.push(perfil.id_usuario);
+        
+        const siguientePerfil = await obtenerSiguientePerfil();
+        renderizarPerfil(siguientePerfil, usuarioActual);
+    } else {
+        showNotification('fas fa-exclamation-circle', result.message, '#ff6b6b', 'white');
+    }
+});
+                document.getElementById('btnX').addEventListener('click', async () => {
+                    showNotification('fas fa-times', '⏭️ Siguiente perfil', '#2d3a4a', 'white');
+                    usuariosVistos.push(perfil.id_usuario);
+                    const siguientePerfil = await obtenerSiguientePerfil();
+                    renderizarPerfil(siguientePerfil, usuarioActual);
+                });
+
+                document.getElementById('btnGift').addEventListener('click', () => {
+                    if (typeof mostrarModalRegalos === 'function') {
+                        mostrarModalRegalos();
+                    } else {
+                        showNotification('fas fa-gift', '🎁 Tienda de regalos próximamente', '#ff6b6b', 'white');
+                    }
+                });
+
+                document.getElementById('btnReactionMessage').addEventListener('click', () => {
+                    showNotification('fas fa-comment', '💬 Función próximamente', '#f39c12', 'white');
                 });
             }
 
-            // Botón X
-            if (btnX) {
-                btnX.addEventListener('click', function() {
-                    this.style.transform = 'scale(1.2)';
-                    setTimeout(() => {
-                        this.style.transform = 'scale(1)';
-                    }, 200);
-                    showNotification('fas fa-times', 'Descartado', '#2d3a4a', 'white');
+            // ============================================
+            // FUNCIÓN PARA CARGAR NOTIFICACIONES NO LEÍDAS
+            // ============================================
+            async function cargarNotificaciones() {
+                try {
+                    const { count, error } = await supabaseClient
+                        .from('notificaciones')
+                        .select('*', { count: 'exact', head: true })
+                        .eq('id_usuario', usuarioId)
+                        .eq('leida', false);
+
+                    if (error) throw error;
+                    
+                    const badge = document.getElementById('notificacionesCount');
+                    if (badge) {
+                        badge.textContent = count || 0;
+                        badge.style.display = count > 0 ? 'flex' : 'none';
+                    }
+                    
+                    return count || 0;
+                } catch (error) {
+                    console.error('Error al cargar notificaciones:', error);
+                    return 0;
+                }
+            }
+
+            // ============================================
+            // FUNCIÓN PARA MOSTRAR NOTIFICACIONES
+            // ============================================
+            async function mostrarNotificaciones() {
+                try {
+                    const { data: notificaciones, error } = await supabaseClient
+                        .from('notificaciones')
+                        .select(`
+                            *,
+                            usuario_origen: id_usuario_origen (nombre, foto_url)
+                        `)
+                        .eq('id_usuario', usuarioId)
+                        .order('fecha', { ascending: false })
+                        .limit(20);
+
+                    if (error) throw error;
+
+                    // Marcar como leídas
+                    const idsNoLeidas = notificaciones.filter(n => !n.leida).map(n => n.id_notificacion);
+                    if (idsNoLeidas.length > 0) {
+                        await supabaseClient
+                            .from('notificaciones')
+                            .update({ leida: true })
+                            .in('id_notificacion', idsNoLeidas);
+                    }
+
+                    // Actualizar contador
+                    await cargarNotificaciones();
+
+                    // Mostrar modal de notificaciones
+                    let html = '';
+                    if (notificaciones.length === 0) {
+                        html = '<p style="text-align: center; padding: 20px;">No tienes notificaciones</p>';
+                    } else {
+                        html = notificaciones.map(notif => `
+                            <div class="notificacion-item" data-id="${notif.id_notificacion}">
+                                <div class="notificacion-icon">
+                                    ${notif.tipo === 'match' ? '💞' : notif.tipo === 'superlike' ? '⭐' : '❤️'}
+                                </div>
+                                <div class="notificacion-contenido">
+                                    <p>${notif.mensaje}</p>
+                                    <small>${new Date(notif.fecha).toLocaleString()}</small>
+                                </div>
+                            </div>
+                        `).join('');
+                    }
+
+                    Swal.fire({
+                        title: 'Notificaciones',
+                        html: `<div class="notificaciones-lista">${html}</div>`,
+                        confirmButtonText: 'Cerrar',
+                        confirmButtonColor: '#6c5ce7',
+                        background: 'white',
+                        width: '400px'
+                    });
+
+                } catch (error) {
+                    console.error('Error al mostrar notificaciones:', error);
+                }
+            }
+
+            // ============================================
+            // EVENTOS DEL MODAL DE IMAGEN
+            // ============================================
+            modalClose.addEventListener('click', cerrarModalImagen);
+            
+            modalPrev.addEventListener('click', modalAnterior);
+            
+            modalNext.addEventListener('click', modalSiguiente);
+            
+            imageModal.addEventListener('click', (e) => {
+                if (e.target === imageModal) {
+                    cerrarModalImagen();
+                }
+            });
+
+            document.addEventListener('keydown', (e) => {
+                if (!imageModal.classList.contains('active')) return;
+                
+                if (e.key === 'Escape') {
+                    cerrarModalImagen();
+                } else if (e.key === 'ArrowLeft') {
+                    modalAnterior();
+                } else if (e.key === 'ArrowRight') {
+                    modalSiguiente();
+                }
+            });
+
+            // Evento para el botón de notificaciones
+            if (btnNotificaciones) {
+                btnNotificaciones.addEventListener('click', mostrarNotificaciones);
+            }
+
+            // NUEVO: Evento para el botón VIP
+            if (btnVIP) {
+                btnVIP.addEventListener('click', () => {
+                    window.location.href = 'vip.html';
                 });
             }
 
-            // Botón Reacción con Mensaje
-            if (btnReactionMessage) {
-                btnReactionMessage.addEventListener('click', function() {
-                    this.style.transform = 'scale(1.2)';
-                    setTimeout(() => {
-                        this.style.transform = 'scale(1)';
-                    }, 200);
-                    showNotification('fas fa-comment', '💬 Reacción con mensaje enviada', '#f39c12', 'white');
-                });
-            }
-
-            // Botón Mensaje (en footer) - REDIRECCIÓN CORREGIDA
+            // NUEVO: Evento para el botón de mensajes
             if (btnMessage) {
-                btnMessage.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    this.style.transform = 'scale(1.05)';
+                btnMessage.addEventListener('click', () => {
                     showNotification('fas fa-comment-dots', '📬 Abriendo mensajes...', '#6c5ce7', 'white');
                     setTimeout(() => {
                         window.location.href = 'mensajes.html';
@@ -894,72 +2381,75 @@
                 });
             }
 
-            // Botón Boost - MODAL
-            if (btnBoost) {
-                btnBoost.addEventListener('click', function() {
-                    this.style.transform = 'scale(1.1)';
-                    setTimeout(() => {
-                        this.style.transform = 'scale(1)';
-                    }, 200);
-                    
-                    if (typeof mostrarModalBoost === 'function') {
-                        mostrarModalBoost();
-                    } else {
-                        showNotification('fas fa-rocket', '🚀 Función de Boost próximamente', '#ff6b6b', 'white');
-                    }
-                });
-            }
+            // ============================================
+            // INICIALIZACIÓN
+            // ============================================
+          // ============================================
+// INICIALIZACIÓN
+// ============================================
+const usuario = await obtenerUsuarioActual();
+if (!usuario) return;
 
-            // Botón Regalo - MODAL
-            if (btnGift) {
-                btnGift.addEventListener('click', function() {
-                    this.style.transform = 'scale(1.2)';
-                    setTimeout(() => {
-                        this.style.transform = 'scale(1)';
-                    }, 200);
-                    
-                    if (typeof mostrarModalRegalos === 'function') {
-                        mostrarModalRegalos();
-                    } else {
-                        showNotification('fas fa-gift', '🎁 Tienda de regalos próximamente', '#ff6b6b', 'white');
-                    }
-                });
-            }
+// Obtener monedas del usuario
+await obtenerMonedasUsuario();
 
-            // Botón Inicio - REDIRECCIÓN CORREGIDA
-            if (btnInicio) {
-                btnInicio.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    showNotification('🏠 Página de inicio', '#6c5ce7', 'fa-home');
-                    setTimeout(() => {
-                        window.location.href = 'principal.html';
-                    }, 300);
-                });
-            }
+// Obtener mensajes no leídos
+await obtenerMensajesNoLeidos();
 
-            // Botón Cuenta - REDIRECCIÓN CORREGIDA
-            if (btnCuenta) {
-                btnCuenta.addEventListener('click', function(e) {
-                    e.preventDefault();
-                    showNotification('👤 Mi perfil', '#2d3a4a', 'fa-user');
-                    setTimeout(() => {
-                        window.location.href = 'cuenta.html';
-                    }, 300);
-                });
-            }
+// Obtener matches con información (actualiza el contador de likes y mensajes)
+await obtenerMatchesConInfo();
 
-            // Botón Likes en footer
-            if (btnLikesFooter) {
-                btnLikesFooter.addEventListener('click', function() {
-                    likesCount++;
-                    updateLikes();
-                    this.style.transform = 'scale(1.1)';
-                    setTimeout(() => {
-                        this.style.transform = 'scale(1)';
-                    }, 200);
-                    showNotification('fas fa-heart', '❤️ +1 like', '#ff4757', 'white');
-                });
-            }
+// Cargar notificaciones
+await cargarNotificaciones();
+
+const primerPerfil = await obtenerSiguientePerfil();
+renderizarPerfil(primerPerfil, usuario);
+
+// Configurar intervalos para actualizaciones en tiempo real
+// Actualizar mensajes no leídos cada 10 segundos
+const intervalMensajes = setInterval(async () => {
+    await obtenerMensajesNoLeidos();
+}, 10000);
+intervalIds.push(intervalMensajes);
+
+// Actualizar contador de likes (matches) cada 15 segundos
+const intervalLikes = setInterval(async () => {
+    await obtenerMatchesConInfo();
+}, 15000);
+intervalIds.push(intervalLikes);
+            // ============================================
+            // EVENT LISTENERS DE NAVEGACIÓN
+            // ============================================
+            btnBoost.addEventListener('click', function() {
+                this.style.transform = 'scale(1.1)';
+                setTimeout(() => this.style.transform = 'scale(1)', 200);
+                
+                if (typeof mostrarModalBoost === 'function') {
+                    mostrarModalBoost();
+                } else {
+                    showNotification('fas fa-rocket', '🚀 Función de Boost próximamente', '#ff6b6b', 'white');
+                }
+            });
+
+            btnInicio.addEventListener('click', () => {
+                window.location.href = 'principal.html';
+            });
+
+            btnLikesFooter.addEventListener('click', function() {
+                this.style.transform = 'scale(1.1)';
+                setTimeout(() => this.style.transform = 'scale(1)', 200);
+                showNotification('fas fa-heart', '❤️ Tus matches', '#ff4757', 'white');
+                window.location.href = 'like.html';
+            });
+
+            btnCuenta.addEventListener('click', () => {
+                window.location.href = 'cuenta.html';
+            });
+
+            // Limpiar intervalos al salir de la página
+            window.addEventListener('beforeunload', () => {
+                intervalIds.forEach(id => clearInterval(id));
+            });
         });
     </script>
 </body>

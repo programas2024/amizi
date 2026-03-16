@@ -6,6 +6,10 @@
     <title>Amizi · Iniciar Sesión</title>
     <!-- Font Awesome para iconos más lindos -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         * {
             margin: 0;
@@ -766,9 +770,9 @@
             <div class="input-group">
                 <div class="input-label">
                     <i class="fas fa-user"></i>
-                    <span>Usuario</span>
+                    <span>Nombre de usuario</span>
                 </div>
-                <input type="text" class="input-field" id="usuarioField" placeholder="ej: laura_21, carlos123, ana_perez">
+                <input type="text" class="input-field" id="usuarioField" placeholder="ej: laura_21, carlos123, ana_perez" data-tooltip="Ingresa tu nombre de usuario registrado">
             </div>
 
             <div class="input-group">
@@ -777,8 +781,8 @@
                     <span>Contraseña</span>
                 </div>
                 <div class="password-wrapper">
-                    <input type="password" class="input-field" id="passwordField" placeholder="••••••••">
-                    <button class="toggle-password" id="togglePassword">
+                    <input type="password" class="input-field" id="passwordField" placeholder="••••••••" data-tooltip="Ingresa tu contraseña">
+                    <button class="toggle-password" id="togglePassword" data-tooltip="Mostrar/ocultar contraseña">
                         <i class="far fa-eye"></i>
                     </button>
                 </div>
@@ -820,14 +824,21 @@
             </div>
 
             <div class="social-icons">
-                <i class="fab fa-instagram" data-tooltip="Instagram"></i>
-                <i class="fab fa-twitter" data-tooltip="Twitter"></i>
-                <i class="fab fa-tiktok" data-tooltip="TikTok"></i>
+                <i class="fab fa-instagram" data-tooltip="Instagram oficial"></i>
+                <i class="fab fa-twitter" data-tooltip="Twitter oficial"></i>
+                <i class="fab fa-tiktok" data-tooltip="TikTok oficial"></i>
             </div>
         </div>
     </div>
 
     <script>
+        // Configuración de Supabase
+        const supabaseUrl = "https://qfwpikteqipzwpmqbllt.supabase.co";
+        const supabaseKey = "sb_publishable_W75gkuE187xY7qWeQsP6XQ_3IWzPC3A";
+        
+        const { createClient } = supabase;
+        const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
         document.addEventListener('DOMContentLoaded', function() {
             // Elementos del formulario
             const btnLogin = document.getElementById('btnLogin');
@@ -835,92 +846,161 @@
             const btnOlvidaste = document.getElementById('btnOlvidaste');
             const togglePassword = document.getElementById('togglePassword');
             const passwordField = document.getElementById('passwordField');
+            const usuarioField = document.getElementById('usuarioField');
             
             // Modal de soporte
             const modalSoporte = document.getElementById('modalSoporte');
             const btnAbrirSoporte = document.getElementById('btnAbrirSoporte');
             const btnCerrarSoporte = document.getElementById('btnCerrarSoporte');
 
-            // Función para mostrar notificaciones elegantes
-            function showNotification(text, color) {
-                const notification = document.createElement('div');
-                notification.textContent = text;
-                notification.style.cssText = `
-                    position: fixed;
-                    top: 20px;
-                    left: 50%;
-                    transform: translateX(-50%);
-                    background: ${color};
-                    color: white;
-                    padding: 16px 32px;
-                    border-radius: 60px;
-                    font-size: 18px;
-                    z-index: 9999;
-                    animation: slideDown 0.3s ease;
-                    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-                    border: 1px solid rgba(255,255,255,0.2);
-                    font-weight: 500;
-                    text-align: center;
-                    max-width: 90%;
-                    white-space: nowrap;
-                `;
-                document.body.appendChild(notification);
-
-                setTimeout(() => {
-                    notification.style.animation = 'fadeOut 0.3s ease';
-                    setTimeout(() => {
-                        document.body.removeChild(notification);
-                    }, 300);
-                }, 2500);
+            // Función para mostrar notificaciones con SweetAlert2
+            function showNotification(title, message, icon) {
+                Swal.fire({
+                    title: title,
+                    text: message,
+                    icon: icon,
+                    confirmButtonColor: '#6c5ce7',
+                    background: 'white',
+                    timer: 2000,
+                    showConfirmButton: false
+                });
             }
 
-            // Añadir estilos de animación
-            const style = document.createElement('style');
-            style.textContent = `
-                @keyframes slideDown {
-                    from {
-                        opacity: 0;
-                        transform: translate(-50%, -30px);
+            // Función para mostrar loading
+            function showLoading() {
+                Swal.fire({
+                    title: 'Verificando...',
+                    text: 'Por favor espera',
+                    allowOutsideClick: false,
+                    background: 'white',
+                    didOpen: () => {
+                        Swal.showLoading();
                     }
-                    to {
-                        opacity: 1;
-                        transform: translate(-50%, 0);
-                    }
-                }
-                
-                @keyframes fadeOut {
-                    from {
-                        opacity: 1;
-                        transform: translate(-50%, 0);
-                    }
-                    to {
-                        opacity: 0;
-                        transform: translate(-50%, -30px);
-                    }
-                }
-            `;
-            document.head.appendChild(style);
+                });
+            }
 
-            // Event listener para login
-            btnLogin.addEventListener('click', function() {
-                showNotification('🔐 Iniciando sesión...', '#4a90e2');
-                // Aquí iría la lógica de login
-                setTimeout(() => {
-                    window.location.href = 'index.html'; // Redirige al index después del login simulado
-                }, 1500);
+            // Función para cerrar loading
+            function closeLoading() {
+                Swal.close();
+            }
+
+            // EVENTO PRINCIPAL DE LOGIN
+            btnLogin.addEventListener('click', async function() {
+                const nombre = usuarioField.value.trim();
+                const contrasena = passwordField.value.trim();
+
+                if (!nombre || !contrasena) {
+                    Swal.fire({
+                        title: 'Campos incompletos',
+                        text: 'Por favor ingresa tu nombre de usuario y contraseña',
+                        icon: 'warning',
+                        confirmButtonColor: '#6c5ce7',
+                        background: 'white'
+                    });
+                    return;
+                }
+
+                showLoading();
+
+                try {
+                    // Buscar usuario por nombre
+                    const { data: usuarios, error } = await supabaseClient
+                        .from('usuarios')
+                        .select('*')
+                        .eq('nombre', nombre);
+
+                    if (error) {
+                        console.error('Error al buscar usuario:', error);
+                        closeLoading();
+                        Swal.fire({
+                            title: 'Error',
+                            text: 'Error al verificar credenciales',
+                            icon: 'error',
+                            confirmButtonColor: '#6c5ce7',
+                            background: 'white'
+                        });
+                        return;
+                    }
+
+                    // Verificar si existe el usuario
+                    if (!usuarios || usuarios.length === 0) {
+                        closeLoading();
+                        Swal.fire({
+                            title: 'Usuario no encontrado',
+                            text: 'El nombre de usuario no está registrado',
+                            icon: 'error',
+                            confirmButtonColor: '#6c5ce7',
+                            background: 'white'
+                        });
+                        return;
+                    }
+
+                    const usuario = usuarios[0];
+
+                    // Verificar contraseña (en producción, debería estar hasheada)
+                    if (usuario.contrasena !== contrasena) {
+                        closeLoading();
+                        Swal.fire({
+                            title: 'Contraseña incorrecta',
+                            text: 'La contraseña ingresada no es correcta',
+                            icon: 'error',
+                            confirmButtonColor: '#6c5ce7',
+                            background: 'white'
+                        });
+                        return;
+                    }
+
+                    // Login exitoso
+                    closeLoading();
+                    
+                    // Guardar datos del usuario en sessionStorage (opcional)
+                    sessionStorage.setItem('usuario_actual', JSON.stringify({
+                        id: usuario.id_usuario,
+                        nombre: usuario.nombre,
+                        correo: usuario.correo,
+                        foto: usuario.foto_url || null
+                    }));
+
+                    // Mostrar mensaje de éxito y redirigir
+                    Swal.fire({
+                        title: '¡Bienvenido! ✨',
+                        text: `Hola ${usuario.nombre}, iniciando sesión...`,
+                        icon: 'success',
+                        confirmButtonColor: '#6c5ce7',
+                        background: 'white',
+                        timer: 1500,
+                        showConfirmButton: false
+                    }).then(() => {
+                        window.location.href = 'principal.html';
+                    });
+
+                } catch (error) {
+                    console.error('Error inesperado:', error);
+                    closeLoading();
+                    Swal.fire({
+                        title: 'Error',
+                        text: 'Ocurrió un error inesperado',
+                        icon: 'error',
+                        confirmButtonColor: '#6c5ce7',
+                        background: 'white'
+                    });
+                }
             });
 
             // Event listener para registrarse
             btnRegistrarse.addEventListener('click', function() {
                 window.location.href = 'registrarce.html';
-                
-                // Aquí iría la redirección a registro
             });
 
             // Event listener para olvidaste contraseña
             btnOlvidaste.addEventListener('click', function() {
-                showNotification('🔑 Recuperación de contraseña', '#2ecc71');
-                // Aquí iría la redirección a recuperar contraseña
+                Swal.fire({
+                    title: '🔑 Recuperar contraseña',
+                    text: 'Por favor contacta al soporte para recuperar tu contraseña',
+                    icon: 'info',
+                    confirmButtonColor: '#6c5ce7',
+                    background: 'white'
+                });
             });
 
             // Toggle mostrar/ocultar contraseña
@@ -944,6 +1024,19 @@
             modalSoporte.addEventListener('click', function(e) {
                 if (e.target === modalSoporte) {
                     modalSoporte.classList.remove('active');
+                }
+            });
+
+            // Permitir login con Enter
+            passwordField.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    btnLogin.click();
+                }
+            });
+
+            usuarioField.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    passwordField.focus();
                 }
             });
         });
