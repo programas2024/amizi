@@ -1,0 +1,2418 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=yes">
+    <title>Amizi · VIP</title>
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Supabase JS -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
+    <!-- SweetAlert2 -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background: #f2f2f7;
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .app-container {
+            max-width: 900px;
+            width: 100%;
+            background-color: #f8f9ff;
+            border-radius: 60px;
+            box-shadow: 0 30px 80px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            padding: 32px 36px;
+            border: 1px solid rgba(255, 255, 255, 0.8);
+        }
+
+        .header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 24px;
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            padding: 15px 25px;
+            border-radius: 60px;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            flex-wrap: wrap;
+            gap: 10px;
+            box-shadow: 0 10px 25px rgba(74, 144, 226, 0.3);
+        }
+
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .star-icon {
+            color: #ffd700;
+            font-size: 28px;
+            filter: drop-shadow(0 2px 5px rgba(255, 215, 0, 0.5));
+        }
+
+        .logo {
+            font-size: 36px;
+            font-weight: 800;
+            color: white;
+            letter-spacing: -1px;
+            text-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            justify-content: flex-end;
+        }
+
+        .carisma-badge {
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(5px);
+            border-radius: 60px;
+            padding: 8px 18px;
+            font-size: 18px;
+            font-weight: 600;
+            color: white;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            white-space: nowrap;
+        }
+
+        .carisma-num {
+            background: rgba(255, 255, 255, 0.4);
+            border-radius: 30px;
+            padding: 4px 14px;
+            font-size: 16px;
+            color: white;
+            font-weight: 700;
+        }
+
+        .boost-btn {
+            background: rgba(255, 255, 255, 0.95);
+            border: none;
+            border-radius: 60px;
+            padding: 8px 20px;
+            font-size: 18px;
+            font-weight: 600;
+            color: #4a90e2;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            white-space: nowrap;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .boost-btn:hover {
+            transform: scale(1.05);
+            background: white;
+        }
+
+        .boost-btn i {
+            color: #ff6b6b;
+        }
+
+        .popular-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            background: white;
+            padding: 12px 25px;
+            border-radius: 60px;
+            border: 1px solid #eeeff5;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .popular-row:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .popular-tag {
+            font-size: 20px;
+            color: #2d3a4a;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .popular-tag i {
+            color: #ff6b6b;
+            font-size: 22px;
+        }
+
+        .popular-tag span {
+            font-weight: 700;
+            color: #1e2b3a;
+        }
+
+        .menu-icon {
+            font-size: 24px;
+            color: #8a9bb0;
+            cursor: pointer;
+        }
+
+        .vip-container {
+            background: white;
+            border-radius: 70px;
+            padding: 30px 25px;
+            border: 1px solid #f0f0f8;
+            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.08);
+            margin: 20px 0 30px 0;
+            width: 100%;
+            position: relative;
+        }
+
+        .vip-title {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .vip-title i {
+            font-size: 40px;
+            color: #ffd700;
+            filter: drop-shadow(0 5px 10px rgba(255, 215, 0, 0.3));
+            animation: starFloat 3s ease-in-out infinite;
+        }
+
+        .vip-title h2 {
+            font-size: 32px;
+            font-weight: 800;
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            letter-spacing: -1px;
+        }
+
+        @keyframes starFloat {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-5px); }
+        }
+
+        .pase-status {
+            background: #f8f9ff;
+            border-radius: 40px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border: 1px solid #e4e4f0;
+        }
+
+        .pase-status-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pase-status-left i {
+            font-size: 24px;
+            color: #ffd700;
+        }
+
+        .pase-status-left span {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e2b3a;
+        }
+
+        .pase-status-badge {
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .pase-status-badge.inactivo {
+            background: #8a9bb0;
+        }
+
+        .vip-top-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 15px;
+            margin-bottom: 25px;
+            flex-wrap: wrap;
+        }
+
+        .coins-card {
+            background: #f8f9ff;
+            border-radius: 40px;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #e4e4f0;
+            flex: 1;
+        }
+
+        .coins-card i {
+            font-size: 24px;
+            color: #ffd700;
+        }
+
+        .coins-info {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .coins-label {
+            font-size: 12px;
+            color: #8a9bb0;
+        }
+
+        .coins-amount {
+            font-size: 20px;
+            font-weight: 700;
+            color: #1e2b3a;
+        }
+
+        .vip-buy-card {
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            border-radius: 40px;
+            padding: 12px 25px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+            color: white;
+            flex: 0 0 auto;
+        }
+
+        .vip-buy-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(74, 144, 226, 0.3);
+        }
+
+        .vip-buy-card i {
+            font-size: 20px;
+            color: #ffd700;
+        }
+
+        .vip-buy-card span {
+            font-weight: 600;
+            font-size: 16px;
+        }
+
+        .tareas-timer {
+            background: #f8f9ff;
+            border-radius: 30px;
+            padding: 8px 15px;
+            margin-bottom: 10px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            border: 1px solid #e4e4f0;
+        }
+
+        .tareas-timer i {
+            color: #ffd700;
+            font-size: 14px;
+        }
+
+        .tareas-timer span {
+            font-size: 13px;
+            color: #5a6b7c;
+        }
+
+        .timer-value {
+            font-weight: 700;
+            color: #4a90e2;
+        }
+
+        .tareas-section {
+            margin-bottom: 25px;
+        }
+
+        .tareas-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: #f8f9ff;
+            border-radius: 40px;
+            padding: 12px 20px;
+            border: 1px solid #e4e4f0;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tareas-header:hover {
+            background: #f0f3fa;
+        }
+
+        .tareas-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .tareas-header-left i {
+            font-size: 20px;
+            color: #ffd700;
+        }
+
+        .tareas-header-left span {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e2b3a;
+        }
+
+        .tareas-progress {
+            background: white;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 13px;
+            color: #4a90e2;
+            font-weight: 600;
+        }
+
+        .tareas-arrow {
+            transition: transform 0.3s;
+            color: #8a9bb0;
+        }
+
+        .tareas-arrow.rotated {
+            transform: rotate(180deg);
+        }
+
+        .tareas-content {
+            max-height: 0;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s;
+            background: #f8f9ff;
+            border-radius: 30px;
+            margin-top: 10px;
+            border: 1px solid #e4e4f0;
+            overflow: hidden;
+        }
+
+        .tareas-content.open {
+            max-height: 500px;
+            opacity: 1;
+            visibility: visible;
+            padding: 15px;
+        }
+
+        .tareas-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .tarea-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px;
+            border-radius: 30px;
+            background: white;
+            transition: all 0.2s;
+            border: 1px solid #e4e4f0;
+            position: relative;
+        }
+
+        .tarea-item.completada {
+            background: #f0fff0;
+            border-color: #2ecc71;
+        }
+        
+        .tarea-item.reclamada {
+            background: #f0fff0;
+            border-color: #2ecc71;
+            opacity: 0.9;
+        }
+
+        .tarea-icon {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #ffd700, #f1c40f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 18px;
+            flex-shrink: 0;
+        }
+
+        .tarea-info {
+            flex: 1;
+        }
+
+        .tarea-info h5 {
+            font-size: 14px;
+            font-weight: 600;
+            color: #1e2b3a;
+            margin-bottom: 3px;
+        }
+
+        .tarea-info p {
+            font-size: 12px;
+            color: #5a6b7c;
+            margin-bottom: 2px;
+        }
+
+        .tarea-progress {
+            font-size: 11px;
+            color: #4a90e2;
+        }
+
+        .tarea-recompensa {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .reclamar-btn {
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            white-space: nowrap;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            box-shadow: 0 4px 10px rgba(74, 144, 226, 0.3);
+        }
+
+        .reclamar-btn:hover {
+            transform: scale(1.05);
+            background: linear-gradient(145deg, #5a9ef0, #7a6af0);
+            box-shadow: 0 6px 15px rgba(74, 144, 226, 0.4);
+        }
+
+        .reclamar-btn:active {
+            transform: scale(0.95);
+        }
+
+        .reclamar-btn i {
+            font-size: 14px;
+            color: #ffd700;
+        }
+
+        .tarea-check {
+            color: #2ecc71;
+            font-size: 20px;
+            margin-left: 5px;
+        }
+
+        .progress-section {
+            margin-bottom: 25px;
+        }
+
+        .progress-card {
+            background: #f8f9ff;
+            border-radius: 40px;
+            padding: 20px;
+            border: 1px solid #e4e4f0;
+        }
+
+        .progress-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 15px;
+        }
+
+        .progress-header-left {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .progress-header-left i {
+            font-size: 20px;
+            color: #ffd700;
+        }
+
+        .progress-header-left span {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1e2b3a;
+        }
+
+        .progress-nivel {
+            background: linear-gradient(145deg, #4a90e2, #6c5ce7);
+            color: white;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .progress-bar-container {
+            height: 10px;
+            background: white;
+            border-radius: 30px;
+            overflow: hidden;
+            margin-bottom: 10px;
+            border: 1px solid #e4e4f0;
+        }
+
+        .progress-bar-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #ffd700, #f1c40f);
+            border-radius: 30px;
+            width: 0%;
+            transition: width 0.3s;
+        }
+
+        .progress-stats {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            color: #8a9bb0;
+        }
+
+        .niveles-title {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .niveles-title i {
+            font-size: 20px;
+            color: #ffd700;
+        }
+
+        .niveles-title h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #1e2b3a;
+        }
+
+        .niveles-title span {
+            background: #f0f3fa;
+            color: #4a90e2;
+            padding: 4px 12px;
+            border-radius: 30px;
+            font-size: 12px;
+            font-weight: 600;
+            margin-left: 8px;
+        }
+
+        .niveles-container {
+            background: #f8f9ff;
+            border-radius: 40px;
+            padding: 15px;
+            border: 1px solid #e4e4f0;
+        }
+
+        .niveles-scroll {
+            max-height: 350px;
+            overflow-y: auto;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .niveles-scroll::-webkit-scrollbar {
+            display: none;
+        }
+
+        .niveles-lista {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .nivel-item {
+            background: white;
+            border-radius: 30px;
+            padding: 12px 15px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid #e4e4f0;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .nivel-item:hover {
+            border-color: #ffd700;
+            transform: translateX(5px);
+        }
+
+        .nivel-item.completado {
+            background: #f0fff0;
+            border-color: #2ecc71;
+        }
+
+        .nivel-item.actual {
+            border-color: #ffd700;
+            border-width: 2px;
+        }
+
+        .nivel-item.bloqueado {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+
+        .nivel-item.bloqueado:hover {
+            border-color: #e4e4f0;
+            transform: none;
+        }
+
+        .nivel-icono {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: linear-gradient(145deg, #ffd700, #f1c40f);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 20px;
+            color: white;
+            flex-shrink: 0;
+        }
+
+        .nivel-info {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .nivel-numero {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1e2b3a;
+            margin-bottom: 2px;
+        }
+
+        .nivel-recompensa {
+            font-size: 12px;
+            color: #8a9bb0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .nivel-badge {
+            font-size: 12px;
+            font-weight: 600;
+            color: #4a90e2;
+            background: #f0f3fa;
+            padding: 4px 10px;
+            border-radius: 30px;
+            white-space: nowrap;
+        }
+
+        .nivel-check {
+            color: #2ecc71;
+            font-size: 16px;
+            margin-left: 5px;
+        }
+
+        .nivel-lock {
+            color: #8a9bb0;
+            font-size: 14px;
+            margin-left: 5px;
+        }
+
+        .footer-nav {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            background: white;
+            padding: 15px 20px;
+            border-radius: 60px;
+            border: 1px solid #eeeff5;
+            margin-top: 20px;
+            gap: 10px;
+            width: 100%;
+        }
+
+        .footer-item {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            flex: 1;
+            white-space: nowrap;
+            position: relative;
+        }
+
+        .footer-item::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            top: -40px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #2d3a4a;
+            color: white;
+            padding: 6px 15px;
+            border-radius: 30px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.2s ease;
+            pointer-events: none;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .footer-item:hover::after {
+            opacity: 1;
+            visibility: visible;
+            top: -45px;
+        }
+
+        .footer-item i {
+            font-size: 24px;
+        }
+
+        .footer-item span {
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .footer-item.inicio {
+            background: #f0f3fa;
+            color: #6c5ce7;
+        }
+
+        .footer-item.mensaje {
+            background: linear-gradient(145deg, #6c5ce7, #8e6ce7);
+            color: white;
+        }
+
+        .footer-item.likes {
+            background: #ff4757;
+            color: white;
+        }
+
+        .footer-item.cuenta {
+            background: #2d3a4a;
+            color: white;
+        }
+
+        .footer-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .notification-container {
+            position: fixed;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            pointer-events: none;
+            width: auto;
+            max-width: 90%;
+        }
+
+        .notification {
+            background: white;
+            color: #1e2b3a;
+            padding: 16px 32px;
+            border-radius: 60px;
+            font-size: 16px;
+            font-weight: 500;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.5);
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            animation: slideDown 0.3s ease;
+            pointer-events: none;
+        }
+
+        .notification i {
+            font-size: 20px;
+        }
+
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes fadeOut {
+            from { opacity: 1; transform: translateY(0); }
+            to { opacity: 0; transform: translateY(-30px); }
+        }
+
+        .notificaciones-btn {
+            position: relative;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(5px);
+            border-radius: 50%;
+            width: 45px;
+            height: 45px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .notificaciones-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .notificaciones-btn i {
+            color: white;
+            font-size: 20px;
+        }
+
+        .notificaciones-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff4757;
+            color: white;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 20px;
+            height: 20px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0 5px;
+            border: 2px solid white;
+        }
+
+        @media (max-width: 700px) {
+            .app-container {
+                padding: 20px;
+            }
+
+            .vip-title h2 {
+                font-size: 26px;
+            }
+
+            .vip-top-row {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .coins-card {
+                width: 100%;
+            }
+
+            .vip-buy-card {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .footer-nav {
+                flex-wrap: wrap;
+                gap: 8px;
+            }
+            
+            .footer-item {
+                flex: 1 1 calc(50% - 8px);
+                min-width: 120px;
+            }
+
+            .nivel-item {
+                padding: 10px 12px;
+            }
+
+            .nivel-icono {
+                width: 35px;
+                height: 35px;
+                font-size: 16px;
+            }
+
+            .nivel-numero {
+                font-size: 13px;
+            }
+
+            .nivel-recompensa {
+                font-size: 11px;
+            }
+
+            .nivel-badge {
+                font-size: 11px;
+                padding: 3px 8px;
+            }
+            
+            .reclamar-btn {
+                padding: 6px 12px;
+                font-size: 11px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="notification-container" id="notificationContainer"></div>
+
+    <div class="app-container">
+        <div class="header">
+            <div class="logo-container">
+                <i class="fas fa-star star-icon"></i>
+                <div class="logo">Amizi</div>
+            </div>
+            
+            <div class="header-right">
+                <div class="carisma-badge">
+                    <i class="fas fa-bolt"></i>
+                    Nivel <span class="carisma-num" id="nivelValor">1</span>
+                </div>
+                <div class="notificaciones-btn" id="btnNotificaciones" data-tooltip="Notificaciones">
+                    <i class="fas fa-bell"></i>
+                    <span class="notificaciones-badge" id="notificacionesCount">0</span>
+                </div>
+                <button class="boost-btn" id="btnBoost">
+                    <i class="fas fa-rocket"></i>
+                    Boost
+                </button>
+            </div>
+        </div>
+
+        <div class="popular-row" id="backButton">
+            <div class="popular-tag">
+                <i class="fas fa-arrow-left"></i>
+                <span>Volver al inicio</span>
+            </div>
+            <div class="menu-icon">
+                <i class="fas fa-ellipsis-h"></i>
+            </div>
+        </div>
+
+        <div class="vip-container">
+            <div class="vip-title">
+                <i class="fas fa-crown"></i>
+                <h2>Pase VIP</h2>
+                <i class="fas fa-star"></i>
+            </div>
+
+            <div class="pase-status" id="paseStatus">
+                <div class="pase-status-left">
+                    <i class="fas fa-crown"></i>
+                    <span>Estado del Pase</span>
+                </div>
+                <div class="pase-status-badge" id="paseStatusBadge">Inactivo</div>
+            </div>
+
+            <div class="vip-top-row">
+                <div class="coins-card">
+                    <i class="fas fa-coins"></i>
+                    <div class="coins-info">
+                        <span class="coins-label">Tus monedas</span>
+                        <span class="coins-amount" id="coinsAmount">0</span>
+                    </div>
+                </div>
+                <div class="vip-buy-card" id="comprarPase">
+                    <i class="fas fa-crown"></i>
+                    <span>Comprar VIP</span>
+                    <i class="fas fa-star"></i>
+                </div>
+            </div>
+
+            <div class="tareas-section">
+                <div class="tareas-timer" id="tareasTimer">
+                    <i class="fas fa-hourglass-half"></i>
+                    <span>Próximo reset en: <span class="timer-value" id="timerValue">23:59:59</span></span>
+                </div>
+                <div class="tareas-header" id="tareasHeader">
+                    <div class="tareas-header-left">
+                        <i class="fas fa-tasks"></i>
+                        <span>Tareas diarias</span>
+                    </div>
+                    <div class="tareas-progress" id="tareasProgress">0/4</div>
+                    <i class="fas fa-chevron-down tareas-arrow" id="tareasArrow"></i>
+                </div>
+                <div class="tareas-content" id="tareasContent">
+                    <div class="tareas-lista" id="tareasLista"></div>
+                </div>
+            </div>
+
+            <div class="progress-section">
+                <div class="progress-card">
+                    <div class="progress-header">
+                        <div class="progress-header-left">
+                            <i class="fas fa-chart-line"></i>
+                            <span>Progreso del Pase</span>
+                        </div>
+                        <div class="progress-nivel" id="progresoTexto">Nivel 1/15</div>
+                    </div>
+                    <div class="progress-bar-container">
+                        <div class="progress-bar-fill" id="progressBar" style="width: 6.67%;"></div>
+                    </div>
+                    <div class="progress-stats">
+                        <span id="recompensasCompletadas">0 recompensas</span>
+                        <span>15 disponibles</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="niveles-title">
+                <i class="fas fa-layer-group"></i>
+                <h3>Niveles VIP</h3>
+                <span id="totalNiveles">15</span>
+            </div>
+
+            <div class="niveles-container">
+                <div class="niveles-scroll">
+                    <div class="niveles-lista" id="nivelesLista"></div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer-nav">
+            <div class="footer-item inicio" id="btnInicio" data-tooltip="Ir al inicio">
+                <i class="fas fa-home"></i>
+                <span>Inicio</span>
+            </div>
+            <div class="footer-item mensaje" id="btnMessage" data-tooltip="Ver mensajes">
+                <i class="fas fa-comment-dots"></i>
+                <span>Mensaje</span>
+            </div>
+            <div class="footer-item likes" id="btnLikesFooter" data-tooltip="Mis likes">
+                <i class="fas fa-heart"></i>
+                <span id="footerLikesCount">0</span>
+            </div>
+            <div class="footer-item cuenta" id="btnCuenta" data-tooltip="Mi perfil">
+                <i class="fas fa-user"></i>
+                <span>Cuenta</span>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // ============================================
+        // CONFIGURACIÓN DE SUPABASE
+        // ============================================
+        const supabaseUrl = "https://qfwpikteqipzwpmqbllt.supabase.co";
+        const supabaseKey = "sb_publishable_W75gkuE187xY7qWeQsP6XQ_3IWzPC3A";
+        
+        const { createClient } = supabase;
+        const supabaseClient = createClient(supabaseUrl, supabaseKey);
+
+        // ============================================
+        // VARIABLES GLOBALES
+        // ============================================
+        let usuarioActual = null;
+        let usuarioId = null;
+        let tareasOpen = false;
+        let nivelesVIP = [];
+        let progresoVIP = null;
+        let recompensasReclamadas = new Set();
+        let monedasActuales = 0;
+        let tareasAsignadas = [];
+        let progresoTareas = null;
+        let timerInterval = null;
+        let fechaActualTareas = null;
+
+        // ============================================
+        // FUNCIÓN DE NOTIFICACIONES (GLOBAL)
+        // ============================================
+        function showNotification(text, bgColor = '#4a90e2', icon = 'fa-info-circle') {
+            const container = document.getElementById('notificationContainer');
+            const notification = document.createElement('div');
+            notification.className = 'notification';
+            notification.innerHTML = `<i class="fas ${icon}" style="color: white"></i> ${text}`;
+            notification.style.background = bgColor;
+            notification.style.color = 'white';
+            container.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'fadeOut 0.3s ease';
+                setTimeout(() => {
+                    if (container.contains(notification)) {
+                        container.removeChild(notification);
+                    }
+                }, 300);
+            }, 2500);
+        }
+
+        // ============================================
+        // RECLAMAR MONEDAS DE TAREA (FUNCIÓN GLOBAL)
+        // ============================================
+        window.reclamarMonedas = async function(idAsignacion, recompensa) {
+            console.log('Reclamando monedas:', idAsignacion, recompensa);
+            
+            try {
+                // Verificar que tenemos los datos necesarios
+                if (!usuarioId) {
+                    showNotification('Error: Usuario no identificado', '#ff6b6b', 'fa-exclamation-circle');
+                    return false;
+                }
+
+                // Buscar la tarea en el array global
+                const tarea = tareasAsignadas.find(t => t.id_asignacion === idAsignacion);
+                if (!tarea) {
+                    showNotification('Error: Tarea no encontrada', '#ff6b6b', 'fa-exclamation-circle');
+                    return false;
+                }
+                
+                // Verificar si ya fue reclamada
+                if (tarea.reclamada) {
+                    showNotification('Ya reclamaste esta recompensa', '#8a9bb0', 'fa-info-circle');
+                    return false;
+                }
+
+                // Verificar si está completada
+                if (!tarea.completada) {
+                    showNotification('Completa la tarea primero', '#ff6b6b', 'fa-exclamation-circle');
+                    return false;
+                }
+
+                // Mostrar confirmación con SweetAlert
+                const confirm = await Swal.fire({
+                    title: '¿Reclamar recompensa?',
+                    html: `
+                        <div style="text-align: center;">
+                            <i class="fas fa-coins" style="font-size: 40px; color: #ffd700; margin: 10px;"></i>
+                            <h3 style="color: #1e2b3a;">+${recompensa} monedas</h3>
+                        </div>
+                    `,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Reclamar',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: '#4a90e2',
+                    cancelButtonColor: '#888',
+                    background: 'white'
+                });
+
+                if (!confirm.isConfirmed) return false;
+
+                // Actualizar monedas en Supabase
+                const nuevasMonedas = monedasActuales + recompensa;
+                
+                const { error: updateError } = await supabaseClient
+                    .from('monedas_usuario')
+                    .update({ monedas: nuevasMonedas })
+                    .eq('id_usuario', usuarioId);
+
+                if (updateError) throw updateError;
+
+                // Marcar tarea como reclamada en Supabase
+                const { error: tareaError } = await supabaseClient
+                    .from('tareas_asignadas')
+                    .update({ 
+                        reclamada: true,
+                        fecha_reclamacion: new Date().toISOString()
+                    })
+                    .eq('id_asignacion', idAsignacion);
+
+                if (tareaError) throw tareaError;
+
+                // Actualizar variables locales
+                tarea.reclamada = true;
+                monedasActuales = nuevasMonedas;
+                
+                // Actualizar UI
+                const coinsAmount = document.getElementById('coinsAmount');
+                if (coinsAmount) {
+                    coinsAmount.textContent = nuevasMonedas.toLocaleString();
+                }
+                
+                // Volver a renderizar las tareas
+                renderizarTareas();
+                
+                // Mostrar notificación de éxito
+                showNotification(`💰 +${recompensa} monedas reclamadas!`, '#2ecc71', 'fa-coins');
+                
+                return true;
+
+            } catch (error) {
+                console.error('Error al reclamar monedas:', error);
+                showNotification('Error al reclamar monedas', '#ff6b6b', 'fa-exclamation-circle');
+                return false;
+            }
+        };
+
+        // ============================================
+        // RENDERIZAR TAREAS
+        // ============================================
+        function renderizarTareas() {
+            const tareasLista = document.getElementById('tareasLista');
+            const tareasProgress = document.getElementById('tareasProgress');
+            
+            if (!tareasLista) return;
+
+            const completadas = tareasAsignadas.filter(t => t.completada).length;
+            if (tareasProgress) {
+                tareasProgress.textContent = `${completadas}/4`;
+            }
+
+            let html = '';
+            tareasAsignadas.forEach(t => {
+                const tarea = t.tareas_diarias || t;
+                const completada = t.completada;
+                const reclamada = t.reclamada || false;
+                const recompensa = generarRecompensaAleatoria(30, 100);
+                
+                html += `
+                    <div class="tarea-item ${completada ? 'completada' : ''} ${reclamada ? 'reclamada' : ''}">
+                        <div class="tarea-icon">${tarea.icono || '📋'}</div>
+                        <div class="tarea-info">
+                            <h5>${tarea.nombre || 'Tarea'}</h5>
+                            <p>${tarea.descripcion || 'Completa esta tarea'}</p>
+                            <div class="tarea-progress">Progreso: ${t.progreso || 0}/${tarea.cantidad_requerida || 1}</div>
+                        </div>
+                        <div class="tarea-recompensa">
+                            ${!reclamada && completada ? 
+                                `<button class="reclamar-btn" onclick="reclamarMonedas(${t.id_asignacion}, ${recompensa})">
+                                    <i class="fas fa-hand-holding-heart"></i>
+                                    Reclamar +${recompensa}
+                                </button>` : 
+                                reclamada ? 
+                                    `<span style="color: #2ecc71; font-weight: 600; background: rgba(46, 204, 113, 0.1); padding: 6px 12px; border-radius: 30px;">
+                                        <i class="fas fa-check-circle"></i> Reclamado
+                                    </span>` : 
+                                    `<span style="background: #f0f3fa; padding: 6px 12px; border-radius: 30px; font-weight: 600;">
+                                        +${recompensa} <i class="fas fa-coins" style="color: #ffd700;"></i>
+                                    </span>`
+                            }
+                        </div>
+                        ${completada && !reclamada ? 
+                            '<i class="fas fa-star" style="color: #ffd700; margin-left: 5px;"></i>' : 
+                            reclamada ? 
+                            '<i class="fas fa-check-circle tarea-check"></i>' : ''}
+                    </div>
+                `;
+            });
+            tareasLista.innerHTML = html;
+        }
+
+        // ============================================
+        // FUNCIÓN PARA GENERAR RECOMPENSA ALEATORIA
+        // ============================================
+        function generarRecompensaAleatoria(min = 30, max = 100) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+
+        // ============================================
+        // OBTENER USUARIO ACTUAL
+        // ============================================
+        async function obtenerUsuarioActual() {
+            try {
+                const usuarioGuardado = sessionStorage.getItem('usuario_actual');
+                
+                if (!usuarioGuardado) {
+                    window.location.href = 'login.html';
+                    return null;
+                }
+
+                usuarioActual = JSON.parse(usuarioGuardado);
+                usuarioId = usuarioActual.id;
+
+                const { data: usuario, error } = await supabaseClient
+                    .from('usuarios')
+                    .select('*')
+                    .eq('id_usuario', usuarioId)
+                    .single();
+
+                if (error) throw error;
+
+                document.getElementById('nivelValor').textContent = usuario.nivel || 1;
+                return usuario;
+            } catch (error) {
+                console.error('Error al obtener usuario:', error);
+                return null;
+            }
+        }
+
+        // ============================================
+        // OBTENER MONEDAS DEL USUARIO
+        // ============================================
+        async function obtenerMonedas() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('monedas_usuario')
+                    .select('monedas')
+                    .eq('id_usuario', usuarioId)
+                    .maybeSingle();
+
+                if (error) throw error;
+
+                if (data) {
+                    monedasActuales = data.monedas;
+                } else {
+                    const { error: insertError } = await supabaseClient
+                        .from('monedas_usuario')
+                        .insert([{ id_usuario: usuarioId, monedas: 1000 }]);
+
+                    if (insertError) throw insertError;
+                    monedasActuales = 1000;
+                }
+
+                document.getElementById('coinsAmount').textContent = monedasActuales.toLocaleString();
+                return monedasActuales;
+            } catch (error) {
+                console.error('Error al obtener monedas:', error);
+                document.getElementById('coinsAmount').textContent = '0';
+                return 0;
+            }
+        }
+
+        // ============================================
+        // OBTENER NIVELES VIP
+        // ============================================
+        async function obtenerNivelesVIP() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('niveles_vip')
+                    .select('*')
+                    .order('nivel', { ascending: true });
+
+                if (error) throw error;
+
+                nivelesVIP = data || [];
+                document.getElementById('totalNiveles').textContent = nivelesVIP.length;
+                return nivelesVIP;
+            } catch (error) {
+                console.error('Error al obtener niveles VIP:', error);
+                return [];
+            }
+        }
+
+        // ============================================
+        // OBTENER PROGRESO VIP
+        // ============================================
+        async function obtenerProgresoVIP() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('progreso_vip')
+                    .select('*')
+                    .eq('id_usuario', usuarioId)
+                    .maybeSingle();
+
+                if (error) throw error;
+
+                const paseStatusBadge = document.getElementById('paseStatusBadge');
+
+                if (data) {
+                    progresoVIP = data;
+                    
+                    if (data.pase_activo) {
+                        paseStatusBadge.textContent = 'Activo';
+                        paseStatusBadge.className = 'pase-status-badge';
+                    } else {
+                        paseStatusBadge.textContent = 'Inactivo';
+                        paseStatusBadge.classList.add('inactivo');
+                    }
+                } else {
+                    const { error: insertError } = await supabaseClient
+                        .from('progreso_vip')
+                        .insert([{
+                            id_usuario: usuarioId,
+                            nivel_actual: 1,
+                            pase_activo: false
+                        }]);
+
+                    if (insertError) throw insertError;
+
+                    progresoVIP = {
+                        id_usuario: usuarioId,
+                        nivel_actual: 1,
+                        pase_activo: false
+                    };
+
+                    paseStatusBadge.textContent = 'Inactivo';
+                    paseStatusBadge.classList.add('inactivo');
+                }
+
+                return progresoVIP;
+            } catch (error) {
+                console.error('Error al obtener progreso VIP:', error);
+                return null;
+            }
+        }
+
+        // ============================================
+        // OBTENER RECOMPENSAS RECLAMADAS
+        // ============================================
+        async function obtenerRecompensasReclamadas() {
+            try {
+                const { data, error } = await supabaseClient
+                    .from('recompensas_reclamadas')
+                    .select('id_nivel')
+                    .eq('id_usuario', usuarioId);
+
+                if (error) throw error;
+
+                recompensasReclamadas = new Set(data?.map(r => r.id_nivel) || []);
+                return recompensasReclamadas;
+            } catch (error) {
+                console.error('Error al obtener recompensas:', error);
+                return new Set();
+            }
+        }
+
+        // ============================================
+        // FUNCIONES PARA CONTAR PROGRESO
+        // ============================================
+        async function contarFotosUsuario() {
+            try {
+                const { count, error } = await supabaseClient
+                    .from('fotos_usuario')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('id_usuario', usuarioId);
+
+                if (error) throw error;
+                return count || 0;
+            } catch (error) {
+                console.error('Error al contar fotos:', error);
+                return 0;
+            }
+        }
+
+        async function contarLikesHoy() {
+            try {
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+                
+                const { count, error } = await supabaseClient
+                    .from('likes')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('id_usuario_origen', usuarioId)
+                    .gte('fecha', hoy.toISOString());
+
+                if (error) throw error;
+                return count || 0;
+            } catch (error) {
+                console.error('Error al contar likes:', error);
+                return 0;
+            }
+        }
+
+        async function contarSuperLikesHoy() {
+            try {
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+                
+                const { count, error } = await supabaseClient
+                    .from('superlikes')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('id_usuario_origen', usuarioId)
+                    .gte('fecha', hoy.toISOString());
+
+                if (error) throw error;
+                return count || 0;
+            } catch (error) {
+                console.error('Error al contar superlikes:', error);
+                return 0;
+            }
+        }
+
+        async function contarMensajesHoy() {
+            try {
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+                
+                const { count, error } = await supabaseClient
+                    .from('mensajes')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('id_usuario', usuarioId)
+                    .gte('fecha', hoy.toISOString());
+
+                if (error) throw error;
+                return count || 0;
+            } catch (error) {
+                console.error('Error al contar mensajes:', error);
+                return 0;
+            }
+        }
+
+        async function contarMatchesHoy() {
+            try {
+                const hoy = new Date();
+                hoy.setHours(0, 0, 0, 0);
+                
+                const { count, error } = await supabaseClient
+                    .from('matches')
+                    .select('*', { count: 'exact', head: true })
+                    .or(`usuario1.eq.${usuarioId},usuario2.eq.${usuarioId}`)
+                    .gte('fecha', hoy.toISOString());
+
+                if (error) throw error;
+                return count || 0;
+            } catch (error) {
+                console.error('Error al contar matches:', error);
+                return 0;
+            }
+        }
+
+        // ============================================
+        // VERIFICAR SI ES UN NUEVO DÍA (RESET DE TAREAS)
+        // ============================================
+        async function verificarNuevoDia() {
+            try {
+                const hoy = new Date().toISOString().split('T')[0];
+                
+                // Si no hay fecha guardada o es diferente a hoy, hay que resetear
+                if (!fechaActualTareas || fechaActualTareas !== hoy) {
+                    console.log('Nuevo día detectado, reseteando tareas...');
+                    fechaActualTareas = hoy;
+                    
+                    // Verificar si ya existen tareas para hoy
+                    const { data: tareasHoy, error } = await supabaseClient
+                        .from('tareas_asignadas')
+                        .select('id_asignacion')
+                        .eq('id_usuario', usuarioId)
+                        .eq('fecha', hoy);
+
+                    if (error) throw error;
+
+                    // Si no hay tareas para hoy, generar nuevas
+                    if (!tareasHoy || tareasHoy.length === 0) {
+                        await generarNuevasTareasDiarias();
+                    } else {
+                        // Si ya hay tareas, solo cargarlas
+                        await cargarTareasDelDia(hoy);
+                    }
+                }
+            } catch (error) {
+                console.error('Error al verificar nuevo día:', error);
+            }
+        }
+
+        // ============================================
+        // GENERAR NUEVAS TAREAS DIARIAS
+        // ============================================
+        async function generarNuevasTareasDiarias() {
+            try {
+                const hoy = new Date().toISOString().split('T')[0];
+                
+                // Obtener todas las tareas disponibles
+                const { data: tareasDisponibles, error: disponiblesError } = await supabaseClient
+                    .from('tareas_diarias')
+                    .select('*')
+                    .eq('activa', true);
+
+                if (disponiblesError) throw disponiblesError;
+
+                if (!tareasDisponibles || tareasDisponibles.length === 0) {
+                    console.error('No hay tareas disponibles');
+                    return;
+                }
+
+                // Seleccionar 4 tareas aleatorias
+                const tareasSeleccionadas = [];
+                const indicesUsados = new Set();
+                
+                const maxTareas = Math.min(4, tareasDisponibles.length);
+                
+                while (tareasSeleccionadas.length < maxTareas) {
+                    const indice = Math.floor(Math.random() * tareasDisponibles.length);
+                    if (!indicesUsados.has(indice)) {
+                        indicesUsados.add(indice);
+                        tareasSeleccionadas.push(tareasDisponibles[indice]);
+                    }
+                }
+
+                // Insertar las tareas seleccionadas
+                const nuevasAsignaciones = [];
+                for (const tarea of tareasSeleccionadas) {
+                    const { data: asignacion, error: insertError } = await supabaseClient
+                        .from('tareas_asignadas')
+                        .insert([{
+                            id_usuario: usuarioId,
+                            id_tarea: tarea.id_tarea,
+                            fecha: hoy,
+                            progreso: 0,
+                            completada: false,
+                            reclamada: false
+                        }])
+                        .select(`
+                            *,
+                            tareas_diarias (*)
+                        `)
+                        .single();
+
+                    if (insertError) throw insertError;
+                    
+                    nuevasAsignaciones.push(asignacion);
+                }
+
+                tareasAsignadas = nuevasAsignaciones;
+
+                // Crear o actualizar progreso diario
+                const { data: progreso, error: progresoError } = await supabaseClient
+                    .from('progreso_tareas_diarias')
+                    .select('*')
+                    .eq('id_usuario', usuarioId)
+                    .eq('fecha', hoy)
+                    .maybeSingle();
+
+                if (progresoError) throw progresoError;
+
+                if (progreso) {
+                    progresoTareas = progreso;
+                } else {
+                    const { data: nuevoProgreso, error: insertError } = await supabaseClient
+                        .from('progreso_tareas_diarias')
+                        .insert([{
+                            id_usuario: usuarioId,
+                            fecha: hoy,
+                            tareas_completadas: 0,
+                            tareas_totales: 4,
+                            nivel_vip_ganado: false
+                        }])
+                        .select()
+                        .single();
+
+                    if (insertError) throw insertError;
+                    progresoTareas = nuevoProgreso;
+                }
+
+                renderizarTareas();
+
+            } catch (error) {
+                console.error('Error al generar nuevas tareas:', error);
+            }
+        }
+
+        // ============================================
+        // CARGAR TAREAS DEL DÍA
+        // ============================================
+        async function cargarTareasDelDia(fecha) {
+            try {
+                const { data: tareas, error } = await supabaseClient
+                    .from('tareas_asignadas')
+                    .select(`
+                        *,
+                        tareas_diarias (*)
+                    `)
+                    .eq('id_usuario', usuarioId)
+                    .eq('fecha', fecha);
+
+                if (error) throw error;
+
+                if (tareas && tareas.length > 0) {
+                    tareasAsignadas = tareas;
+                }
+
+                // Cargar progreso diario
+                const { data: progreso, error: progresoError } = await supabaseClient
+                    .from('progreso_tareas_diarias')
+                    .select('*')
+                    .eq('id_usuario', usuarioId)
+                    .eq('fecha', fecha)
+                    .maybeSingle();
+
+                if (progresoError) throw progresoError;
+
+                if (progreso) {
+                    progresoTareas = progreso;
+                }
+
+                renderizarTareas();
+
+            } catch (error) {
+                console.error('Error al cargar tareas del día:', error);
+            }
+        }
+
+        // ============================================
+        // ACTUALIZAR PROGRESO DE TAREAS
+        // ============================================
+        async function actualizarProgresoTareas() {
+            try {
+                const [fotos, likes, superlikes, mensajes, matches] = await Promise.all([
+                    contarFotosUsuario(),
+                    contarLikesHoy(),
+                    contarSuperLikesHoy(),
+                    contarMensajesHoy(),
+                    contarMatchesHoy()
+                ]);
+
+                let progresoActualizado = false;
+
+                for (const tarea of tareasAsignadas) {
+                    const tareaData = tarea.tareas_diarias || tarea;
+                    if (!tareaData) continue;
+                    
+                    let progreso = 0;
+                    
+                    switch (tareaData.tipo) {
+                        case 'like':
+                            progreso = likes;
+                            break;
+                        case 'superlike':
+                            progreso = superlikes;
+                            break;
+                        case 'fotos':
+                            progreso = fotos;
+                            break;
+                        case 'mensaje':
+                            progreso = mensajes;
+                            break;
+                        case 'match':
+                            progreso = matches;
+                            break;
+                    }
+
+                    progreso = Math.min(progreso, tareaData.cantidad_requerida);
+                    const estabaCompletada = tarea.completada;
+                    const ahoraCompletada = progreso >= tareaData.cantidad_requerida;
+
+                    if (progreso !== tarea.progreso || estabaCompletada !== ahoraCompletada) {
+                        tarea.progreso = progreso;
+                        tarea.completada = ahoraCompletada;
+                        progresoActualizado = true;
+                    }
+                }
+
+                if (progresoActualizado) {
+                    // Actualizar en la base de datos
+                    for (const tarea of tareasAsignadas) {
+                        await supabaseClient
+                            .from('tareas_asignadas')
+                            .update({ 
+                                progreso: tarea.progreso,
+                                completada: tarea.completada 
+                            })
+                            .eq('id_asignacion', tarea.id_asignacion);
+                    }
+                    
+                    renderizarTareas();
+                    
+                    const completadas = tareasAsignadas.filter(t => t.completada).length;
+                    
+                    // Actualizar progreso de tareas diarias
+                    if (progresoTareas) {
+                        await supabaseClient
+                            .from('progreso_tareas_diarias')
+                            .update({ tareas_completadas: completadas })
+                            .eq('id_progreso', progresoTareas.id_progreso);
+                    }
+                    
+                    // Verificar si se completaron las 4 tareas para subir nivel VIP
+                    if (completadas >= 4 && progresoTareas && !progresoTareas.nivel_vip_ganado) {
+                        await subirNivelVIP();
+                    }
+                }
+
+            } catch (error) {
+                console.error('Error al actualizar progreso:', error);
+            }
+        }
+
+        // ============================================
+        // SUBIR DE NIVEL VIP
+        // ============================================
+        async function subirNivelVIP() {
+            try {
+                if (!progresoVIP?.pase_activo) {
+                    showNotification('Activa el Pase VIP para ganar niveles', '#4a90e2', 'fa-info-circle');
+                    return;
+                }
+
+                const nuevoNivel = progresoVIP.nivel_actual + 1;
+                
+                if (nuevoNivel > 15) {
+                    showNotification('¡Ya alcanzaste el nivel máximo!', '#ffd700', 'fa-crown');
+                    return;
+                }
+
+                const { error } = await supabaseClient
+                    .from('progreso_vip')
+                    .update({ nivel_actual: nuevoNivel })
+                    .eq('id_usuario', usuarioId);
+
+                if (error) throw error;
+
+                if (progresoTareas) {
+                    await supabaseClient
+                        .from('progreso_tareas_diarias')
+                        .update({ nivel_vip_ganado: true })
+                        .eq('id_progreso', progresoTareas.id_progreso);
+                }
+
+                progresoVIP.nivel_actual = nuevoNivel;
+                
+                showNotification(`🎉 ¡Subiste al Nivel ${nuevoNivel}!`, '#4a90e2', 'fa-level-up-alt');
+
+                renderizarNiveles();
+                actualizarProgreso();
+
+            } catch (error) {
+                console.error('Error al subir nivel:', error);
+            }
+        }
+
+        // ============================================
+        // RENDERIZAR NIVELES VIP
+        // ============================================
+        function renderizarNiveles() {
+            const nivelesLista = document.getElementById('nivelesLista');
+            if (!nivelesLista || nivelesVIP.length === 0) return;
+
+            let html = '';
+            nivelesVIP.forEach(n => {
+                const completado = recompensasReclamadas.has(n.id_nivel);
+                const actual = progresoVIP?.nivel_actual === n.nivel && !completado;
+                const bloqueado = progresoVIP?.nivel_actual < n.nivel && !completado;
+                
+                const clases = [];
+                if (completado) clases.push('completado');
+                if (actual) clases.push('actual');
+                if (bloqueado) clases.push('bloqueado');
+                
+                let recompensaTexto = '';
+                switch (n.recompensa_tipo) {
+                    case 'monedas':
+                        recompensaTexto = `${n.recompensa_cantidad} monedas`;
+                        break;
+                    case 'boost':
+                        recompensaTexto = `${n.recompensa_cantidad} Boost`;
+                        break;
+                    case 'superlike':
+                        recompensaTexto = `${n.recompensa_cantidad} Super Like`;
+                        break;
+                    case 'vip_dias':
+                        recompensaTexto = `VIP ${n.recompensa_cantidad} día${n.recompensa_cantidad > 1 ? 's' : ''}`;
+                        break;
+                    case 'regalo':
+                        recompensaTexto = 'Regalo especial';
+                        break;
+                }
+                
+                html += `
+                    <div class="nivel-item ${clases.join(' ')}" data-nivel-id="${n.id_nivel}">
+                        <div class="nivel-icono">${n.icono}</div>
+                        <div class="nivel-info">
+                            <div class="nivel-numero">Nivel ${n.nivel}: ${n.nombre}</div>
+                            <div class="nivel-recompensa">${recompensaTexto}</div>
+                        </div>
+                        <div class="nivel-badge">${n.nivel}</div>
+                        ${completado ? '<i class="fas fa-check-circle nivel-check"></i>' : ''}
+                        ${bloqueado ? '<i class="fas fa-lock nivel-lock"></i>' : ''}
+                    </div>
+                `;
+            });
+            nivelesLista.innerHTML = html;
+
+            document.querySelectorAll('.nivel-item:not(.bloqueado)').forEach(item => {
+                item.addEventListener('click', async () => {
+                    const nivelId = parseInt(item.dataset.nivelId);
+                    const nivelData = nivelesVIP.find(n => n.id_nivel === nivelId);
+                    if (nivelData) {
+                        await reclamarRecompensa(nivelId, nivelData);
+                    }
+                });
+            });
+        }
+
+        // ============================================
+        // RECLAMAR RECOMPENSA
+        // ============================================
+        async function reclamarRecompensa(idNivel, nivelData) {
+            try {
+                if (!progresoVIP?.pase_activo) {
+                    Swal.fire({
+                        title: 'Pase Inactivo',
+                        text: 'Debes comprar el Pase VIP primero',
+                        icon: 'warning',
+                        confirmButtonColor: '#4a90e2',
+                        background: 'white'
+                    });
+                    return false;
+                }
+
+                if (recompensasReclamadas.has(idNivel)) {
+                    Swal.fire({
+                        title: 'Ya reclamada',
+                        text: 'Esta recompensa ya fue reclamada',
+                        icon: 'info',
+                        confirmButtonColor: '#4a90e2',
+                        background: 'white'
+                    });
+                    return false;
+                }
+
+                if (progresoVIP.nivel_actual < nivelData.nivel) {
+                    Swal.fire({
+                        title: 'Nivel no alcanzado',
+                        text: `Debes alcanzar el nivel ${nivelData.nivel} primero`,
+                        icon: 'warning',
+                        confirmButtonColor: '#4a90e2',
+                        background: 'white'
+                    });
+                    return false;
+                }
+
+                const confirm = await Swal.fire({
+                    title: '¿Reclamar recompensa?',
+                    text: `Obtendrás: ${nivelData.recompensa_tipo === 'monedas' ? nivelData.recompensa_cantidad + ' monedas' : nivelData.recompensa_tipo}`,
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Reclamar',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: '#4a90e2',
+                    cancelButtonColor: '#888',
+                    background: 'white'
+                });
+
+                if (!confirm.isConfirmed) return false;
+
+                const { error: insertError } = await supabaseClient
+                    .from('recompensas_reclamadas')
+                    .insert([{
+                        id_usuario: usuarioId,
+                        id_nivel: idNivel
+                    }]);
+
+                if (insertError) throw insertError;
+
+                if (nivelData.recompensa_tipo === 'monedas') {
+                    const nuevasMonedas = monedasActuales + nivelData.recompensa_cantidad;
+                    
+                    const { error: updateError } = await supabaseClient
+                        .from('monedas_usuario')
+                        .update({ monedas: nuevasMonedas })
+                        .eq('id_usuario', usuarioId);
+
+                    if (updateError) throw updateError;
+
+                    monedasActuales = nuevasMonedas;
+                    document.getElementById('coinsAmount').textContent = monedasActuales.toLocaleString();
+                }
+
+                recompensasReclamadas.add(idNivel);
+                
+                renderizarNiveles();
+                actualizarProgreso();
+
+                showNotification(`🎉 Recompensa reclamada!`, '#2ecc71', 'fa-gift');
+                return true;
+            } catch (error) {
+                console.error('Error al reclamar:', error);
+                showNotification('Error al reclamar', '#ff6b6b', 'fa-exclamation-circle');
+                return false;
+            }
+        }
+
+        // ============================================
+        // ACTUALIZAR PROGRESO GENERAL
+        // ============================================
+        function actualizarProgreso() {
+            const completados = recompensasReclamadas.size;
+            const porcentaje = (completados / nivelesVIP.length) * 100;
+            document.getElementById('progressBar').style.width = `${porcentaje}%`;
+            
+            const nivelActual = progresoVIP?.nivel_actual || 1;
+            document.getElementById('progresoTexto').textContent = `Nivel ${nivelActual}/15`;
+            document.getElementById('recompensasCompletadas').textContent = `${completados} recompensas`;
+        }
+
+        // ============================================
+        // COMPRAR PASE VIP
+        // ============================================
+        async function comprarPaseVIP() {
+            try {
+                if (progresoVIP?.pase_activo) {
+                    Swal.fire({
+                        title: 'Pase ya activo',
+                        text: 'Ya tienes el Pase VIP activo',
+                        icon: 'info',
+                        confirmButtonColor: '#4a90e2',
+                        background: 'white'
+                    });
+                    return;
+                }
+
+                if (monedasActuales < 1000) {
+                    Swal.fire({
+                        title: 'Monedas insuficientes',
+                        text: 'Necesitas 1,000 monedas para comprar el Pase VIP',
+                        icon: 'warning',
+                        confirmButtonColor: '#4a90e2',
+                        background: 'white'
+                    });
+                    return;
+                }
+
+                const confirm = await Swal.fire({
+                    title: '✨ Comprar Pase VIP ✨',
+                    html: `
+                        <div style="text-align: center; padding: 20px;">
+                            <i class="fas fa-crown" style="font-size: 50px; color: #ffd700; margin-bottom: 15px;"></i>
+                            <h3 style="color: #1e2b3a; margin-bottom: 10px;">¿Activar Pase VIP?</h3>
+                            <p style="color: #5a6b7c; margin-bottom: 20px;">Desbloquea 15 niveles con recompensas exclusivas</p>
+                            <div style="background: linear-gradient(145deg, #4a90e2, #6c5ce7); border-radius: 30px; padding: 15px; color: white;">
+                                <strong>Precio: 1,000 monedas</strong>
+                            </div>
+                        </div>
+                    `,
+                    showCancelButton: true,
+                    confirmButtonText: 'Comprar',
+                    cancelButtonText: 'Cancelar',
+                    confirmButtonColor: '#4a90e2',
+                    cancelButtonColor: '#888',
+                    background: 'white'
+                });
+
+                if (!confirm.isConfirmed) return;
+
+                const nuevasMonedas = monedasActuales - 1000;
+                
+                const { error: monedasError } = await supabaseClient
+                    .from('monedas_usuario')
+                    .update({ monedas: nuevasMonedas })
+                    .eq('id_usuario', usuarioId);
+
+                if (monedasError) throw monedasError;
+
+                const { error: compraError } = await supabaseClient
+                    .from('compras_vip')
+                    .insert([{
+                        id_usuario: usuarioId,
+                        monto_pagado: 1000
+                    }]);
+
+                if (compraError) throw compraError;
+
+                const fechaActual = new Date();
+                const fechaExpiracion = new Date();
+                fechaExpiracion.setDate(fechaExpiracion.getDate() + 30);
+
+                const { error: updateError } = await supabaseClient
+                    .from('progreso_vip')
+                    .update({
+                        pase_activo: true,
+                        fecha_activacion: fechaActual.toISOString(),
+                        fecha_expiracion: fechaExpiracion.toISOString()
+                    })
+                    .eq('id_usuario', usuarioId);
+
+                if (updateError) throw updateError;
+
+                monedasActuales = nuevasMonedas;
+                document.getElementById('coinsAmount').textContent = monedasActuales.toLocaleString();
+                
+                progresoVIP.pase_activo = true;
+                progresoVIP.fecha_activacion = fechaActual.toISOString();
+                progresoVIP.fecha_expiracion = fechaExpiracion.toISOString();
+
+                const paseStatusBadge = document.getElementById('paseStatusBadge');
+                paseStatusBadge.textContent = 'Activo';
+                paseStatusBadge.classList.remove('inactivo');
+
+                renderizarNiveles();
+
+                showNotification('🎉 ¡Pase VIP activado!', '#4a90e2', 'fa-crown');
+
+            } catch (error) {
+                console.error('Error al comprar pase:', error);
+                showNotification('Error al procesar la compra', '#ff6b6b', 'fa-exclamation-circle');
+            }
+        }
+
+        // ============================================
+        // INICIAR TIMER DE 24 HORAS
+        // ============================================
+        function iniciarTimer() {
+            const timerValue = document.getElementById('timerValue');
+            
+            const calcularTiempoRestante = () => {
+                const ahora = new Date();
+                const manana = new Date(ahora);
+                manana.setDate(manana.getDate() + 1);
+                manana.setHours(0, 0, 0, 0);
+                
+                const diffMs = manana - ahora;
+                const diffHrs = Math.floor(diffMs / (1000 * 60 * 60));
+                const diffMin = Math.floor((diffMs % (1000 * 60 * 60)) / (1000 * 60));
+                const diffSeg = Math.floor((diffMs % (1000 * 60)) / 1000);
+                
+                return `${String(diffHrs).padStart(2, '0')}:${String(diffMin).padStart(2, '0')}:${String(diffSeg).padStart(2, '0')}`;
+            };
+
+            if (timerInterval) clearInterval(timerInterval);
+            
+            timerValue.textContent = calcularTiempoRestante();
+            
+            timerInterval = setInterval(() => {
+                const tiempoRestante = calcularTiempoRestante();
+                timerValue.textContent = tiempoRestante;
+                
+                // Si el timer llega a 00:00:00, resetear tareas
+                if (tiempoRestante === '00:00:00') {
+                    verificarNuevoDia();
+                }
+            }, 1000);
+        }
+
+        // ============================================
+        // TOGGLE TAREAS
+        // ============================================
+        function toggleTareas() {
+            const tareasContent = document.getElementById('tareasContent');
+            const tareasArrow = document.getElementById('tareasArrow');
+            
+            tareasOpen = !tareasOpen;
+            if (tareasOpen) {
+                tareasContent.classList.add('open');
+                tareasArrow.classList.add('rotated');
+            } else {
+                tareasContent.classList.remove('open');
+                tareasArrow.classList.remove('rotated');
+            }
+        }
+
+        // ============================================
+        // CARGAR NOTIFICACIONES
+        // ============================================
+        async function cargarNotificaciones() {
+            try {
+                const { count, error } = await supabaseClient
+                    .from('notificaciones')
+                    .select('*', { count: 'exact', head: true })
+                    .eq('id_usuario', usuarioId)
+                    .eq('leida', false);
+
+                if (error) throw error;
+                
+                const badge = document.getElementById('notificacionesCount');
+                if (badge) {
+                    badge.textContent = count || 0;
+                    badge.style.display = count > 0 ? 'flex' : 'none';
+                }
+                
+                return count || 0;
+            } catch (error) {
+                console.error('Error al cargar notificaciones:', error);
+                return 0;
+            }
+        }
+
+        // ============================================
+        // MOSTRAR NOTIFICACIONES
+        // ============================================
+        async function mostrarNotificaciones() {
+            try {
+                const { data: notificaciones, error } = await supabaseClient
+                    .from('notificaciones')
+                    .select(`
+                        *,
+                        usuario_origen: id_usuario_origen (nombre, foto_url)
+                    `)
+                    .eq('id_usuario', usuarioId)
+                    .order('fecha', { ascending: false })
+                    .limit(20);
+
+                if (error) throw error;
+
+                const idsNoLeidas = notificaciones.filter(n => !n.leida).map(n => n.id_notificacion);
+                if (idsNoLeidas.length > 0) {
+                    await supabaseClient
+                        .from('notificaciones')
+                        .update({ leida: true })
+                        .in('id_notificacion', idsNoLeidas);
+                }
+
+                await cargarNotificaciones();
+
+                let html = '';
+                if (notificaciones.length === 0) {
+                    html = '<p style="text-align: center; padding: 20px;">No tienes notificaciones</p>';
+                } else {
+                    html = notificaciones.map(notif => `
+                        <div style="display: flex; align-items: center; gap: 10px; padding: 10px; border-bottom: 1px solid #e4e4f0;">
+                            <div style="font-size: 24px;">${notif.tipo === 'match' ? '💞' : notif.tipo === 'superlike' ? '⭐' : '❤️'}</div>
+                            <div style="flex: 1;">
+                                <p style="margin: 0;">${notif.mensaje}</p>
+                                <small style="color: #8a9bb0;">${new Date(notif.fecha).toLocaleString()}</small>
+                            </div>
+                        </div>
+                    `).join('');
+                }
+
+                Swal.fire({
+                    title: 'Notificaciones',
+                    html: `<div style="max-height: 400px; overflow-y: auto;">${html}</div>`,
+                    confirmButtonText: 'Cerrar',
+                    confirmButtonColor: '#6c5ce7',
+                    background: 'white',
+                    width: '400px'
+                });
+
+            } catch (error) {
+                console.error('Error al mostrar notificaciones:', error);
+            }
+        }
+
+        // ============================================
+        // INICIALIZACIÓN
+        // ============================================
+        document.addEventListener('DOMContentLoaded', async function() {
+            const btnBoost = document.getElementById('btnBoost');
+            const btnInicio = document.getElementById('btnInicio');
+            const btnMessage = document.getElementById('btnMessage');
+            const btnLikesFooter = document.getElementById('btnLikesFooter');
+            const btnCuenta = document.getElementById('btnCuenta');
+            const btnNotificaciones = document.getElementById('btnNotificaciones');
+            const backButton = document.getElementById('backButton');
+            const comprarPase = document.getElementById('comprarPase');
+            const tareasHeader = document.getElementById('tareasHeader');
+            const footerLikesCount = document.getElementById('footerLikesCount');
+
+            // Obtener usuario actual
+            const usuario = await obtenerUsuarioActual();
+            if (!usuario) return;
+
+            // Establecer fecha actual
+            fechaActualTareas = new Date().toISOString().split('T')[0];
+
+            // Cargar todos los datos
+            await Promise.all([
+                obtenerMonedas(),
+                obtenerNivelesVIP(),
+                obtenerProgresoVIP(),
+                obtenerRecompensasReclamadas(),
+                cargarTareasDelDia(fechaActualTareas),
+                cargarNotificaciones()
+            ]);
+
+            // Si no hay tareas para hoy, generarlas
+            if (tareasAsignadas.length === 0) {
+                await generarNuevasTareasDiarias();
+            }
+
+            // Renderizar todo
+            renderizarNiveles();
+            renderizarTareas();
+            actualizarProgreso();
+            iniciarTimer();
+
+            // Verificar si es nuevo día cada minuto
+            setInterval(async () => {
+                await verificarNuevoDia();
+            }, 60000);
+
+            // Actualizar progreso cada 10 segundos
+            setInterval(async () => {
+                await actualizarProgresoTareas();
+            }, 10000);
+
+            // Cargar contador de likes
+            const { count } = await supabaseClient
+                .from('likes')
+                .select('*', { count: 'exact', head: true })
+                .eq('id_usuario_destino', usuarioId);
+            footerLikesCount.textContent = count || 0;
+
+            // ============================================
+            // EVENT LISTENERS
+            // ============================================
+            
+            if (btnNotificaciones) {
+                btnNotificaciones.addEventListener('click', mostrarNotificaciones);
+            }
+
+            if (backButton) {
+                backButton.addEventListener('click', () => {
+                    showNotification('Volviendo al inicio...', '#6c5ce7', 'fa-arrow-left');
+                    setTimeout(() => {
+                        window.location.href = 'principal.html';
+                    }, 300);
+                });
+            }
+
+            if (comprarPase) {
+                comprarPase.addEventListener('click', comprarPaseVIP);
+            }
+
+            if (tareasHeader) {
+                tareasHeader.addEventListener('click', toggleTareas);
+            }
+
+            if (btnBoost) {
+                btnBoost.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.1)';
+                    setTimeout(() => this.style.transform = 'scale(1)', 200);
+                    showNotification('🚀 Boost de visibilidad', '#ff6b6b', 'fa-rocket');
+                });
+            }
+
+            if (btnInicio) {
+                btnInicio.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showNotification('🏠 Página de inicio', '#6c5ce7', 'fa-home');
+                    setTimeout(() => {
+                        window.location.href = 'principal.html';
+                    }, 300);
+                });
+            }
+
+            if (btnMessage) {
+                btnMessage.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showNotification('📬 Abriendo mensajes...', '#6c5ce7', 'fa-comment-dots');
+                    setTimeout(() => {
+                        window.location.href = 'mensajes.html';
+                    }, 300);
+                });
+            }
+
+            if (btnLikesFooter) {
+                btnLikesFooter.addEventListener('click', function() {
+                    this.style.transform = 'scale(1.1)';
+                    setTimeout(() => this.style.transform = 'scale(1)', 200);
+                    showNotification('❤️ Tus likes', '#ff4757', 'fa-heart');
+                    setTimeout(() => {
+                        window.location.href = 'like.html';
+                    }, 300);
+                });
+            }
+
+            if (btnCuenta) {
+                btnCuenta.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    showNotification('👤 Mi perfil', '#2d3a4a', 'fa-user');
+                    setTimeout(() => {
+                        window.location.href = 'cuenta.html';
+                    }, 300);
+                });
+            }
+            
+        });
+    </script>
+</body>
+</html>
